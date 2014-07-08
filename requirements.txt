@@ -1,0 +1,10 @@
+# Basic stuff
+cython
+
+# Falcon and its plugins
+falcon
+talons
+
+# ORMs
+#sqlalchemy
+peewee

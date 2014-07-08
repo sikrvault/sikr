@@ -10,51 +10,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from peewee import *
 import falcon
-import json
-
-from talons.auth import middleware
-from talons.auth import basicauth, httpheader, htpasswd
-
-import settings
-
-# Define the database connection and get the cursor for operating
-db = peewee
-conn = sqlite3.connect('test.db')
-db = conn.cursor()
-
-
-# Assume getappconfig() returns a dictionary of application configuration
-# options that may have been read from some INI file...
-# config = getappconfig()
-
-# auth_middleware = middleware.create_middleware(identify_with=[
-#                                                  basicauth.Identifier,
-#                                                  httpheader.Identifier],
-#                                                authenticate_with=htpasswd.Authenticator,
-#                                                **config)
-
-
-class Item(object):
-
-    def on_get(self, request, response):
-        """
-        Handle the GET request, returning a list of the items that the user
-        has access to.
-        """
-        response.status = falcon.HTTP_200
-        response.body = "Hello data!"
-
-
-class Service(object):
-
-    def on_get(self, request, response):
-        pass
-
-    def on_post(self, request, response):
-        pass
-
 
 # Create the API instance, referenced internally as api and externally as
 # wsgi_app

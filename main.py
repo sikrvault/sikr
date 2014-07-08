@@ -10,4 +10,25 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import os
+
 # Add the current directory to the python path
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+def load_app():
+
+    """
+    Load all the components for the application
+    """
+    import app.models
+    import app.app
+    import app.urls
+    import app.views
+
+
+if __name__ == '__main__':
+    import logging
+    logging.basicConfig()
+    logging.getLogger().setLevel(logging.DEBUG)
+
+    load_app()

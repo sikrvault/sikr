@@ -10,42 +10,49 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-# I don't like this, it's agains the PEP, but let's deal with it for now
+# I don't like this, it's against the PEP, but let's deal with it for now
 from peewee import *
 
 import settings
 
 # Get the database or create it
-db = SqliteDatabase(settings.DB_FILE)
+db = SqliteDatabase(settings.DB_FILE, threadlocals=True)
 
 
-class User(Model):
-    #username
-    #token
-    #email
-    #password
-    pass
+class ConnectionModel(Model):
 
-
-class Group(Model):
-    pk = PrimaryKeyField(primary_key=True)
-    name = CharField(max_length=255, unique=True)
-
+    """
+    This model acts as an abstract model that will create the database
+    connection, which is necessary for all the models.
+    """
     class Meta:
         database = db
 
 
-class Item(Model):
+class User(ConnectionModel):
+    pk = PrimaryKeyField(primary_key=True)
+    username = CharField(unique=True)
+    name = CharField()
+    token = CharField(unique=True)
+    email = CharField(unique=True)
+    password = CharField()
+
+
+class Group(ConnectionModel):
+    pk = PrimaryKeyField(primary_key=True)
+    name = CharField(max_length=255, unique=True)
+
+
+class Item(ConnectionModel):
     pk = PrimaryKeyField(primary_key=True)
     name = CharField()
     description = TextField()
     group = ForeignKeyField(Group, related_name='group', null=True)
+    author = ForeignKeyField(User, related_name='author')
+    allowed_users = ForeignKeyField
 
-    class Meta:
-        database = db
 
-
-class Service(Model):
+class Service(ConnectionModel):
     pk = PrimaryKeyField(primary_key=True)
     name = CharField(max_length=255)
     username = CharField(max_length=255)
@@ -54,5 +61,12 @@ class Service(Model):
     tags = CharField()
     item = ForeignKeyField(Item, related_name='item')
 
-    class Meta:
-        database = db
+
+# Try to create the database tables, don't do anything if they fail
+try:
+    User.create_table()
+    Group.create_table()
+    Item.create_table()
+    Service.create_table()
+except:
+    pass

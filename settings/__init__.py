@@ -2,12 +2,8 @@ DEBUG = True
 STAGING = False
 
 if DEBUG and not STAGING:
-    from . import development
+    from .development import *
 elif STAGING:
-    from . import staging
+    from .staging import *
 elif not DEBUG and not STAGING:
-    from . import production
-
-if DEBUG:
-    import sys
-    print(sys.path)
+    from .production import *

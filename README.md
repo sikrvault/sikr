@@ -8,7 +8,7 @@ anything about the data you uploaded, it's going to get encrypted so there is
 no way for the person managing the instance or the server itself to decrypt or
 read your information.
 
-This is just the backend part, so unless you are <insert genius name here> you
+This is just the backend part, so unless you are \<insert genius name here\> you
 will probably need a frontend to work with. You can use the default
 sikre-frontend project.
 

@@ -10,11 +10,3 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import falcon
-
-# Create the API instance, referenced internally as api and externally as
-# wsgi_app
-wsgi_app = api = falcon.API()
-
-items = Item()
-api.add_route('/items', items)

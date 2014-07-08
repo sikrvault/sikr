@@ -21,9 +21,9 @@ def load_app():
     Load all the components for the application
     """
     import app.models
-    import app.app
-    import app.urls
+    #import app.app
     import app.views
+    import app.urls
 
 
 if __name__ == '__main__':

@@ -10,25 +10,25 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import falcon
-import json
+import sys
+
+from sikre.settings import DATABASE
+
+from pymongo import MongoClient
 
 
-class Item(object):
+def connect_to_database():
 
-    def on_get(self, request, response):
-        """
-        Handle the GET request, returning a list of the items that the user
-        has access to.
-        """
-        response.status = falcon.HTTP_200
-        response.body = "Hello data!"
+    """
+    Try to connect to the database and the collection, if something happens
+    we break the application, since it cannot run without a database.
+    """
+    try:
+        connection = MongoClient(DATABASE['HOST'], DATABASE['PORT'])
+        db = connection[DATABASE['NAME']]
+    except Exception as e:
+        print("ERROR: Something went wrong while connecting to the database.")
+        sys.exit(e)
 
 
-class Service(object):
-
-    def on_get(self, request, response):
-        pass
-
-    def on_post(self, request, response):
-        pass
+def read_from_collection()

@@ -13,7 +13,7 @@
 # I don't like this, it's against the PEP, but let's deal with it for now
 from peewee import *
 
-import settings
+from sikre import settings
 
 # Get the database or create it
 db = SqliteDatabase(settings.DB_FILE, threadlocals=True)
@@ -25,7 +25,22 @@ class ConnectionModel(Model):
     This model acts as an abstract model that will create the database
     connection, which is necessary for all the models.
     """
+    def __str__(self):
+        """
+        Return JSON ready data if any model is accesed through the str method
+        """
+        r = {}
+        for k in self._data.keys():
+            try:
+                r[k] = str(getattr(self, k))
+            except:
+                r[k] = json.dumps(getattr(self, k))
+        return str(r)
+
     class Meta:
+        """
+        Connect all the models to the same database.
+        """
         database = db
 
 
@@ -49,7 +64,7 @@ class Item(ConnectionModel):
     description = TextField()
     group = ForeignKeyField(Group, related_name='group', null=True)
     author = ForeignKeyField(User, related_name='author')
-    allowed_users = ForeignKeyField
+    #allowed_users = ForeignKeyField
 
 
 class Service(ConnectionModel):

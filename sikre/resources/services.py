@@ -10,3 +10,10 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+class ServicesResource(object):
+
+    def on_get(self, request, response):
+        pass
+
+    def on_post(self, request, response):
+        pass

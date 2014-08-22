@@ -12,23 +12,33 @@
 
 import os
 
+import falcon
+
+from sikre.resources.items import ItemsResource
+from sikre.resources.services import ServicesResource
+from sikre import settings
+
 # Add the current directory to the python path
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-def load_app():
+# Fire the models module, that will create the models if they don't exist
+import sikre.models.models
 
-    """
-    Load all the components for the application
-    """
-    import app.models
-    #import app.app
-    import app.views
-    import app.urls
+# Create the API instance, referenced internally as api and externally as
+# wsgi_app
+api = falcon.API()
 
+items = ItemsResource()
+# groups = Group()
+# users = User()
+services = ServicesResource()
+
+api.add_route('/{}/items'.format(settings.DEFAULT_API), items)
+# api.add_route('/{}/users'.format(settings.DEFAULT_API), users)
+# api.add_route('/{}/groups'.format(settings.DEFAULT_API), groups)
+api.add_route('/{}/services'.format(settings.DEFAULT_API), services)
 
 if __name__ == '__main__':
     import logging
     logging.basicConfig()
     logging.getLogger().setLevel(logging.DEBUG)
-
-    load_app()

@@ -12,6 +12,10 @@ This is just the backend part, so unless you are \<insert genius name here\> you
 will probably need a frontend to work with. You can use the default
 sikre-frontend project.
 
+## What does it use?
+
+Sikre is built in top of Falcon (micro)framework and Angular JS.
+
 ## Requirements
 
 * A GNU/Linux server
@@ -45,7 +49,7 @@ As a included dependency, and for the sake of separating components as most
 as we are able, we included *uwsgi* in the dependencies, so you can test run
 your project with the following command (inside the virtual environment):
 
-    `$ uwsgi --http :8080 --wsgi-file main.py --callable wsgi_app`
+    `$ uwsgi --http :8080 --wsgi-file app.py --callable api`
 
 Now you can visit your application going to `localhost:8080` in your browser.
 Please remember that this is the backend, so it will only reply to the API

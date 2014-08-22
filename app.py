@@ -16,6 +16,7 @@ import falcon
 
 from sikre.resources.items import ItemsResource
 from sikre.resources.services import ServicesResource
+from sikre.resources.tests import TestResource
 from sikre import settings
 
 # Add the current directory to the python path
@@ -28,15 +29,11 @@ import sikre.models.models
 # wsgi_app
 api = falcon.API()
 
-items = ItemsResource()
-# groups = Group()
-# users = User()
-services = ServicesResource()
-
-api.add_route('/{}/items'.format(settings.DEFAULT_API), items)
+api.add_route('/{}/items'.format(settings.DEFAULT_API), ItemsResource())
 # api.add_route('/{}/users'.format(settings.DEFAULT_API), users)
 # api.add_route('/{}/groups'.format(settings.DEFAULT_API), groups)
-api.add_route('/{}/services'.format(settings.DEFAULT_API), services)
+api.add_route('/{}/services'.format(settings.DEFAULT_API), ServicesResource())
+api.add_route('/test_api', TestResource())
 
 if __name__ == '__main__':
     import logging

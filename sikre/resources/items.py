@@ -33,13 +33,21 @@ class ItemsResource(object):
         try:
             result = {}
             items_q = Item.select()
+            services_q = Service.select()
+
+            # Get all the services and organize them
+            services = {}
+            for i in services_q:
+                services["name"] = i.name
+            # Get all the items and put them into the list
             for i in items_q:
                 result["name"] = i.name
+                result["description"] = i.description
+                result["services"] = [services]
             response.status = falcon.HTTP_200
             response.body = json.dumps({"items":[result]})
         except Exception as e:
             print(e)
-            print(e.message)
             raise falcon.HTTPError(falcon.HTTP_500,
                                    "Server error",
                                    "Either there are no items or something went terribly wrong.")

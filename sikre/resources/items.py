@@ -31,21 +31,26 @@ class ItemsResource(object):
         """
         # Get the data
         try:
-            result = {}
-            items_q = Item.select()
+            result = []
+            services = []
+            items_q = Item.select(User.username == request.user.username)
             services_q = Service.select()
 
-            # Get all the services and organize them
-            services = {}
             for i in services_q:
-                services["name"] = i.name
+                services_dict = {}
+                services_dict["name"] = i.name
+                services.append(services_dict)
+
             # Get all the items and put them into the list
             for i in items_q:
-                result["name"] = i.name
-                result["description"] = i.description
-                result["services"] = [services]
+                item_dict = {}
+                item_dict["name"] = i.name
+                item_dict["description"] = i.description
+                item_dict["services"] = services
+                result.append(item_dict)
+
             response.status = falcon.HTTP_200
-            response.body = json.dumps({"items":[result]})
+            response.body = json.dumps({"items":result})
         except Exception as e:
             print(e)
             raise falcon.HTTPError(falcon.HTTP_500,

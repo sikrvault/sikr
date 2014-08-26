@@ -10,6 +10,12 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import falcon
+import json
+
+from sikre.models.models import User, Group, Item, Service
+
+
 class ServicesResource(object):
 
     def on_get(self, request, response):
@@ -20,25 +26,28 @@ class ServicesResource(object):
         First we create an empty dictionary and query the database to get
         all the item objects. After that, we iterate over the objects to
         populate the dictionary. In the end we return a 200 code to the browser
-        and return the results dictionary wrapped in a list like the REsT
+        and return the results dictionary wrapped in a list like the ReST
         standard says.
         """
         # Get the data
         try:
-            result = {}
+            result = []
             services_q = Service.select()
 
             # Get all the services and organize them
-            services = {}
             for i in services_q:
-                services["name"] = i.name
+                services_dict = {}
+                services_dict["url"] = i.url
+                services_dict["username"] = i.username
+                services_dict["password"] = i.password
+                result.append(services_dict)
             # Get all the items and put them into the list
-            for i in items_q:
-                result["name"] = i.name
-                result["description"] = i.description
-                result["services"] = [services]
+            # for i in items_q:
+            #     result["name"] = i.name
+            #     result["description"] = i.description
+            #     result["services"] = [services]
             response.status = falcon.HTTP_200
-            response.body = json.dumps({"items":[result]})
+            response.body = json.dumps({"services":result})
         except Exception as e:
             print(e)
             raise falcon.HTTPError(falcon.HTTP_500,

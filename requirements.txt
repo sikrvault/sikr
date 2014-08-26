@@ -1,10 +1,12 @@
 # Basic stuff
 cython
 
+# Test server
+uwsgi
+
+# ORMs
+peewee
+
 # Falcon and its plugins
 falcon
 talons
-
-# ORMs
-#sqlalchemy
-peewee

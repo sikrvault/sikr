@@ -33,7 +33,7 @@ class ItemsResource(object):
         try:
             result = []
             services = []
-            items_q = Item.select(User.username == request.user.username)
+            items_q = Item.select()
             services_q = Service.select()
 
             for i in services_q:

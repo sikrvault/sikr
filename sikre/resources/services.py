@@ -18,7 +18,7 @@ from sikre.models.models import User, Group, Item, Service
 
 class ServicesResource(object):
 
-    def on_get(self, request, response):
+    def on_get(self, request, response, pk):
         """
         Handle the GET request, returning a list of the items that the user
         has access to.
@@ -32,20 +32,15 @@ class ServicesResource(object):
         # Get the data
         try:
             result = []
-            services_q = Service.select()
+            service = Service.get(pk=pk)
 
             # Get all the services and organize them
-            for i in services_q:
-                services_dict = {}
-                services_dict["url"] = i.url
-                services_dict["username"] = i.username
-                services_dict["password"] = i.password
-                result.append(services_dict)
-            # Get all the items and put them into the list
-            # for i in items_q:
-            #     result["name"] = i.name
-            #     result["description"] = i.description
-            #     result["services"] = [services]
+            services_dict = {}
+            services_dict["url"] = service.url
+            services_dict["username"] = service.username
+            services_dict["password"] = service.password
+            result.append(services_dict)
+
             response.status = falcon.HTTP_200
             response.body = json.dumps({"services":result})
         except Exception as e:

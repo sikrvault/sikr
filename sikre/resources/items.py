@@ -38,6 +38,7 @@ class ItemsResource(object):
 
             for i in services_q:
                 services_dict = {}
+                services_dict["id"] = i.pk
                 services_dict["name"] = i.name
                 services.append(services_dict)
 

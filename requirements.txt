@@ -10,3 +10,6 @@ peewee
 # Falcon and its plugins
 falcon
 talons
+
+# IPython, which is better for debugging
+ipython

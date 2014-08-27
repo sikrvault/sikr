@@ -36,12 +36,12 @@ def headers_for_all(req, resp, params):
 # Create the API instance, referenced internally as api and externally as
 # wsgi_app
 api = falcon.API(before=[headers_for_all])
-
-api.add_route('/{}/items'.format(settings.DEFAULT_API), ItemsResource())
+api_version = '/' + settings.DEFAULT_API
+api.add_route(api_version + '/items', ItemsResource())
 # api.add_route('/{}/users'.format(settings.DEFAULT_API), users)
 # api.add_route('/{}/groups'.format(settings.DEFAULT_API), groups)
-api.add_route('/{}/services'.format(settings.DEFAULT_API), ServicesResource())
-api.add_route('/{}/add'.format(settings.DEFAULT_API), ServicesResource())
+api.add_route(api_version + '/services/{pk}', ServicesResource())
+api.add_route(api_version + '/add', ServicesResource())
 api.add_route('/test_api', TestResource())
 
 if __name__ == '__main__':

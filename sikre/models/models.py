@@ -10,6 +10,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import datetime
 # I don't like this, it's against the PEP, but let's deal with it for now
 from peewee import *
 
@@ -51,6 +52,9 @@ class User(ConnectionModel):
     token = CharField(unique=True)
     email = CharField(unique=True)
     password = CharField()
+    date_joined = DateTimeField(default=datetime.datetime.now)
+    is_active = BooleanField(default=True)
+    is_superuser = BooleanField(default=False)
 
 
 class Group(ConnectionModel):
@@ -64,7 +68,9 @@ class Item(ConnectionModel):
     description = TextField()
     group = ForeignKeyField(Group, related_name='group', null=True)
     author = ForeignKeyField(User, related_name='author')
-    #allowed_users = ForeignKeyField
+    pub_date = DateTimeField(default=datetime.datetime.now)
+    allowed_users = ForeignKeyField(User, related_name='allowed_users')
+    tags = CharField(null=True)
 
 
 class Service(ConnectionModel):
@@ -73,8 +79,9 @@ class Service(ConnectionModel):
     username = CharField(max_length=255)
     password = CharField(max_length=255)
     url = CharField(max_length=255)
-    tags = CharField()
+    #file =
     item = ForeignKeyField(Item, related_name='item')
+    pub_date = DateTimeField(default=datetime.datetime.now)
 
 
 # Try to create the database tables, don't do anything if they fail

@@ -13,7 +13,32 @@
 import falcon
 import json
 
-from sikre.models.models import User, Group, Item, Service
+from sikre.models.models import User, ItemGroup, Item, Service
+
+
+class AddServicesResource(object):
+
+    """
+    This resource handles the /services/ url.
+    """
+    def on_get(self, request, response):
+        raise falcon.HTTPError(falcon.HTTP_405, "Client error",
+                               "The GET method is not allowed in this endpoint.")
+
+    def on_post(self, request, response):
+        pass
+
+    def on_put(self, request, response):
+        raise falcon.HTTPError(falcon.HTTP_405, "Client error",
+                               "The PUT method is not allowed in this endpoint.")
+
+    def on_update(self, request, response):
+        raise falcon.HTTPError(falcon.HTTP_405, "Client error",
+                               "The UPDATE method is not allowed in this endpoint.")
+
+    def on_delete(self, request, response):
+        raise falcon.HTTPError(falcon.HTTP_405, "Client error",
+                               "The DELETE method is not allowed in this endpoint.")
 
 
 class ServicesResource(object):
@@ -50,4 +75,14 @@ class ServicesResource(object):
                                    "Either there are no items or something went terribly wrong.")
 
     def on_post(self, request, response):
+        raise falcon.HTTPError(falcon.HTTP_405, "Client error",
+                               "The POST method is not allowed in this endpoint.")
+
+    def on_put(self, request, response):
+        pass
+
+    def on_update(self, request, response):
+        pass
+
+    def on_delete(self, request, response):
         pass

@@ -15,7 +15,7 @@ import os
 import falcon
 
 from sikre.resources.items import ItemsResource
-from sikre.resources.services import ServicesResource
+from sikre.resources.services import ServicesResource, AddServicesResource
 from sikre.resources.tests import TestResource
 from sikre import settings
 
@@ -36,12 +36,18 @@ def headers_for_all(req, resp, params):
 # Create the API instance, referenced internally as api and externally as
 # wsgi_app
 api = falcon.API(before=[headers_for_all])
+
+# URLs
 api_version = '/' + settings.DEFAULT_API
+#api.add_route(api_version + '/auth/{provider}/login', AuthResource())
+#api.add_route(api_version + '/auth/{provider}/logout', AuthResource())
+
 api.add_route(api_version + '/items', ItemsResource())
-# api.add_route('/{}/users'.format(settings.DEFAULT_API), users)
-# api.add_route('/{}/groups'.format(settings.DEFAULT_API), groups)
+#api.add_route(api_version + '/items/{pk}', ItemsResource())
+
+api.add_route(api_version + '/services', AddServicesResource())
 api.add_route(api_version + '/services/{pk}', ServicesResource())
-api.add_route(api_version + '/add', ServicesResource())
+
 api.add_route('/test_api', TestResource())
 
 if __name__ == '__main__':

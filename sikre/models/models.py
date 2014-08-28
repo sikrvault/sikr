@@ -45,19 +45,53 @@ class ConnectionModel(Model):
         database = db
 
 
+######################
+# User block
+######################
+
 class User(ConnectionModel):
+
+    """
+    Standard user model. Stores minimal data about the user to handle the
+    authentication, like email, username, and auth token, apart from some
+    extra parameters for administration.
+    """
     pk = PrimaryKeyField(primary_key=True)
     username = CharField(unique=True)
-    name = CharField()
     token = CharField(unique=True)
     email = CharField(unique=True)
-    password = CharField()
-    date_joined = DateTimeField(default=datetime.datetime.now)
+    join_date = DateTimeField(default=datetime.datetime.now)
     is_active = BooleanField(default=True)
     is_superuser = BooleanField(default=False)
 
 
-class Group(ConnectionModel):
+class UserGroup(ConnectionModel):
+
+    """
+    Basic model to group users.
+    """
+    pk = PrimaryKeyField(primary_key=True)
+    name = CharField(max_length=255, unique=True)
+    pub_date = DateTimeField(default=datetime.datetime.now)
+
+
+class GroupToUser(ConnectionModel):
+
+    """
+    Trough table for the many to many between group and user.
+    """
+    user = ForeignKeyField(User)
+    group = ForeignKeyField(UserGroup)
+
+    class Meta:
+        primary_key = CompositeKey('group', 'user')
+
+
+######################
+# Item block
+######################
+
+class ItemGroup(ConnectionModel):
     pk = PrimaryKeyField(primary_key=True)
     name = CharField(max_length=255, unique=True)
 
@@ -66,11 +100,34 @@ class Item(ConnectionModel):
     pk = PrimaryKeyField(primary_key=True)
     name = CharField()
     description = TextField()
-    group = ForeignKeyField(Group, related_name='group', null=True)
     author = ForeignKeyField(User, related_name='author')
     pub_date = DateTimeField(default=datetime.datetime.now)
-    allowed_users = ForeignKeyField(User, related_name='allowed_users')
     tags = CharField(null=True)
+
+
+class ItemGroupToItem(ConnectionModel):
+
+    """
+    Trough table for the many to many between item groups and items.
+    """
+    item = ForeignKeyField(Item)
+    itemgroup = ForeignKeyField(ItemGroup)
+
+    class Meta:
+        primary_key = CompositeKey('itemgroup', 'item')
+
+
+class UserToItem(ConnectionModel):
+
+    """
+    Trough table for the many to many between users and items, this table
+    determines which user can access what item.
+    """
+    item = ForeignKeyField(Item)
+    user = ForeignKeyField(User)
+
+    class Meta:
+        primary_key = CompositeKey('user', 'item')
 
 
 class Service(ConnectionModel):
@@ -87,8 +144,13 @@ class Service(ConnectionModel):
 # Try to create the database tables, don't do anything if they fail
 try:
     User.create_table()
-    Group.create_table()
+    UserGroup.create_table()
+    GroupToUser.create_table()
+
+    ItemGroup.create_table()
     Item.create_table()
+    ItemGroupToItem.create_table()
+    UserToItem.create_table()
     Service.create_table()
 except:
     pass

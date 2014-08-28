@@ -29,7 +29,7 @@ import string
 from peewee import *
 
 
-from sikre.models.models import User, Item, Service, Group
+from sikre.models.models import User, Item, Service, ItemGroup
 
 
 ############################
@@ -70,7 +70,7 @@ groups = 2
 
 while groups > 0:
     chars = "".join([random.choice(string.ascii_letters) for i in range(10)])
-    new_group = Group.create(name=chars,)
+    new_group = ItemGroup.create(name=chars,)
     group = new_group.save()
     groups -= 1
 

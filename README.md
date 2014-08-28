@@ -12,11 +12,13 @@ read your information.
 
 This is just the backend part, so unless you are \<insert genius name here\> you
 will probably need a frontend to work with. You can use the default
-sikre-frontend project.
+[sikre-frontend](https://github.com/clione/sikre-frontend) project.
 
 ## What does it use?
 
-Sikre is built in top of Falcon (micro)framework.
+* [Falcon microframework](http://falconframework.org/)
+* [Talons (Falcon auth)](https://pypi.python.org/pypi/talons/0.1)
+* [Peewee ORM](http://peewee.readthedocs.org/en/latest/)
 
 ## Requirements
 

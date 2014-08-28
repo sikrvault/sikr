@@ -61,3 +61,11 @@ endpoints, you will not be able to see anything else.
 
 There is a test endpoint while in debug mode which you can visit in:
 `localhost:8080/test_api`
+
+## License and copyright
+
+This project is licensed under the Apache 2.0 license. Copyright belongs to Clione Software and Havas Worldwide London
+
+## Authors
+
+* Oscar Carballal Prego

@@ -17,6 +17,7 @@ import falcon
 from sikre.resources.items import ItemsResource
 from sikre.resources.services import ServicesResource, AddServicesResource
 from sikre.resources.tests import TestResource
+from sikre.resources.login import AuthResource
 from sikre import settings
 
 # Add the current directory to the python path
@@ -39,8 +40,9 @@ api = falcon.API(before=[headers_for_all])
 
 # URLs
 api_version = '/' + settings.DEFAULT_API
-#api.add_route(api_version + '/auth/{provider}/login', AuthResource())
-#api.add_route(api_version + '/auth/{provider}/logout', AuthResource())
+api.add_route(api_version + '/auth/{provider}/login', LoginResource())
+api.add_route(api_version + '/auth/{provider}/logout', LogoutResource())
+api.add_route(api_version + '/auth/forgotpassword', ForgotPasswordResource())
 
 api.add_route(api_version + '/items', ItemsResource())
 #api.add_route(api_version + '/items/{pk}', ItemsResource())
@@ -48,7 +50,8 @@ api.add_route(api_version + '/items', ItemsResource())
 api.add_route(api_version + '/services', AddServicesResource())
 api.add_route(api_version + '/services/{pk}', ServicesResource())
 
-api.add_route('/test_api', TestResource())
+if settings.DEBUG:
+    api.add_route('/test_api', TestResource())
 
 if __name__ == '__main__':
     import logging

@@ -59,6 +59,7 @@ class User(ConnectionModel):
     pk = PrimaryKeyField(primary_key=True)
     username = CharField(unique=True)
     token = CharField(unique=True)
+    password = CharField(unique=True)
     email = CharField(unique=True)
     join_date = DateTimeField(default=datetime.datetime.now)
     is_active = BooleanField(default=True)
@@ -136,6 +137,7 @@ class Service(ConnectionModel):
     username = CharField(max_length=255)
     password = CharField(max_length=255)
     url = CharField(max_length=255)
+
     #file =
     item = ForeignKeyField(Item, related_name='item')
     pub_date = DateTimeField(default=datetime.datetime.now)

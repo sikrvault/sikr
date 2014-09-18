@@ -20,3 +20,6 @@ DEFAULT_API = 'v1'
 # Main server token, this is used as the second cycle cryptography. Make it
 # unique and keep it away from strangers!
 SECRET = '-&3whmt0f&h#zvyc@yk4bs3g6biu9l&a%0l=5u*q2+rz(sypdk'
+
+SITE_TITLE = 'Havas Worldwide London'
+LOGO_IMAGE = '/static/images/havaslogo.jpg'

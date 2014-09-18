@@ -74,11 +74,11 @@ class ServicesResource(object):
                                    "Server error",
                                    "Either there are no items or something went terribly wrong.")
 
-    def on_post(self, request, response):
+    def on_post(self, request, response, pk):
         raise falcon.HTTPError(falcon.HTTP_405, "Client error",
                                "The POST method is not allowed in this endpoint.")
 
-    def on_put(self, request, response):
+    def on_put(self, request, response, pk):
         pass
 
     def on_update(self, request, response):

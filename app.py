@@ -17,7 +17,7 @@ import falcon
 from sikre.resources.items import ItemsResource
 from sikre.resources.services import ServicesResource, AddServicesResource
 from sikre.resources.tests import TestResource
-from sikre.resources.login import AuthResource
+from sikre.resources.login import LoginResource, LogoutResource, ForgotPasswordResource
 from sikre import settings
 
 # Add the current directory to the python path

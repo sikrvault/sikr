@@ -11,6 +11,9 @@
 # under the License.
 
 import datetime
+import crypt
+import hmac
+
 # I don't like this, it's against the PEP, but let's deal with it for now
 from peewee import *
 
@@ -61,9 +64,37 @@ class User(ConnectionModel):
     token = CharField(unique=True)
     password = CharField(unique=True)
     email = CharField(unique=True)
+
+    # Social JWT storage
+    facebook = CharField(unique=True)
+    google = CharField(unique=True)
+    github = CharField(unique=True)
+    linkedin = CharField(unique=True)
+    twitter = CharField(unique=True)
+
+    # Data
     join_date = DateTimeField(default=datetime.datetime.now)
     is_active = BooleanField(default=True)
     is_superuser = BooleanField(default=False)
+
+    def set_password(self, password):
+        """
+        Method to set the password of the user. If the user registers through
+        social networks, this method will be called to create a scrambled
+        password.
+        """
+        hashed_password = crypt.crypt(password)
+        self.password = hashed_password
+
+    def check_password(self, password):
+        """
+        Method to check that the sent password matches the password in
+        """
+        check = hmac.compare_digest(crypt.crypt(password, self.password), self.password)
+        if not check:
+           raise ValueError("hashed version doesn't validate against original")
+        else:
+            return True
 
 
 class UserGroup(ConnectionModel):

@@ -17,7 +17,10 @@ import falcon
 from sikre.resources.items import ItemsResource
 from sikre.resources.services import ServicesResource, AddServicesResource
 from sikre.resources.tests import TestResource
-from sikre.resources.login import LoginResource, LogoutResource, ForgotPasswordResource
+from sikre.resources.auth.login import LoginResource, LogoutResource, ForgotPasswordResource
+# from sikre.resources.auth.google import GoogleAuth
+# from sikre.resources.auth.facebook import FacebookAuth
+
 from sikre import settings
 
 # Add the current directory to the python path
@@ -40,9 +43,14 @@ api = falcon.API(before=[headers_for_all])
 
 # URLs
 api_version = '/' + settings.DEFAULT_API
-api.add_route(api_version + '/auth/{provider}/login', LoginResource())
-api.add_route(api_version + '/auth/{provider}/logout', LogoutResource())
-api.add_route(api_version + '/auth/forgotpassword', ForgotPasswordResource())
+api.add_route(api_version + '/auth/login', LoginResource())
+api.add_route(api_version + '/auth/logout', LogoutResource())
+# api.add_route(api_version + '/auth/forgotpassword', ForgotPasswordResource())
+# api.add_route(api_version + '/auth/facebook', FacebookAuth())
+# api.add_route(api_version + '/auth/google', GoogleAuth())
+# api.add_route(api_version + '/auth/twitter', Twitter())
+# api.add_route(api_version + '/auth/github', GithubAuth())
+# api.add_route(api_version + '/auth/linkedin', LinkedinAuth())
 
 api.add_route(api_version + '/items', ItemsResource())
 #api.add_route(api_version + '/items/{pk}', ItemsResource())

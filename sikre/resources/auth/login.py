@@ -12,6 +12,24 @@
 
 import falcon
 
+from sikre.models.models import User
+
+
+def create_jwt_token(user):
+    payload = {
+        'iss': 'localhost',
+        'sub': user.id,
+        'iat': datetime.now(),
+        'exp': datetime.now() + timedelta(days=14)
+    }
+    token = jwt.encode(payload, app.config['TOKEN_SECRET'])
+    return token.decode('unicode_escape')
+
+
+def parse_token(req):
+    token = req.headers.get('Authorization').split()[1]
+    return jwt.decode(token, app.config['TOKEN_SECRET'])
+
 
 class LoginResource(object):
 
@@ -22,15 +40,24 @@ class LoginResource(object):
         raise falcon.HTTPError(falcon.HTTP_405, "Client error",
                                "The GET method is not allowed in this endpoint.")
 
-    def on_post(self, request, response, provider):
+    def on_post(self, request, response):
 
         """
         This method will check that the email and the token match, then logs
         in the user.
         """
+        print("WHATEVER: " + request)
+        try:
+            user = User.get(username=request.body['username'])
+            valid = user.check_password(request.body['password'])
+            print("WHATEVER: " + request)
+            if valid:
+                pass
+            response.statuc = falcon.HTTP_200
+            response.body = 'Logged in'
+        except:
+            raise falcon.HTTPError(falcon.HTTP_500)
 
-        response.statuc = falcon.HTTP_200
-        response.body = 'whatever, man'
 
     def on_put(self, request, response, provider):
         raise falcon.HTTPError(falcon.HTTP_405, "Client error",

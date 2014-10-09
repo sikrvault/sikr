@@ -45,6 +45,7 @@ api = falcon.API(before=[headers_for_all])
 api_version = '/' + settings.DEFAULT_API
 api.add_route(api_version + '/auth/login', LoginResource())
 api.add_route(api_version + '/auth/logout', LogoutResource())
+
 # api.add_route(api_version + '/auth/forgotpassword', ForgotPasswordResource())
 # api.add_route(api_version + '/auth/facebook', FacebookAuth())
 # api.add_route(api_version + '/auth/google', GoogleAuth())

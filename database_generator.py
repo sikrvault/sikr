@@ -14,13 +14,10 @@
 
 import sys
 import os
-
-
-path = os.path.dirname(os.path.realpath(__file__)).strip('/utils')
-sys.path.append(path)
-print(sys.path)
-
-
+import getpass
+# path = os.path.dirname(os.path.realpath(__file__)).strip('/utils')
+# sys.path.append(path)
+# print(sys.path)
 import hashlib
 import uuid
 import random
@@ -37,11 +34,11 @@ from sikre.models.models import User, Item, Service, ItemGroup
 ############################
 
 create_admin = input("Do you want to create an admin user? (Y/n) ")
-if create_admin == 'y' or create_admin == 'Y':
+if create_admin in ['y', 'Y', 'yes', 'YES', None]:
     name = input("Full name: ")
     email = input("E-Mail address: ")
     username = input("Username (no spaces): ")
-    password = input("Password (we won't ask twice): ")
+    password = getpass.getpass("Password (we don't ask twice!): ")
 
     # Process the password for storage
     salt = uuid.uuid4().hex.encode('utf-8')

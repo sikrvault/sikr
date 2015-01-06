@@ -66,11 +66,11 @@ class User(ConnectionModel):
     email = CharField(unique=True)
 
     # Social JWT storage
-    facebook = CharField(unique=True)
-    google = CharField(unique=True)
-    github = CharField(unique=True)
-    linkedin = CharField(unique=True)
-    twitter = CharField(unique=True)
+    facebook = CharField(unique=True, null=True)
+    google = CharField(unique=True, null=True)
+    github = CharField(unique=True, null=True)
+    linkedin = CharField(unique=True, null=True)
+    twitter = CharField(unique=True, null=True)
 
     # Data
     join_date = DateTimeField(default=datetime.datetime.now)

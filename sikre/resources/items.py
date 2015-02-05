@@ -51,7 +51,7 @@ class ItemsResource(object):
                 result.append(item_dict)
 
             response.status = falcon.HTTP_200
-            response.body = json.dumps({"items":result})
+            response.body = json.dumps([{"items":result}])
         except Exception as e:
             print(e)
             raise falcon.HTTPError(falcon.HTTP_500,

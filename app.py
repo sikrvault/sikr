@@ -41,7 +41,11 @@ if sys.version_info <= (3, 0):
 
 # Create the API instance, referenced internally as api and externally as
 # wsgi_app
-api = falcon.API(middleware=[RequireJSON(), BaseHeaders(), WrongURL()])
+api = falcon.API(middleware=[
+    RequireJSON(),
+    BaseHeaders(),
+    WrongURL()]
+)
 
 # URLs
 api_version = '/' + settings.DEFAULT_API

@@ -19,6 +19,14 @@ from sikre import settings
 
 class VersionResource(object):
 
+    """Returns the API version details
+
+    Args:
+        object
+    Returns:
+        JSON data
+    """
+
     def on_get(self, request, response):
 
         """Return the version of the API"""

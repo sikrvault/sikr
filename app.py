@@ -14,6 +14,8 @@ import os
 
 import falcon
 
+from sikre.hooks import headers, wrongurls
+from sikre.resources.main import VersionResource
 from sikre.resources.items import ItemsResource
 from sikre.resources.services import ServicesResource, AddServicesResource
 from sikre.resources.tests import TestResource
@@ -29,20 +31,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Fire the models module, that will create the models if they don't exist
 import sikre.models.models
 
-# Set the headers for all requests... I don't know if this should go here...
-def headers_for_all(req, resp, params):
-    resp.set_headers({
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
-        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE'
-    })
 
 # Create the API instance, referenced internally as api and externally as
 # wsgi_app
-api = falcon.API(before=[headers_for_all])
+api = falcon.API(before=[headers.headers_for_all],
+                 after=[wrongurls.wrong_endpoint])
 
 # URLs
 api_version = '/' + settings.DEFAULT_API
+api.add_route(api_version, VersionResource())
 api.add_route(api_version + '/auth/login', LoginResource())
 api.add_route(api_version + '/auth/logout', LogoutResource())
 

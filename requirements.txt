@@ -1,14 +1,11 @@
 # Basic stuff
 cython
 
-# Test server
-uwsgi
-
 # ORMs
 peewee
 
 # Falcon and its plugins
-falcon
+falcon=>0.2.0b2
 talons
 
 # IPython, which is better for debugging

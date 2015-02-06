@@ -11,6 +11,7 @@
 # under the License.
 
 import os
+import sys
 
 import falcon
 
@@ -33,6 +34,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Fire the models module, that will create the models if they don't exist
 import sikre.models.models
 
+# Check if we are running on python 3
+if sys.version_info <= (3, 0):
+    sys.stdout.write("Sorry, requires Python 3.3.x or better, not Python 2.x\n")
+    sys.exit(1)
 
 # Create the API instance, referenced internally as api and externally as
 # wsgi_app

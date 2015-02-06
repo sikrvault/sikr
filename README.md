@@ -49,9 +49,8 @@ project.
 
 ## How to run
 
-As a included dependency, and for the sake of separating components as most
-as we are able, we included *uwsgi* in the dependencies, so you can test run
-your project with the following command (inside the virtual environment):
+To run it for testing you can use gunicorn or uwsgi or any other wsgi
+interface. To run it with uwsgi for example:
 
 `$ uwsgi --http :8080 --wsgi-file app.py --callable api`
 

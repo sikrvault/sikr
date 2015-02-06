@@ -14,7 +14,9 @@ import os
 
 import falcon
 
-from sikre.hooks import headers, wrongurls
+from sikre.middleware.handle_404 import WrongURL
+from sikre.middleware.headers import BaseHeaders
+from sikre.middleware.json import RequireJSON
 from sikre.resources.main import VersionResource
 from sikre.resources.items import ItemsResource
 from sikre.resources.services import ServicesResource, AddServicesResource
@@ -34,8 +36,7 @@ import sikre.models.models
 
 # Create the API instance, referenced internally as api and externally as
 # wsgi_app
-api = falcon.API(before=[headers.headers_for_all],
-                 after=[wrongurls.wrong_endpoint])
+api = falcon.API(middleware=[RequireJSON(), BaseHeaders(), WrongURL()])
 
 # URLs
 api_version = '/' + settings.DEFAULT_API
@@ -51,7 +52,7 @@ api.add_route(api_version + '/auth/logout', LogoutResource())
 # api.add_route(api_version + '/auth/linkedin', LinkedinAuth())
 
 api.add_route(api_version + '/items', ItemsResource())
-#api.add_route(api_version + '/items/{pk}', ItemsResource())
+# api.add_route(api_version + '/items/{pk}', ItemsResource())
 
 api.add_route(api_version + '/services', AddServicesResource())
 api.add_route(api_version + '/services/{pk}', ServicesResource())

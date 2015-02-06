@@ -10,17 +10,21 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import json
-
 import falcon
 
+from sikre import settings
 
-def wrong_endpoint(req, resp, params):
 
-    """Capture all the 404s on the API and send a response
-    """
-    if resp.status == '404':
-        resp.status = falcon.HTTP_200
-        resp.body = json.dumps([{"message": "This endpoint doesn't exist",
-                                 "code": 404,
-                                 "documentation": "http://docs.sikr.io"}])
+class RequireJSON(object):
+
+    def process_request(self, req, resp):
+        if not req.client_accepts_json:
+            raise falcon.HTTPNotAcceptable(
+                'This API only supports responses encoded as JSON.',
+                href=settings.__docs__)
+
+        if req.method in ('POST', 'PUT'):
+            if 'application/json' not in req.content_type:
+                raise falcon.HTTPUnsupportedMediaType(
+                    'This API only supports requests encoded as JSON.',
+                    href=settings.__docs__)

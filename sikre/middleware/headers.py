@@ -11,12 +11,16 @@
 # under the License.
 
 
-def headers_for_all(req, resp, params):
+class BaseHeaders(object):
+    def process_request(self, req, resp):
 
-    """Set common headers for all the requests
-    """
-    resp.set_headers({
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
-        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE'
-    })
+        """Force some required headers inside every request and response
+
+        We intercept all the requests and responses and add some required
+        headers for the API interaction.
+        """
+        resp.set_headers({
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
+            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE'
+        })

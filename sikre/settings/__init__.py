@@ -13,9 +13,10 @@
 DEBUG = True
 STAGING = False
 
-__version__ = '0.0.1'
+__version__ = '1'
 __codename__ = 'Kaneda'
 __status__ = 'alpha'
+__docs__ = 'http://docs.sikr.io'
 
 if DEBUG and not STAGING:
     from .development import *

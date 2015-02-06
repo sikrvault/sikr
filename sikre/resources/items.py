@@ -10,9 +10,11 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import falcon
 import json
 
+import falcon
+
+from sikre import settings
 from sikre.models.models import User, ItemGroup, Item, Service
 
 
@@ -51,24 +53,33 @@ class ItemsResource(object):
                 result.append(item_dict)
 
             response.status = falcon.HTTP_200
-            response.body = json.dumps(["items":result])
+            response.body = json.dumps(result)
         except Exception as e:
             print(e)
-            raise falcon.HTTPError(falcon.HTTP_500,
-                                   "Server error",
-                                   "Either there are no items or something went terribly wrong.")
+            error_msg = ("A chicken got into the server farm! We will be back "
+                         "as soon as we can get rid of it")
+            raise falcon.HTTPServiceUnavailable(title="Service outage",
+                                                description=error_msg,
+                                                retry_after=30,
+                                                href=settings.__docs__)
 
     def on_post(self, request, response):
         pass
 
     def on_put(self, request, response):
-        raise falcon.HTTPError(falcon.HTTP_405, "Client error",
-                               "The PUT method is not allowed in this endpoint.")
+        raise falcon.HTTPError(falcon.HTTP_405,
+                               title="Client error",
+                               description="{0} method not allowed.".format(request.method),
+                               href=settings.__docs__)
 
     def on_update(self, request, response):
-        raise falcon.HTTPError(falcon.HTTP_405, "Client error",
-                               "The UPDATE method is not allowed in this endpoint.")
+        raise falcon.HTTPError(falcon.HTTP_405,
+                               title="Client error",
+                               description="{0} method not allowed.".format(request.method),
+                               href=settings.__docs__)
 
     def on_delete(self, request, response):
-        raise falcon.HTTPError(falcon.HTTP_405, "Client error",
-                               "The DELETE method is not allowed in this endpoint.")
+        raise falcon.HTTPError(falcon.HTTP_405,
+                               title="Client error",
+                               description="{0} method not allowed.".format(request.method),
+                               href=settings.__docs__)

@@ -18,6 +18,7 @@ import falcon
 from sikre.middleware.handle_404 import WrongURL
 from sikre.middleware.headers import BaseHeaders
 from sikre.middleware.json import RequireJSON
+from sikre.middleware.https import RequireHTTPS
 from sikre.resources.main import VersionResource
 from sikre.resources.items import ItemsResource
 from sikre.resources.services import ServicesResource, AddServicesResource
@@ -44,7 +45,8 @@ if sys.version_info <= (3, 0):
 api = falcon.API(middleware=[
     RequireJSON(),
     BaseHeaders(),
-    WrongURL()]
+    WrongURL(),
+    RequireHTTPS()]
 )
 
 # URLs
@@ -60,8 +62,11 @@ api.add_route(api_version + '/auth/logout', LogoutResource())
 # api.add_route(api_version + '/auth/github', GithubAuth())
 # api.add_route(api_version + '/auth/linkedin', LinkedinAuth())
 
+api.add_route(api_version + '/groups', GroupsResource())
+api.add_route(api_version + '/group', AddGroupResource)
+api.add_route(api_version + '/group/{pk}', ShowGroupResource())
 api.add_route(api_version + '/items', ItemsResource())
-# api.add_route(api_version + '/items/{pk}', ItemsResource())
+api.add_route(api_version + '/item/{pk}', ItemsResource())
 
 api.add_route(api_version + '/services', AddServicesResource())
 api.add_route(api_version + '/services/{pk}', ServicesResource())

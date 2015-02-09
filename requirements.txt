@@ -1,12 +1,6 @@
-# Basic stuff
 cython
-
-# ORMs
 peewee
-
-# Falcon and its plugins
-falcon=>0.2.0b2
+falcon=>0.2.0r1
 talons
-
-# IPython, which is better for debugging
 ipython
+sphinx

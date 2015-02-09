@@ -23,7 +23,7 @@ class WrongURL(object):
 
         """Intercept the main falcon 404
 
-        If we hit a nonexistent resource, we change the response to 200 and
+        If we hit a nonexistent resource, we change the response and
         return an error json
         """
         if resp.status == falcon.HTTP_404:

@@ -10,48 +10,42 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import os
 import sys
+import logging
 
 import falcon
 
-from sikre.middleware.handle_404 import WrongURL
-from sikre.middleware.headers import BaseHeaders
-from sikre.middleware.json import RequireJSON
-from sikre.middleware.https import RequireHTTPS
-from sikre.resources.main import VersionResource
-from sikre.resources.items import ItemsResource
-from sikre.resources.services import ServicesResource, AddServicesResource
-from sikre.resources.tests import TestResource
+from sikre import middleware, resources, settings
+
 from sikre.resources.auth.login import LoginResource, LogoutResource, ForgotPasswordResource
-# from sikre.resources.auth.google import GoogleAuth
-# from sikre.resources.auth.facebook import FacebookAuth
-
-from sikre import settings
-
-# Add the current directory to the python path
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-# Fire the models module, that will create the models if they don't exist
-import sikre.models.models
 
 # Check if we are running on python 3
 if sys.version_info <= (3, 0):
     sys.stdout.write("Sorry, requires Python 3.3.x or better, not Python 2.x\n")
     sys.exit(1)
 
+# Start logging
+logging.config.dictConfig(settings.LOG_CONFIG)
+logger = logging.getLogger("app.py")
+logger.info("API started")
+
+# Fire the models module, that will create the models if they don't exist
+import sikre.models.models
+logger.info("Database connected")
 # Create the API instance, referenced internally as api and externally as
 # wsgi_app
-api = falcon.API(middleware=[
-    RequireJSON(),
-    BaseHeaders(),
-    WrongURL(),
-    RequireHTTPS()]
+api = falcon.API(
+    middleware=[
+        middleware.json.RequireJSON(),
+        middleware.https.RequireHTTPS(),
+        middleware.headers.BaseHeaders(),
+        middleware.handle_404.WrongURL()
+    ]
 )
 
 # URLs
 api_version = '/' + settings.DEFAULT_API
-api.add_route(api_version, VersionResource())
+api.add_route(api_version, resources.main.Version())
 api.add_route(api_version + '/auth/login', LoginResource())
 api.add_route(api_version + '/auth/logout', LogoutResource())
 
@@ -62,19 +56,14 @@ api.add_route(api_version + '/auth/logout', LogoutResource())
 # api.add_route(api_version + '/auth/github', GithubAuth())
 # api.add_route(api_version + '/auth/linkedin', LinkedinAuth())
 
-api.add_route(api_version + '/groups', GroupsResource())
-api.add_route(api_version + '/group', AddGroupResource)
-api.add_route(api_version + '/group/{pk}', ShowGroupResource())
-api.add_route(api_version + '/items', ItemsResource())
-api.add_route(api_version + '/item/{pk}', ItemsResource())
-
-api.add_route(api_version + '/services', AddServicesResource())
-api.add_route(api_version + '/services/{pk}', ServicesResource())
+api.add_route(api_version + '/groups', resources.groups.Groups())
+api.add_route(api_version + '/groups/{pk}', resources.groups.DetailGroup())
+api.add_route(api_version + '/items', resources.items.Items())
+api.add_route(api_version + '/item/{pk}', resources.items.DetailItem())
+api.add_route(api_version + '/services', resources.services.Services())
+api.add_route(api_version + '/services/{pk}', resources.services.DetailService())
 
 if settings.DEBUG:
-    api.add_route('/test_api', TestResource())
+    api.add_route('/test_api', resources.tests.TestResource())
 
-if __name__ == '__main__':
-    import logging
-    logging.basicConfig()
-    logging.getLogger().setLevel(logging.DEBUG)
+logger.info("Application started")

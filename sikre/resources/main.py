@@ -17,7 +17,7 @@ import falcon
 from sikre import settings
 
 
-class VersionResource(object):
+class Version(object):
 
     """Returns the API version details
 

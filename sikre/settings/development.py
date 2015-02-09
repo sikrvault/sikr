@@ -1,10 +1,17 @@
-# Specify here the database settings for your MongoDB database. Currently we
-# don't have support for no other engine.
-DB_FILE = 'development.db'
+import os
+
+# Add the current directory to the python path
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+# Specify here the database settings. Currently we support only PostgreSQL and
+# SQLite.
 DATABASE = {
-    'NAME': '',       # Collection name
-    'HOST': '',       # Server IP
-    'PORT': 27017,    # Default: 27017
+    'ENGINE': 'sqlite',        # 'postgres' for PostgreSQL or 'sqlite' for SQLite. Any other defaults to sqlite
+    'NAME': 'development.db',  # Collection name. Filename for SQLite or DB name for PostgreSQL
+    'HOST': '',                # Server IP. Default: localhost
+    'PORT': '',                # Not needed for SQLite. PostgreSQL default: 5432
+    'USER': '',                # Not needed for SQLite. User that has access to the DB
+    'PASSWORD': '',            # Not needed for SQLite. Password for the user
 }
 
 # Restrict the extensions allowed for the uploaded files, we do other checks
@@ -21,5 +28,30 @@ DEFAULT_API = 'v1'
 # unique and keep it away from strangers!
 SECRET = '-&3whmt0f&h#zvyc@yk4bs3g6biu9l&a%0l=5u*q2+rz(sypdk'
 
-SITE_TITLE = 'Havas Worldwide London'
-LOGO_IMAGE = '/static/images/havaslogo.jpg'
+# Logging settings. This is a standard python logging configuration.
+LOGFILE = 'sikr.log'
+LOG_CONFIG = {
+    "version": 1,
+    'formatters': {
+        'standard': {
+            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt': "%Y/%b/%d %H:%M:%S"
+        },
+    },
+    'handlers': {
+        'logfile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, LOGFILE),
+            'maxBytes': 2097152,  # 2MB per file
+            'backupCount': 2,  # Store up to three files
+            'formatter': 'standard',
+        },
+    },
+    'loggers': {
+        'sikr': {
+            'handlers': ["logfile", ],
+            'level': 'DEBUG',
+        },
+    }
+}

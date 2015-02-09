@@ -13,21 +13,49 @@
 import datetime
 import crypt
 import hmac
+import logging
+
+from sikre import settings
 
 # I don't like this, it's against the PEP, but let's deal with it for now
 from peewee import *
 
-from sikre import settings
+# Set the logging
+logger = logging.getLogger('sikre.models.models')
 
-# Get the database or create it
-db = SqliteDatabase(settings.DB_FILE, threadlocals=True)
+######################
+# CONNECTION BLOCK
+######################
+
+# Set the database. This creates a connection to the PostgreSQL or SQLite
+# databases according to the settings.
+# TODO: Move the connector out of the models
+try:
+    db_conf = settings.DATABASE
+    if db_conf['ENGINE'] == 'postgres':
+        db = PostgresqlDatabase(
+            db_conf['NAME'], user=db_conf['USER'],
+            password=db_conf['PASSWORD'], host=db_conf['HOST'],
+            port=db_conf['PORT'])
+    else:
+        db = SqliteDatabase(settings.DATABASE['NAME'])
+except Exception as e:
+    message = ("Couldn't connect to the database. Please check that your "
+               "configuration is okay and the database exists.")
+    logger.error(message)
+    # This will leave the message in the WSGI logfile in case the other logger
+    # fails
+    print(message)
 
 
 class ConnectionModel(Model):
 
-    """
-    This model acts as an abstract model that will create the database
-    connection, which is necessary for all the models.
+    """This model will abstract some of the functionality required across all
+    the data models in the application.
+
+    Returns:
+        database: the database connection for the model
+        __str__: the data returned as a JSON string
     """
     def __str__(self):
         """
@@ -92,7 +120,7 @@ class User(ConnectionModel):
         """
         check = hmac.compare_digest(crypt.crypt(password, self.password), self.password)
         if not check:
-           raise ValueError("hashed version doesn't validate against original")
+            raise ValueError("hashed version doesn't validate against original")
         else:
             return True
 
@@ -169,7 +197,7 @@ class Service(ConnectionModel):
     password = CharField(max_length=255)
     url = CharField(max_length=255)
 
-    #file =
+    # file =
     item = ForeignKeyField(Item, related_name='item')
     pub_date = DateTimeField(default=datetime.datetime.now)
 

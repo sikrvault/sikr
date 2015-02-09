@@ -1,6 +1,6 @@
 cython
 peewee
-falcon=>0.2.0r1
+falcon>=0.2.0rc1
 talons
 ipython
 sphinx

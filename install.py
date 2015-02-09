@@ -30,3 +30,23 @@ else:
     print(" * Virtual environment not detected. You will need to "
           "create one through the `pyvenv` command. Exiting.")
     sys.exit(1)
+
+# Add the current directory to the python path
+BASE_DIR = os.getcwd()
+REQUIREMENTS = os.path.join(BASE_DIR, 'requirements.txt')
+
+# Let's install cython
+print(" * Installing cython... ")
+# We can't install anything until cython is finished, the reason is to make
+# falcon more efficient by bytecompiling it.
+try:
+    pip.main(['install', '-q', 'cython'])
+except Exception as e:
+    print(" ERROR: Couldn't install Cython, message: {e}".format(e))
+    sys.exit(1)
+print(" * Cython installed, installing the rest of dependencies....")
+try:
+    pip.main(['install', '-qr', '{0}'.format(REQUIREMENTS)])
+except Exception as e:
+    print(" * Couldn't install dependencies. Retry with `pip install -r requirements.txt")
+    sys.exit(1)

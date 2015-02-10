@@ -11,43 +11,37 @@
 # under the License.
 
 import sys
-import logging
 
 import falcon
 
-from sikre import middleware, resources, settings
-
-from sikre.resources.auth.login import LoginResource, LogoutResource, ForgotPasswordResource
-
+from sikre.middleware import json, https, headers, handle_404
+from sikre.resources import groups, items, services, main, tests
+from sikre.utils.logs import logger
+from sikre import settings
 # Check if we are running on python 3
 if sys.version_info <= (3, 0):
     sys.stdout.write("Sorry, requires Python 3.3.x or better, not Python 2.x\n")
     sys.exit(1)
 
-# Start logging
-logging.config.dictConfig(settings.LOG_CONFIG)
-logger = logging.getLogger("app.py")
-logger.info("API started")
-
 # Fire the models module, that will create the models if they don't exist
 import sikre.models.models
-logger.info("Database connected")
+
 # Create the API instance, referenced internally as api and externally as
 # wsgi_app
 api = falcon.API(
     middleware=[
-        middleware.json.RequireJSON(),
-        middleware.https.RequireHTTPS(),
-        middleware.headers.BaseHeaders(),
-        middleware.handle_404.WrongURL()
+        json.RequireJSON(),
+        https.RequireHTTPS(),
+        headers.BaseHeaders(),
+        handle_404.WrongURL()
     ]
 )
 
 # URLs
 api_version = '/' + settings.DEFAULT_API
-api.add_route(api_version, resources.main.Version())
-api.add_route(api_version + '/auth/login', LoginResource())
-api.add_route(api_version + '/auth/logout', LogoutResource())
+api.add_route(api_version, main.Version())
+# api.add_route(api_version + '/auth/login', auth.LoginResource())
+# api.add_route(api_version + '/auth/logout', LogoutResource())
 
 # api.add_route(api_version + '/auth/forgotpassword', ForgotPasswordResource())
 # api.add_route(api_version + '/auth/facebook', FacebookAuth())
@@ -56,14 +50,14 @@ api.add_route(api_version + '/auth/logout', LogoutResource())
 # api.add_route(api_version + '/auth/github', GithubAuth())
 # api.add_route(api_version + '/auth/linkedin', LinkedinAuth())
 
-api.add_route(api_version + '/groups', resources.groups.Groups())
-api.add_route(api_version + '/groups/{pk}', resources.groups.DetailGroup())
-api.add_route(api_version + '/items', resources.items.Items())
-api.add_route(api_version + '/item/{pk}', resources.items.DetailItem())
-api.add_route(api_version + '/services', resources.services.Services())
-api.add_route(api_version + '/services/{pk}', resources.services.DetailService())
+api.add_route(api_version + '/groups', groups.Groups())
+api.add_route(api_version + '/groups/{pk}', groups.DetailGroup())
+api.add_route(api_version + '/items', items.Items())
+api.add_route(api_version + '/item/{pk}', items.DetailItem())
+api.add_route(api_version + '/services', services.Services())
+api.add_route(api_version + '/services/{pk}', services.DetailService())
+
+logger.debug("API service started")
 
 if settings.DEBUG:
-    api.add_route('/test_api', resources.tests.TestResource())
-
-logger.info("Application started")
+    api.add_route('/test_api', tests.TestResource())

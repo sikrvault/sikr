@@ -89,6 +89,6 @@ while items > 0:
         chars = "".join([random.choice(string.ascii_letters) for i in range(15)])
         digits = "".join([random.choice(string.digits) for i in range(8)])
         new_service = Service(name=chars, username=chars, password=chars, url=chars,
-                              item=item)
+                              item=item.id)
         new_service.save()
         services -= 1

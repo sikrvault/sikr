@@ -198,7 +198,7 @@ class Service(ConnectionModel):
     url = CharField(max_length=255)
 
     # file =
-    item = ForeignKeyField(Item, related_name='item')
+    item = ForeignKeyField(Item, related_name='items')
     pub_date = DateTimeField(default=datetime.datetime.now)
 
 

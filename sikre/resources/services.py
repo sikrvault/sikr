@@ -18,42 +18,59 @@ from sikre import settings
 from sikre.models.models import User, ItemGroup, Item, Service
 
 
-class AddServicesResource(object):
+class DetailService(object):
 
     """
     This resource handles the /services/ url.
     """
-    def on_get(self, request, response):
-        raise falcon.HTTPError(falcon.HTTP_405,
-                               title="Client error",
-                               description="{0} method not allowed.".format(request.method),
-                               href=settings.__docs__)
+    def on_get(self, req, res, pk):
+        # Get the data
+        try:
+            payload = []
+            service = Service.get(Service.pk == pk)
 
-    def on_post(self, request, response):
+            # Get all the services and organize them
+            services_dict = {}
+            services_dict["url"] = service.url
+            services_dict["username"] = service.username
+            services_dict["password"] = service.password
+            payload.append(services_dict)
+
+            res.status = falcon.HTTP_200
+            res.body = json.dumps(payload)
+        except Exception as e:
+            print(e)
+            error_msg = ("Unable to get the items. Please try again later")
+            raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
+                                                description=error_msg,
+                                                retry_after=30,
+                                                href=settings.__docs__)
+
+    def on_post(self, req, res, pk):
         pass
 
-    def on_put(self, request, response):
+    def on_put(self, req, res, pk):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
-    def on_update(self, request, response):
+    def on_update(self, req, res, pk):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
-    def on_delete(self, request, response):
+    def on_delete(self, req, res, pk):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
 
-class ServicesResource(object):
+class Services(object):
 
-    def on_get(self, request, response, pk):
+    def on_get(self, req, res):
         """
         Handle the GET request, returning a list of the items that the user
         has access to.
@@ -64,34 +81,13 @@ class ServicesResource(object):
         and return the results dictionary wrapped in a list like the ReST
         standard says.
         """
-        # Get the data
-        try:
-            result = []
-            service = Service.get(pk=pk)
-
-            # Get all the services and organize them
-            services_dict = {}
-            services_dict["url"] = service.url
-            services_dict["username"] = service.username
-            services_dict["password"] = service.password
-            result.append(services_dict)
-
-            response.status = falcon.HTTP_200
-            response.body = json.dumps({"services": result})
-        except Exception as e:
-            print(e)
-            error_msg = ("A chicken got into the server farm! We will be back "
-                         "as soon as we can get rid of it")
-            raise falcon.HTTPServiceUnavailable(title="Service outage",
-                                                description=error_msg,
-                                                retry_after=30,
-                                                href=settings.__docs__)
-
-    def on_post(self, request, response, pk):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
                                description="{0} method not allowed.".format(request.method),
                                href=settings.__docs__)
+
+    def on_post(self, request, response, pk):
+        pass
 
     def on_put(self, request, response, pk):
         raise falcon.HTTPError(falcon.HTTP_405,

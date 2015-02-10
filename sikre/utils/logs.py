@@ -10,25 +10,10 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import sys
+import logging
+import logging.config
 
-from sikre.settings import DATABASE
+from sikre import settings
 
-from pymongo import MongoClient
-
-
-def connect_to_database():
-
-    """
-    Try to connect to the database and the collection, if something happens
-    we break the application, since it cannot run without a database.
-    """
-    try:
-        connection = MongoClient(DATABASE['HOST'], DATABASE['PORT'])
-        db = connection[DATABASE['NAME']]
-    except Exception as e:
-        print("ERROR: Something went wrong while connecting to the database.")
-        sys.exit(e)
-
-
-def read_from_collection()
+logging.config.dictConfig(settings.LOG_CONFIG)
+logger = logging.getLogger("sikr")

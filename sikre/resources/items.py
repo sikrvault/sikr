@@ -15,12 +15,13 @@ import json
 import falcon
 
 from sikre import settings
+from sikre.utils.logs import logger
 from sikre.models.models import User, ItemGroup, Item, Service
 
 
-class ItemsResource(object):
+class Items(object):
 
-    def on_get(self, request, response):
+    def on_get(self, req, res):
         """
         Handle the GET request, returning a list of the items that the user
         has access to.
@@ -33,53 +34,118 @@ class ItemsResource(object):
         """
         # Get the data
         try:
-            result = []
-            services = []
+            payload = []
             items_q = Item.select()
-            services_q = Service.select()
-
-            for i in services_q:
-                services_dict = {}
-                services_dict["id"] = i.pk
-                services_dict["name"] = i.name
-                services.append(services_dict)
-
-            # Get all the items and put them into the list
-            for i in items_q:
-                item_dict = {}
-                item_dict["name"] = i.name
-                item_dict["description"] = i.description
-                item_dict["services"] = services
-                result.append(item_dict)
-
-            response.status = falcon.HTTP_200
-            response.body = json.dumps(result)
+            for item in items_q:
+                # Clean the services
+                services = []
+                # Get all the services that belong to the item
+                services_q = Service.select().where(Service.item == item)
+                for service in services_q:
+                    service_object = {}
+                    service_object["id"] = service.pk
+                    service_object["name"] = service.name
+                    services.append(service_object)
+                # Create the item object and append the services to it
+                item_object = {}
+                item_object["name"] = item.name
+                item_object["description"] = item.description
+                item_object["services"] = services
+                payload.append(item_object)
+            res.status = falcon.HTTP_200
+            res.body = json.dumps(payload)
+            logger.debug("Items request succesful")
         except Exception as e:
-            print(e)
-            error_msg = ("A chicken got into the server farm! We will be back "
-                         "as soon as we can get rid of it")
-            raise falcon.HTTPServiceUnavailable(title="Service outage",
+            logger.error(e)
+            error_msg = ("Unable to get the items. Please try again later")
+            raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
                                                 description=error_msg,
                                                 retry_after=30,
                                                 href=settings.__docs__)
 
-    def on_post(self, request, response):
+    def on_post(self, req, res):
         pass
 
-    def on_put(self, request, response):
+    def on_put(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
-    def on_update(self, request, response):
+    def on_update(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
-    def on_delete(self, request, response):
+    def on_delete(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
+
+
+class DetailItem(object):
+
+    """Show details of a specific group or add/delete a group
+    """
+    def on_get(self, req, res, pk):
+        # Check user authentication
+        try:
+            group = ItemGroup.get(ItemGroup.pk == pk)
+
+            payload = {}
+            payload["name"] = group.name
+            payload["id"] = group.pk
+
+            res.status = falcon.HTTP_200
+            res.body = json.dumps(payload)
+        except Exception as e:
+            print(e)
+            error_msg = ("Unable to get the group. Please try again later.")
+            raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
+                                                description=error_msg,
+                                                retry_after=30,
+                                                href=settings.__docs__)
+
+    def on_post(self, req, res, pk):
+        raise falcon.HTTPError(falcon.HTTP_405,
+                               title="Client error",
+                               description="{0} method not allowed.".format(req.method),
+                               href=settings.__docs__)
+
+    def on_put(self, req, res, pk):
+        try:
+            payload = json.loads(req.stream)
+            group = ItemGroup.get(ItemGroup.pk == pk)
+            pass
+
+        except Exception as e:
+            print(e)
+            error_msg = ("Unable to update the group. Please try again later.")
+            raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
+                                                description=error_msg,
+                                                retry_after=30,
+                                                href=settings.__docs__)
+
+    def on_update(self, req, res, pk):
+        raise falcon.HTTPError(falcon.HTTP_405,
+                               title="Client error",
+                               description="{0} method not allowed.".format(req.method),
+                               href=settings.__docs__)
+
+    def on_delete(self, req, res, pk):
+        try:
+            group = ItemGroup.get(ItemGroup.pk == pk)
+            group.delete_instance(recursive=True)
+
+            res.status = falcon.HTTP_200
+            res.body = json.dumps({"status": "Deletion successful"})
+
+        except Exception as e:
+            print(e)
+            error_msg = ("Unable to delete group. Please try again later.")
+            raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
+                                                description=error_msg,
+                                                retry_after=30,
+                                                href=settings.__docs__)

@@ -34,8 +34,8 @@ LOG_CONFIG = {
     "version": 1,
     'formatters': {
         'standard': {
-            'format': "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
-            'datefmt': "%Y/%b/%d %H:%M:%S"
+            'format': "[%(asctime)s] %(levelname)s [%(filename)s->%(funcName)s:%(lineno)s] %(message)s",
+            'datefmt': "%Y/%m/%d %H:%M:%S"
         },
     },
     'handlers': {

@@ -21,6 +21,9 @@ from sikre.models.models import User, ItemGroup
 class Groups(object):
 
     """Show all the groups that the current user has read permission.
+
+    This resource will send the ItemGroups that belong to the user in the
+    matter of ID and NAME
     """
     def on_get(self, req, res):
         # Check user authentication
@@ -30,6 +33,7 @@ class Groups(object):
 
             for group in groups:
                 group_dict = {}
+                group_dict["id"] = group.pk
                 group_dict["name"] = group.name
                 payload.append(group_dict)
 
@@ -37,9 +41,8 @@ class Groups(object):
             res.body = json.dumps(payload)
         except Exception as e:
             print(e)
-            error_msg = ("A chicken got into the server farm! We will be back "
-                         "as soon as we can get rid of it")
-            raise falcon.HTTPServiceUnavailable(title="Service outage",
+            error_msg = ("Unable to get the groups. Please try again later")
+            raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
                                                 description=error_msg,
                                                 retry_after=30,
                                                 href=settings.__docs__)

@@ -46,7 +46,8 @@ if create_admin in ['y', 'Y', 'yes', 'YES', None]:
 
     # Create the user object in the database
     new_user = User.create(name=name, email=email, username=username,
-                           password=hashed_password, token='dummytoken')
+                           password=hashed_password, token='dummytoken',
+                           is_superuser=True)
     user = new_user.save()
 else:
     print("Admin user not created. You can create it afterwards.")
@@ -58,12 +59,16 @@ else:
 
 # Create a dummy user if there's no admin
 if create_admin != 'y' and create_admin != 'Y':
-    dummy_user = User.create(name="Dummy", email="dummy@example.com",
-                             username="dummy", password="dummy")
-    user = dummy_user.save()
+    new_user = User.create(name="Dummy", email="dummy@example.com",
+                             username="dummy", password="dummy", token="dummy")
+    user = new_user.save()
 
+# Create a secondary user
+secondary_user = User.create(name="Second", email="example@example.com",
+                             username="second", password="second", token="dummy")
+secondary_user.save()
 # Create some groups
-groups = 2
+groups = 5
 
 while groups > 0:
     chars = "".join([random.choice(string.ascii_letters) for i in range(10)])
@@ -72,23 +77,23 @@ while groups > 0:
     groups -= 1
 
 # Create some items
-items = 5
+items = 10
 
 while items > 0:
     chars = "".join([random.choice(string.ascii_letters) for i in range(15)])
     digits = "".join([random.choice(string.digits) for i in range(8)])
-    new_item = Item(name=chars, description=chars * 2, group=group, author=user,
-                    allowed_users=user)
-    item = new_item.save()
+    new_item = Item(name=chars, description=chars * 2, group=group, author=new_user,
+                    allowed_users=random.choice([new_user, secondary_user]))
+    new_item.save()
     items -= 1
 
     # Create some services
-    services = 2
+    services = 4
 
     while services > 0:
         chars = "".join([random.choice(string.ascii_letters) for i in range(15)])
         digits = "".join([random.choice(string.digits) for i in range(8)])
         new_service = Service(name=chars, username=chars, password=chars, url=chars,
-                              item=item.id)
+                              item=new_item)
         new_service.save()
         services -= 1

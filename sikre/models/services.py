@@ -10,10 +10,20 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import logging
-import logging.config
+import datetime
 
-from sikre import settings
+from peewee import *
 
-logging.config.dictConfig(settings.LOG_CONFIG)
-logger = logging.getLogger("sikr")
+from sikre.db.connector import ConnectionModel
+from sikre.models.items import Item
+
+
+class Service(ConnectionModel):
+    name = CharField(max_length=255)
+    username = CharField(max_length=255)
+    password = CharField(max_length=255)
+    url = CharField(max_length=255)
+
+    # file =
+    item = ForeignKeyField(Item, related_name='items')
+    pub_date = DateTimeField(default=datetime.datetime.now)

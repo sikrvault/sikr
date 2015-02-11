@@ -1,4 +1,4 @@
-# Copyright 2014 Clione Software and Havas Worldwide London
+# Copyright 2014-2015 Clione Software and Havas Worldwide London
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy
@@ -16,7 +16,9 @@ import falcon
 
 from sikre import settings
 from sikre.utils.logs import logger
-from sikre.models.models import User, ItemGroup, Item, Service
+from sikre.models.users import User
+from sikre.models.items import ItemGroup, Item
+from sikre.models.services import Service
 
 
 class Items(object):

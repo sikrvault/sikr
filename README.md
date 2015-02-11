@@ -24,7 +24,7 @@ will probably need a frontend to work with. You can use the default
 
 * A GNU/Linux server
 * Python 3.4+
-* A valid SSL certificate
+* A valid SSL certificate (not necessary if DEBUG=True)
 
 Please note that this project **won't run** on Python 2.7.x series.
 
@@ -42,12 +42,19 @@ To install please follow these steps:
 
 * Install the dependencies
 
-    `$ pip install requirements.txt`
+    `$ python install.py`
 
-That will install Falcon and the required dependencies for the rest of the
-project.
+That will install Cython wait for it to finish and then Falcon and its
+dependencies. The reason is to win a bit more of speed with a precompiled
+falcon version.
 
 ## How to run
+
+There is two ways of running the application. One is the main wsgi application
+that will serve all the requests. The other is running it as a management
+script.
+
+### Run as service
 
 To run it for testing you can use gunicorn or uwsgi or any other wsgi
 interface. To run it with uwsgi for example:
@@ -60,6 +67,19 @@ endpoints, you will not be able to see anything else.
 
 There is a test endpoint while in debug mode which you can visit in:
 `localhost:8080/test_api`
+
+### Run as management script
+
+To run the application as a management script you just need to invoke it
+from python:
+
+`$ python app.py`
+
+This script contains multiple actions that take care of the service. At
+the moment of writing this document these are the functions:
+
+    **syncdb**   Creates the database schema necessary to run the application
+    **generate** Fill the database with random data. Useful for testing
 
 ## License and copyright
 

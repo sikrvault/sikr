@@ -78,8 +78,8 @@ from python:
 This script contains multiple actions that take care of the service. At
 the moment of writing this document these are the functions:
 
-    **syncdb**   Creates the database schema necessary to run the application
-    **generate** Fill the database with random data. Useful for testing
+* `syncdb` Creates the database schema necessary to run the application
+* `generate` Fill the database with random data. Useful for testing
 
 ## License and copyright
 

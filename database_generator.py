@@ -13,8 +13,6 @@
 # under the License.
 
 import sys
-import time
-import os
 import getpass
 # path = os.path.dirname(os.path.realpath(__file__)).strip('/utils')
 # sys.path.append(path)
@@ -26,15 +24,12 @@ import string
 
 from peewee import *
 
-
 from sikre.models.models import User, Item, Service, ItemGroup
 
 
 def send_message(string):
     print(string, end='\r')
     sys.stdout.write("\033[K")
-    #time.sleep(0.3)
-    #print("\r" * len(string), end='')
 
 ############################
 # Admin user creation      #

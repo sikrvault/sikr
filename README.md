@@ -87,4 +87,4 @@ This project is licensed under the Apache 2.0 license. Copyright belongs to Clio
 
 ## Authors
 
-* Oscar Carballal Prego
+Oscar Carballal Prego <oscar.carballal@clione.io>

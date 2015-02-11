@@ -14,6 +14,10 @@ This is just the backend part, so unless you are \<insert genius name here\> you
 will probably need a frontend to work with. You can use the default
 [sikre-frontend](https://github.com/clione/sikre-frontend) project.
 
+## Who uses it?
+
+The official password storage service called `Sikr` is going to use it. It's still on development (tied to the project) but you can reach it on http://sikr.io and http://api.sikr.io
+
 ## What does it use?
 
 * [Falcon microframework](http://falconframework.org/)

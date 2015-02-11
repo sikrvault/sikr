@@ -22,7 +22,9 @@ from sikre.models.models import User, ItemGroup, Item, Service
 class Items(object):
 
     def on_get(self, req, res):
-        """
+        """Get the items that belong to that user.
+
+        This method contains two behaviours, one returns
         Handle the GET request, returning a list of the items that the user
         has access to.
 
@@ -32,33 +34,32 @@ class Items(object):
         and return the results dictionary wrapped in a list like the REsT
         standard says.
         """
-        # Get the data
         try:
             payload = []
-            items_q = Item.select()
-            for item in items_q:
-                # Clean the services
-                services = []
-                # Get all the services that belong to the item
-                services_q = Service.select().where(Service.item == item)
-                for service in services_q:
-                    service_object = {}
-                    service_object["id"] = service.pk
-                    service_object["name"] = service.name
-                    services.append(service_object)
-                # Create the item object and append the services to it
-                item_object = {}
-                item_object["name"] = item.name
-                item_object["description"] = item.description
-                item_object["services"] = services
-                payload.append(item_object)
+            filter_group = req.get_param("group", required=False)
+            if filter_group:
+                items = (Item.select(Item.name, Item.description, Item.id)
+                             .where(Item.group == int(filter_group))
+                             .dicts())
+                logger.debug("Got items filtered by group")
+            else:
+                items = (Item.select(Item.name, Item.description, Item.id)
+                             .dicts())
+                logger.debug("Got all items")
+            for item in items:
+                services = list(Service.select(Service.id, Service.name)
+                                       .where(Service.item == item["id"])
+                                       .dicts())
+                item["services"] = services
+                payload.append(item)
             res.status = falcon.HTTP_200
             res.body = json.dumps(payload)
             logger.debug("Items request succesful")
         except Exception as e:
+            print(e)
             logger.error(e)
             error_msg = ("Unable to get the items. Please try again later")
-            raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
+            raise falcon.HTTPServiceUnavailable(title=req.method + " failed",
                                                 description=error_msg,
                                                 retry_after=30,
                                                 href=settings.__docs__)
@@ -69,19 +70,19 @@ class Items(object):
     def on_put(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(req.method),
+                               description=req.method + " method not allowed.",
                                href=settings.__docs__)
 
     def on_update(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(req.method),
+                               description=req.method + " method not allowed.",
                                href=settings.__docs__)
 
     def on_delete(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(req.method),
+                               description=req.method + " method not allowed.",
                                href=settings.__docs__)
 
 
@@ -103,7 +104,7 @@ class DetailItem(object):
         except Exception as e:
             print(e)
             error_msg = ("Unable to get the group. Please try again later.")
-            raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
+            raise falcon.HTTPServiceUnavailable(req.method + " failed",
                                                 description=error_msg,
                                                 retry_after=30,
                                                 href=settings.__docs__)

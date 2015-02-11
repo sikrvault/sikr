@@ -13,6 +13,7 @@
 # under the License.
 
 import sys
+import time
 import os
 import getpass
 # path = os.path.dirname(os.path.realpath(__file__)).strip('/utils')
@@ -29,11 +30,17 @@ from peewee import *
 from sikre.models.models import User, Item, Service, ItemGroup
 
 
+def send_message(string):
+    print(string, end='\r')
+    sys.stdout.write("\033[K")
+    #time.sleep(0.3)
+    #print("\r" * len(string), end='')
+
 ############################
 # Admin user creation      #
 ############################
 
-create_admin = input("Do you want to create an admin user? (Y/n) ")
+create_admin = input("\nDo you want to create an admin user? (Y/n) ")
 if create_admin in ['y', 'Y', 'yes', 'YES', None]:
     name = input("Full name: ")
     email = input("E-Mail address: ")
@@ -50,7 +57,7 @@ if create_admin in ['y', 'Y', 'yes', 'YES', None]:
                            is_superuser=True)
     user = new_user.save()
 else:
-    print("Admin user not created. You can create it afterwards.")
+    print("Admin user not created. You can create it afterwards.\n")
 
 
 ##########################
@@ -60,40 +67,41 @@ else:
 # Create a dummy user if there's no admin
 if create_admin != 'y' and create_admin != 'Y':
     new_user = User.create(name="Dummy", email="dummy@example.com",
-                             username="dummy", password="dummy", token="dummy")
+                           username="dummy", password="dummy", token="dummy")
     user = new_user.save()
 
 # Create a secondary user
 secondary_user = User.create(name="Second", email="example@example.com",
-                             username="second", password="second", token="dummy")
+                             username="second", password="second", token="dummy1")
 secondary_user.save()
 # Create some groups
 groups = 5
-
 while groups > 0:
+    send_message(" * Creating groups, {0} remaining".format(groups))
     chars = "".join([random.choice(string.ascii_letters) for i in range(10)])
     new_group = ItemGroup.create(name=chars,)
-    group = new_group.save()
+    new_group.save()
     groups -= 1
 
     # Create some items
     items = 10
-
     while items > 0:
+        send_message(" * Creating items for group {0}. {1} remaining".format(new_group.id, items))
         chars = "".join([random.choice(string.ascii_letters) for i in range(15)])
         digits = "".join([random.choice(string.digits) for i in range(8)])
-        new_item = Item(name=chars, description=chars * 2, group=new_group, author=new_user,
-                        allowed_users=random.choice([new_user, secondary_user]))
+        new_item = Item(name=chars, description=chars * 2, group=new_group)
         new_item.save()
+        new_item.allowed_users.add(random.choice([new_user, secondary_user]))
         items -= 1
 
         # Create some services
         services = 4
-
         while services > 0:
+            send_message(" * Creating services for item {0}. {1} remaining".format(new_item.id, services))
             chars = "".join([random.choice(string.ascii_letters) for i in range(15)])
             digits = "".join([random.choice(string.digits) for i in range(8)])
             new_service = Service(name=chars, username=chars, password=chars, url=chars,
                                   item=new_item)
             new_service.save()
             services -= 1
+print(" * Database generation completed successfully")

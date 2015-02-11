@@ -11,17 +11,15 @@
 # under the License.
 
 import datetime
-import crypt
-import hmac
-import logging
+import uuid
+import hashlib
 
-from sikre import settings
-
-# I don't like this, it's against the PEP, but let's deal with it for now
+from playhouse.shortcuts import ManyToManyField
 from peewee import *
 
-# Set the logging
-logger = logging.getLogger('sikre.models.models')
+from sikre import settings
+from sikre.utils.logs import logger
+
 
 ######################
 # CONNECTION BLOCK
@@ -87,7 +85,6 @@ class User(ConnectionModel):
     authentication, like email, username, and auth token, apart from some
     extra parameters for administration.
     """
-    pk = PrimaryKeyField(primary_key=True)
     username = CharField(unique=True)
     token = CharField(unique=True)
     password = CharField(unique=True)
@@ -111,8 +108,10 @@ class User(ConnectionModel):
         social networks, this method will be called to create a scrambled
         password.
         """
-        hashed_password = crypt.crypt(password)
+        salt = uuid.uuid4().hex.encode('utf-8')
+        hashed_password = hashlib.sha512(password.encode('utf-8') + salt).hexdigest()
         self.password = hashed_password
+        self.save()
 
     def check_password(self, password):
         """
@@ -125,73 +124,41 @@ class User(ConnectionModel):
             return True
 
 
-class UserGroup(ConnectionModel):
+class Group(ConnectionModel):
 
     """
     Basic model to group users.
     """
-    pk = PrimaryKeyField(primary_key=True)
     name = CharField(max_length=255, unique=True)
+    users = ManyToManyField(User, related_name='usergroups')
     pub_date = DateTimeField(default=datetime.datetime.now)
 
-
-class GroupToUser(ConnectionModel):
-
-    """
-    Trough table for the many to many between group and user.
-    """
-    user = ForeignKeyField(User)
-    group = ForeignKeyField(UserGroup)
-
-    class Meta:
-        primary_key = CompositeKey('group', 'user')
-
+UserGroup = Group.users.get_through_model()
 
 ######################
 # Item block
 ######################
 
+
 class ItemGroup(ConnectionModel):
-    pk = PrimaryKeyField(primary_key=True)
     name = CharField(max_length=255, unique=True)
+    allowed_users = ManyToManyField(User, related_name='itemgroups')
+
+UserItemGroup = ItemGroup.allowed_users.get_through_model()
 
 
 class Item(ConnectionModel):
-    pk = PrimaryKeyField(primary_key=True)
     name = CharField()
     description = TextField()
-    author = ForeignKeyField(User, related_name='author')
+    allowed_users = ManyToManyField(User, related_name='allowed_users')
     pub_date = DateTimeField(default=datetime.datetime.now)
     tags = CharField(null=True)
+    group = ForeignKeyField(ItemGroup)
 
-
-class ItemGroupToItem(ConnectionModel):
-
-    """
-    Trough table for the many to many between item groups and items.
-    """
-    item = ForeignKeyField(Item)
-    itemgroup = ForeignKeyField(ItemGroup)
-
-    class Meta:
-        primary_key = CompositeKey('itemgroup', 'item')
-
-
-class UserToItem(ConnectionModel):
-
-    """
-    Trough table for the many to many between users and items, this table
-    determines which user can access what item.
-    """
-    item = ForeignKeyField(Item)
-    user = ForeignKeyField(User)
-
-    class Meta:
-        primary_key = CompositeKey('user', 'item')
+UserItem = Item.allowed_users.get_through_model()
 
 
 class Service(ConnectionModel):
-    pk = PrimaryKeyField(primary_key=True)
     name = CharField(max_length=255)
     username = CharField(max_length=255)
     password = CharField(max_length=255)
@@ -204,14 +171,20 @@ class Service(ConnectionModel):
 
 # Try to create the database tables, don't do anything if they fail
 try:
-    User.create_table()
-    UserGroup.create_table()
-    GroupToUser.create_table()
-
-    ItemGroup.create_table()
-    Item.create_table()
-    ItemGroupToItem.create_table()
-    UserToItem.create_table()
-    Service.create_table()
+    print(" * Syncing database tables...")
+    # First set the m2m models
+    logger.info("Attempting to create the tables")
+    db.create_tables([
+        User,
+        Group,
+        UserGroup,
+        ItemGroup,
+        UserItemGroup,
+        UserItem,
+        Item,
+        Service
+    ])
+    print(" * Database tables created")
 except:
-    pass
+    logger.error("DB tables not created. Probably they already exist")
+    print(" * No changes")

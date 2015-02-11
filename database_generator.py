@@ -76,24 +76,24 @@ while groups > 0:
     group = new_group.save()
     groups -= 1
 
-# Create some items
-items = 10
+    # Create some items
+    items = 10
 
-while items > 0:
-    chars = "".join([random.choice(string.ascii_letters) for i in range(15)])
-    digits = "".join([random.choice(string.digits) for i in range(8)])
-    new_item = Item(name=chars, description=chars * 2, group=group, author=new_user,
-                    allowed_users=random.choice([new_user, secondary_user]))
-    new_item.save()
-    items -= 1
-
-    # Create some services
-    services = 4
-
-    while services > 0:
+    while items > 0:
         chars = "".join([random.choice(string.ascii_letters) for i in range(15)])
         digits = "".join([random.choice(string.digits) for i in range(8)])
-        new_service = Service(name=chars, username=chars, password=chars, url=chars,
-                              item=new_item)
-        new_service.save()
-        services -= 1
+        new_item = Item(name=chars, description=chars * 2, group=new_group, author=new_user,
+                        allowed_users=random.choice([new_user, secondary_user]))
+        new_item.save()
+        items -= 1
+
+        # Create some services
+        services = 4
+
+        while services > 0:
+            chars = "".join([random.choice(string.ascii_letters) for i in range(15)])
+            digits = "".join([random.choice(string.digits) for i in range(8)])
+            new_service = Service(name=chars, username=chars, password=chars, url=chars,
+                                  item=new_item)
+            new_service.save()
+            services -= 1

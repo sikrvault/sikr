@@ -24,6 +24,9 @@ ALLOWED_EXTENSIONS = [
 # logic in the app.
 DEFAULT_API = 'v1'
 
+# How long the user session will last (in hours). Default: 168 (7 days)
+SESSION_EXPIRES = 168
+
 # Service tokens, this are usually the "client secret" or private API keys
 # that you need to finish the OAuth validation. Remember NOT to commit back
 # this values! They should remain known to you only!

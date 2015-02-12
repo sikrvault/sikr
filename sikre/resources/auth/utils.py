@@ -10,23 +10,24 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-import datetime
+from datetime import datetime, timedelta
 
 import jwt
 
-from sikre.models.models import User
+from sikre import settings
+
 
 def create_jwt_token(user):
     payload = {
         'iss': 'localhost',
         'sub': user.id,
         'iat': datetime.now(),
-        'exp': datetime.now() + timedelta(days=14)
+        'exp': datetime.now() + timedelta(hours=settings.SESSION_EXPIRES)
     }
-    token = jwt.encode(payload, app.config['TOKEN_SECRET'])
+    token = jwt.encode(payload, settings.SECRET)
     return token.decode('unicode_escape')
 
 
 def parse_token(req):
     token = req.headers.get('Authorization').split()[1]
-    return jwt.decode(token, app.config['TOKEN_SECRET'])
+    return jwt.decode(token, settings.SECRET)

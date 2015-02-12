@@ -11,7 +11,9 @@
 # under the License.
 
 import json
-from urlparse import parse_qsl
+from urllib.parse import parse_qsl
+# from urlparse import parse_qsl
+# from urllib import urlencode
 
 from sikre import settings
 from sikre.db.connector import db

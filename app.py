@@ -62,7 +62,7 @@ else:
     # api.add_route(api_version + '/auth/facebook', facebook.FacebookAuth())
     # api.add_route(api_version + '/auth/google', GoogleAuth())
     # api.add_route(api_version + '/auth/twitter', Twitter())
-    api.add_route(api_version + '/auth/github', github.GithubAuth())
+    api.add_route(api_version + '/auth/github/login', github.GithubAuth())
     # api.add_route(api_version + '/auth/linkedin', LinkedinAuth())
 
     api.add_route(api_version + '/groups', groups.Groups())

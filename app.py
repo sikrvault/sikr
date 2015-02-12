@@ -45,7 +45,7 @@ else:
     # wsgi_app
     api = falcon.API(
         middleware=[
-            json.RequireJSON(),
+            #json.RequireJSON(),
             https.RequireHTTPS(),
             headers.BaseHeaders(),
             handle_404.WrongURL()

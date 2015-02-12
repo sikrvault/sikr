@@ -24,8 +24,17 @@ ALLOWED_EXTENSIONS = [
 # logic in the app.
 DEFAULT_API = 'v1'
 
+# Service tokens, this are usually the "client secret" or private API keys
+# that you need to finish the OAuth validation. Remember NOT to commit back
+# this values! They should remain known to you only!
+GITHUB_SECRET = ''
+FACEBOOK_SECRET = ''
+LINKEDIN_SECRET = ''
+GOOGLEPLUS_SECRET = ''
+TWITTER_SECRET = ''
+
 # Main server token, this is used as the second cycle cryptography. Make it
-# unique and keep it away from strangers!
+# unique and keep it away from strangers! This token is an example.
 SECRET = '-&3whmt0f&h#zvyc@yk4bs3g6biu9l&a%0l=5u*q2+rz(sypdk'
 
 # Logging settings. This is a standard python logging configuration.

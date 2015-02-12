@@ -10,8 +10,13 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from sikre.resources.auth import decorators, utils
+import json
+from urlparse import parse_qsl
+
 from sikre import settings
+from sikre.db.connector import db
+from sikre.models.users import User
+from sikre.resources.auth import decorators, utils
 
 
 class GithubAuth(object):
@@ -38,34 +43,34 @@ class GithubAuth(object):
 
         # Step 3. (optional) Link accounts.
         if req.headers.get('Authorization'):
-            user = User.select().where(github=profile['id']).get()
+            user = User.select().where(User.github == profile['id']).get()
             if user:
-                res = jsonify(message='There is already a GitHub account that belongs to you')
+                res = json.dumps(message='There is already a GitHub account that belongs to you')
                 res.status_code = 409
                 return res
 
-            payload = parse_token(req)
+            payload = utils.parse_token(req)
 
             user = User.select().where(id=payload['sub']).get()
             if not user:
-                res = jsonify(message='User not found')
+                res = json.dumps(message='User not found')
                 res.status_code = 400
                 return res
 
             u = User(github=profile['id'], display_name=profile['name'])
             db.session.add(u)
             db.session.commit()
-            token = create_token(u)
-            return jsonify(token=token)
+            token = utils.create_token(u)
+            return json.dumps(token=token)
 
         # Step 4. Create a new account or return an existing one.
         user = User.select().where(github=profile['id']).get()
         if user:
-            token = create_token(user)
-            return jsonify(token=token)
+            token = utils.create_token(user)
+            return json.dumps(token=token)
 
         u = User(github=profile['id'], display_name=profile['name'])
         db.session.add(u)
         db.session.commit()
-        token = create_token(u)
-        return jsonify(token=token)
+        token = utils.create_token(u)
+        return json.dumps(token=token)

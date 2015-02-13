@@ -115,7 +115,7 @@ class GithubAuth(object):
 
     def on_options(self, req, res):
             stream = req.stream.read()
-            data = json.dumps(stream.decode('utf-8'))
+            data = json.loads(stream.decode('utf-8'))
             res.set_headers({
                 'Access-Control-Allow-Credentials': 'true',
                 'Access-Control-Allow-Origin': data["redirectUri"],

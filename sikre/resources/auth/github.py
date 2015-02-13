@@ -35,13 +35,10 @@ class GithubAuth(object):
         access_token_url = 'https://github.com/login/oauth/access_token'
         users_api_url = 'https://api.github.com/user'
 
-        logger.debug("here we go")
         # Read the incoming data
         stream = req.stream.read()
-        logger.debug(stream)
         data = json.loads(stream.decode('utf-8'))
-        logger.debug(data)
-        logger.debug("asdfasdfadsfqasdfASDFASDFASD")
+        logger.debug("GitHub OAuth: Incoming data read successfully")
 
         params = {
             'client_id': data['clientId'],
@@ -49,51 +46,64 @@ class GithubAuth(object):
             'client_secret': settings.GITHUB_SECRET,
             'code': data['code']
         }
+        logger.debug("GitHub OAuth: Built the code response correctly")
 
         # Step 1. Exchange authorization code for access token.
         r = requests.get(access_token_url, params=params)
         access_token = dict(parse_qsl(r.text))
         headers = {'User-Agent': 'Satellizer'}
+        logger.debug("GitHub OAuth: Auth code exchange for token success")
 
         # Step 2. Retrieve information about the current user.
         r = requests.get(users_api_url, params=access_token, headers=headers)
-        print(r)
         profile = json.loads(r.text)
-        print(profile)
+        logger.debug("GitHub OAuth: Retrieve user information success")
 
         # Step 3. (optional) Link accounts.
         if req.auth:
+            # Try to see if there's already an account or is not created
+            try:
+                user = User.select().where(User.github == profile['id']).get()
+                if user:
+                    logger.debug("GitHub OAuth: Account {0} already exists".format(profile["id"]))
+                    res.body = json.dumps(message='There is already a GitHub account that belongs to you')
+                    res.status = falcon.HTTP_409
+                    return
+            except User.DoesNotExist:
+                pass
+
+            try:
+                payload = utils.parse_token(req)
+                user = User.select().where(User.id == payload['sub']).get()
+                # if not user:
+                #     res.body = json.dumps(message='User not found')
+                #     res.status = falcon.HTTP_400
+                #     return
+            except User.DoesNotExist:
+                u = User(User.github == profile['id'], User.username == profile['name'])
+                u.save()
+                db.session.add(u)
+                db.session.commit()
+                token = utils.create_token(u)
+                res.body = json.dumps(token=token)
+                res.status = falcon.HTTP_200
+                return
+
+        # Step 4. Create a new account or return an existing one.
+        try:
             user = User.select().where(User.github == profile['id']).get()
             if user:
-                res = json.dumps(message='There is already a GitHub account that belongs to you')
-                res.status_code = 409
-                return res
-
-            payload = utils.parse_token(req)
-
-            user = User.select().where(id=payload['sub']).get()
-            if not user:
-                res = json.dumps(message='User not found')
-                res.status_code = 400
-                return res
-
-            u = User(github=profile['id'], display_name=profile['name'])
+                token = utils.create_token(user)
+                res.body = json.dumps(token=token)
+                res.status = falcon.HTTP_200
+                return
+        except User.DoesNotExist:
+            u = User(User.github == profile['id'], User.username == profile['name'])
             db.session.add(u)
             db.session.commit()
             token = utils.create_token(u)
-            return json.dumps(token=token)
-
-        # Step 4. Create a new account or return an existing one.
-        user = User.select().where(User.github == profile['id']).get()
-        if user:
-            token = utils.create_token(user)
-            return json.dumps(token=token)
-
-        u = User(User.github == profile['id'], User.username == profile['name'])
-        db.session.add(u)
-        db.session.commit()
-        token = utils.create_token(u)
-        return json.dumps(token=token)
+            res.body = json.dumps(token=token)
+            res.status = falcon.HTTP_200
 
     def on_put(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,

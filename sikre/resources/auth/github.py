@@ -17,7 +17,7 @@ import falcon
 import requests
 
 from sikre import settings
-from sikre.db.connector import db
+# from sikre.db.connector import db
 from sikre.models.users import User
 from sikre.resources.auth import decorators, utils
 from sikre.utils.logs import logger
@@ -84,7 +84,7 @@ class GithubAuth(object):
                 u.save()
                 # db.session.add(u)
                 # db.session.commit()
-                token = utils.create_token(u)
+                token = utils.create_jwt_token(u)
                 res.body = json.dumps(token=token)
                 res.status = falcon.HTTP_200
                 return
@@ -93,7 +93,7 @@ class GithubAuth(object):
         try:
             user = User.select().where(User.github == profile['id']).get()
             if user:
-                token = utils.create_token(user)
+                token = utils.create_jwt_token(user)
                 res.body = json.dumps(token=token)
                 res.status = falcon.HTTP_200
                 return
@@ -101,7 +101,7 @@ class GithubAuth(object):
             u = User(User.github == profile['id'], User.username == profile['name'])
             # db.session.add(u)
             # db.session.commit()
-            token = utils.create_token(u)
+            token = utils.create_jwt_token(u)
             res.body = json.dumps(token=token)
             res.status = falcon.HTTP_200
 

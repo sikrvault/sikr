@@ -17,21 +17,17 @@ import falcon
 import requests
 
 from sikre import settings
-# from sikre.db.connector import db
 from sikre.models.users import User
-from sikre.resources.auth import decorators, utils
+from sikre.resources.auth import utils
 from sikre.utils.logs import logger
-
-logger.debug("hit the resource")
 
 
 class GithubAuth(object):
 
-    def on_get(self, req, res):
-        res.body = "This is not supposed to happen"
-        res.status = falcon.HTTP_404
-
     def on_post(self, req, res):
+
+        """Create the JWT token for the user
+        """
         access_token_url = 'https://github.com/login/oauth/access_token'
         users_api_url = 'https://api.github.com/user'
 
@@ -64,7 +60,7 @@ class GithubAuth(object):
             # Parse token
             payload = utils.parse_token(req)
 
-            # Try to see if there's already an account or is not created
+            # Try to see if there's already an account
             try:
                 user = User.select().where(
                     (User.github == profile['id']) |
@@ -74,60 +70,31 @@ class GithubAuth(object):
                 if user:
                     logger.debug("GitHub OAuth: Account {0} already exists".format(profile["id"]))
                     token = utils.create_jwt_token(user)
-                    res.body = json.dumps({"token":token})
+                    res.body = json.dumps({"token": token})
                     res.status = falcon.HTTP_200
                     return
+            # Step 4. No account, let's create one!
             except User.DoesNotExist:
                 logger.debug("GitHub OAuth: User does not exist")
                 user = User.create(github=profile['id'], username=profile['name'], email=profile["email"])
                 user.save()
+                logger.debug("GitHub OAuth: Created user {0}".format(profile["name"]))
                 token = utils.create_jwt_token(user)
-                res.body = json.dumps({"token":token})
+                res.body = json.dumps({"token": token})
                 res.status = falcon.HTTP_200
                 return
 
+    def on_options(self, req, res):
 
-        #         if user:
+        """Acknowledge the OPTIONS method.
+        """
+        res.status = falcon.HTTP_200
 
-        #             token = utils.create_jwt_token(user)
-        #             res.body = json.dumps({"token":token})
-        #         res.status = falcon.HTTP_200
-        #             return
-        #     except User.DoesNotExist:
-        #         pass
-
-        #     try:
-        #         payload = utils.parse_token(req)
-        #         user = User.select().where(User.id == payload['sub']).get()
-        #         # if not user:
-        #         #     res.body = json.dumps(message='User not found')
-        #         #     res.status = falcon.HTTP_400
-        #         #     return
-        #     except User.DoesNotExist:
-        #         u = User(github=profile['id'], username=profile['name'], email=profile["email"])
-        #         u.save()
-        #         # db.session.add(u)
-        #         # db.session.commit()
-        #         token = utils.create_jwt_token(u)
-        #         res.body = json.dumps({"token":token})
-        #         res.status = falcon.HTTP_200
-        #         return
-
-        # # Step 4. Create a new account or return an existing one.
-        # try:
-        #     user = User.select().where(User.github == profile['id']).get()
-        #     if user:
-        #         token = utils.create_jwt_token(user)
-        #         res.body = json.dumps({"token":token})
-        #         res.status = falcon.HTTP_200
-        #         return
-        # except User.DoesNotExist:
-        #     u = User(github=profile['id'], username=profile['name'], email=profile["email"])
-        #     # db.session.add(u)
-        #     # db.session.commit()
-        #     token = utils.create_jwt_token(u)
-        #     res.body = json.dumps({"token":token})
-        #     res.status = falcon.HTTP_200
+    def on_get(self, req, res):
+        raise falcon.HTTPError(falcon.HTTP_405,
+                               title="Client error",
+                               description=req.method + " method not allowed.",
+                               href=settings.__docs__)
 
     def on_put(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
@@ -146,6 +113,3 @@ class GithubAuth(object):
                                title="Client error",
                                description=req.method + " method not allowed.",
                                href=settings.__docs__)
-
-    def on_options(self, req, res):
-        res.status = falcon.HTTP_200

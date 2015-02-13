@@ -34,7 +34,7 @@ class Groups(object):
 
             for group in groups:
                 group_dict = {}
-                group_dict["id"] = group.pk
+                group_dict["id"] = group.id
                 group_dict["name"] = group.name
                 payload.append(group_dict)
 
@@ -74,10 +74,10 @@ class DetailGroup(object):
 
     """Show details of a specific group or add/delete a group
     """
-    def on_get(self, req, res, pk):
+    def on_get(self, req, res, id):
         # Check user authentication
         try:
-            group = ItemGroup.get(ItemGroup.pk == pk)
+            group = ItemGroup.get(ItemGroup.id == id)
 
             payload = {}
             payload["name"] = group.name
@@ -93,16 +93,16 @@ class DetailGroup(object):
                                                 retry_after=30,
                                                 href=settings.__docs__)
 
-    def on_post(self, req, res, pk):
+    def on_post(self, req, res, id):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
                                description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
-    def on_put(self, req, res, pk):
+    def on_put(self, req, res, id):
         try:
             payload = json.loads(req.stream)
-            group = ItemGroup.get(ItemGroup.pk == pk)
+            group = ItemGroup.get(ItemGroup.id == id)
             pass
 
         except Exception as e:

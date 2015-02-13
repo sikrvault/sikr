@@ -25,11 +25,11 @@ class DetailService(object):
     """
     This resource handles the /services/ url.
     """
-    def on_get(self, req, res, pk):
+    def on_get(self, req, res, id):
         # Get the data
         try:
             payload = []
-            service = Service.get(Service.pk == pk)
+            service = Service.get(Service.id == id)
 
             # Get all the services and organize them
             services_dict = {}
@@ -48,22 +48,22 @@ class DetailService(object):
                                                 retry_after=30,
                                                 href=settings.__docs__)
 
-    def on_post(self, req, res, pk):
+    def on_post(self, req, res, id):
         pass
 
-    def on_put(self, req, res, pk):
+    def on_put(self, req, res, id):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
                                description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
-    def on_update(self, req, res, pk):
+    def on_update(self, req, res, id):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
                                description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
-    def on_delete(self, req, res, pk):
+    def on_delete(self, req, res, id):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
                                description="{0} method not allowed.".format(req.method),

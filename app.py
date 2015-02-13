@@ -66,11 +66,11 @@ else:
     # api.add_route(api_version + '/auth/linkedin', LinkedinAuth())
 
     api.add_route(api_version + '/groups', groups.Groups())
-    api.add_route(api_version + '/groups/{pk}', groups.DetailGroup())
+    api.add_route(api_version + '/groups/{id}', groups.DetailGroup())
     api.add_route(api_version + '/items', items.Items())
-    api.add_route(api_version + '/item/{pk}', items.DetailItem())
+    api.add_route(api_version + '/item/{id}', items.DetailItem())
     api.add_route(api_version + '/services', services.Services())
-    api.add_route(api_version + '/services/{pk}', services.DetailService())
+    api.add_route(api_version + '/services/{id}', services.DetailService())
 
     logger.debug("API service started")
 

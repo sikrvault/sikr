@@ -13,23 +13,35 @@
 import json
 from urllib.parse import parse_qsl
 
+import falcon
 import requests
 
 from sikre import settings
 from sikre.db.connector import db
 from sikre.models.users import User
 from sikre.resources.auth import decorators, utils
+from sikre.utils.logs import logger
+
+logger.debug("hit the resource")
 
 
 class GithubAuth(object):
+
+    def on_get(self, req, res):
+        res.body = "wat the fuck"
+        res.status = falcon.HTTP_200
 
     def on_post(self, req, res):
         access_token_url = 'https://github.com/login/oauth/access_token'
         users_api_url = 'https://api.github.com/user'
 
+        logger.debug("here we go")
         # Read the incoming data
         stream = req.stream.read()
+        logger.debug(stream)
         data = json.loads(stream.decode('utf-8'))
+        logger.debug(data)
+        logger.debug("asdfasdfadsfqasdfASDFASDFASD")
 
         params = {
             'client_id': data['clientId'],
@@ -82,3 +94,21 @@ class GithubAuth(object):
         db.session.commit()
         token = utils.create_token(u)
         return json.dumps(token=token)
+
+    def on_put(self, req, res):
+        raise falcon.HTTPError(falcon.HTTP_405,
+                               title="Client error",
+                               description=req.method + " method not allowed.",
+                               href=settings.__docs__)
+
+    def on_update(self, req, res):
+        raise falcon.HTTPError(falcon.HTTP_405,
+                               title="Client error",
+                               description=req.method + " method not allowed.",
+                               href=settings.__docs__)
+
+    def on_delete(self, req, res):
+        raise falcon.HTTPError(falcon.HTTP_405,
+                               title="Client error",
+                               description=req.method + " method not allowed.",
+                               href=settings.__docs__)

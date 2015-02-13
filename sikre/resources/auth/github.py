@@ -57,32 +57,29 @@ class GithubAuth(object):
 
         # Step 3. (optional) Link accounts.
         if req.auth:
-            # Parse token
             payload = utils.parse_token(req)
-
-            # Try to see if there's already an account
             try:
                 user = User.select().where(
                     (User.github == profile['id']) |
                     (User.id == payload['sub'])
                 ).get()
-
-                if user:
-                    logger.debug("GitHub OAuth: Account {0} already exists".format(profile["id"]))
-                    token = utils.create_jwt_token(user)
-                    res.body = json.dumps({"token": token})
-                    res.status = falcon.HTTP_200
-                    return
-            # Step 4. No account, let's create one!
+                logger.debug("GitHub OAuth: Account {0} already exists".format(profile["id"]))
             except User.DoesNotExist:
                 logger.debug("GitHub OAuth: User does not exist")
                 user = User.create(github=profile['id'], username=profile['name'], email=profile["email"])
                 user.save()
                 logger.debug("GitHub OAuth: Created user {0}".format(profile["name"]))
-                token = utils.create_jwt_token(user)
-                res.body = json.dumps({"token": token})
-                res.status = falcon.HTTP_200
-                return
+        else:
+            try:
+                user = User.select().where(User.github == profile['id']).get()
+            except User.DoesNotExist:
+                logger.debug("GitHub OAuth: User does not exist")
+                user = User.create(github=profile['id'], username=profile['name'], email=profile["email"])
+                user.save()
+                logger.debug("GitHub OAuth: Created user {0}".format(profile["name"]))
+        token = utils.create_jwt_token(user)
+        res.body = json.dumps({"token": token})
+        res.status = falcon.HTTP_200
 
     def on_options(self, req, res):
 

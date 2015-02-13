@@ -85,7 +85,7 @@ class GithubAuth(object):
                 # db.session.add(u)
                 # db.session.commit()
                 token = utils.create_jwt_token(u)
-                res.body = json.dumps(token=token)
+                res.body = json.dumps({"token":token})
                 res.status = falcon.HTTP_200
                 return
 
@@ -94,7 +94,7 @@ class GithubAuth(object):
             user = User.select().where(User.github == profile['id']).get()
             if user:
                 token = utils.create_jwt_token(user)
-                res.body = json.dumps(token=token)
+                res.body = json.dumps({"token":token})
                 res.status = falcon.HTTP_200
                 return
         except User.DoesNotExist:
@@ -102,8 +102,14 @@ class GithubAuth(object):
             # db.session.add(u)
             # db.session.commit()
             token = utils.create_jwt_token(u)
-            res.body = json.dumps(token=token)
+            res.body = json.dumps({"token":token})
             res.status = falcon.HTTP_200
+            res.set_headers({
+                'Access-Control-Allow-Credentials': 'true',
+                'Access-Control-Allow-Origin': 'https://sikr.io',
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, UPDATE, DELETE'
+            })
 
     def on_put(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,

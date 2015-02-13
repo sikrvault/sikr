@@ -84,12 +84,12 @@ class GithubAuth(object):
             return json.dumps(token=token)
 
         # Step 4. Create a new account or return an existing one.
-        user = User.select().where(github=profile['id']).get()
+        user = User.select().where(User.github == profile['id']).get()
         if user:
             token = utils.create_token(user)
             return json.dumps(token=token)
 
-        u = User(github=profile['id'], display_name=profile['name'])
+        u = User(User.github == profile['id'], User.username == profile['name'])
         db.session.add(u)
         db.session.commit()
         token = utils.create_token(u)

@@ -20,7 +20,7 @@ class BaseHeaders(object):
         headers for the API interaction.
         """
         resp.set_headers({
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': req.host,
             'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
             'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE'
         })

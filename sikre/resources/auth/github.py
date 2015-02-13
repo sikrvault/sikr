@@ -80,7 +80,7 @@ class GithubAuth(object):
                 #     res.status = falcon.HTTP_400
                 #     return
             except User.DoesNotExist:
-                u = User(github=profile['id'], username=profile['name'])
+                u = User(github=profile['id'], username=profile['name'], email=profile["email"])
                 u.save()
                 # db.session.add(u)
                 # db.session.commit()
@@ -98,7 +98,7 @@ class GithubAuth(object):
                 res.status = falcon.HTTP_200
                 return
         except User.DoesNotExist:
-            u = User(github=profile['id'], username=profile['name'])
+            u = User(github=profile['id'], username=profile['name'], email=profile["email"])
             # db.session.add(u)
             # db.session.commit()
             token = utils.create_jwt_token(u)

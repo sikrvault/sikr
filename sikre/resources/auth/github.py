@@ -61,49 +61,73 @@ class GithubAuth(object):
 
         # Step 3. (optional) Link accounts.
         if req.auth:
+            # Parse token
+            payload = utils.parse_token(req)
+
             # Try to see if there's already an account or is not created
             try:
-                user = User.select().where(User.github == profile['id']).get()
+                user = User.select().where(
+                    (User.github == profile['id']) |
+                    (User.id == payload['sub'])
+                ).get()
+
                 if user:
                     logger.debug("GitHub OAuth: Account {0} already exists".format(profile["id"]))
-                    res.body = json.dumps(message='There is already a GitHub account that belongs to you')
-                    res.status = falcon.HTTP_409
+                    token = utils.create_jwt_token(user)
+                    res.body = json.dumps({"token":token})
+                    res.status = falcon.HTTP_200
                     return
             except User.DoesNotExist:
-                pass
-
-            try:
-                payload = utils.parse_token(req)
-                user = User.select().where(User.id == payload['sub']).get()
-                # if not user:
-                #     res.body = json.dumps(message='User not found')
-                #     res.status = falcon.HTTP_400
-                #     return
-            except User.DoesNotExist:
-                u = User(github=profile['id'], username=profile['name'], email=profile["email"])
-                u.save()
-                # db.session.add(u)
-                # db.session.commit()
-                token = utils.create_jwt_token(u)
-                res.body = json.dumps({"token":token})
-                res.status = falcon.HTTP_200
-                return
-
-        # Step 4. Create a new account or return an existing one.
-        try:
-            user = User.select().where(User.github == profile['id']).get()
-            if user:
+                logger.debug("GitHub OAuth: User does not exist")
+                user = User.create(github=profile['id'], username=profile['name'], email=profile["email"])
+                user.save()
                 token = utils.create_jwt_token(user)
                 res.body = json.dumps({"token":token})
                 res.status = falcon.HTTP_200
                 return
-        except User.DoesNotExist:
-            u = User(github=profile['id'], username=profile['name'], email=profile["email"])
-            # db.session.add(u)
-            # db.session.commit()
-            token = utils.create_jwt_token(u)
-            res.body = json.dumps({"token":token})
-            res.status = falcon.HTTP_200
+
+
+        #         if user:
+
+        #             token = utils.create_jwt_token(user)
+        #             res.body = json.dumps({"token":token})
+        #         res.status = falcon.HTTP_200
+        #             return
+        #     except User.DoesNotExist:
+        #         pass
+
+        #     try:
+        #         payload = utils.parse_token(req)
+        #         user = User.select().where(User.id == payload['sub']).get()
+        #         # if not user:
+        #         #     res.body = json.dumps(message='User not found')
+        #         #     res.status = falcon.HTTP_400
+        #         #     return
+        #     except User.DoesNotExist:
+        #         u = User(github=profile['id'], username=profile['name'], email=profile["email"])
+        #         u.save()
+        #         # db.session.add(u)
+        #         # db.session.commit()
+        #         token = utils.create_jwt_token(u)
+        #         res.body = json.dumps({"token":token})
+        #         res.status = falcon.HTTP_200
+        #         return
+
+        # # Step 4. Create a new account or return an existing one.
+        # try:
+        #     user = User.select().where(User.github == profile['id']).get()
+        #     if user:
+        #         token = utils.create_jwt_token(user)
+        #         res.body = json.dumps({"token":token})
+        #         res.status = falcon.HTTP_200
+        #         return
+        # except User.DoesNotExist:
+        #     u = User(github=profile['id'], username=profile['name'], email=profile["email"])
+        #     # db.session.add(u)
+        #     # db.session.commit()
+        #     token = utils.create_jwt_token(u)
+        #     res.body = json.dumps({"token":token})
+        #     res.status = falcon.HTTP_200
 
     def on_put(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
@@ -124,10 +148,4 @@ class GithubAuth(object):
                                href=settings.__docs__)
 
     def on_options(self, req, res):
-            res.set_headers({
-                'Access-Control-Allow-Credentials': 'true',
-                'Access-Control-Allow-Origin': 'https://sikr.io',
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
-                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, UPDATE, DELETE'
-            })
-            res.status = falcon.HTTP_200
+        res.status = falcon.HTTP_200

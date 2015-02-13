@@ -28,8 +28,8 @@ logger.debug("hit the resource")
 class GithubAuth(object):
 
     def on_get(self, req, res):
-        res.body = "wat the fuck"
-        res.status = falcon.HTTP_200
+        res.body = "This is not supposed to happen"
+        res.status = falcon.HTTP_404
 
     def on_post(self, req, res):
         access_token_url = 'https://github.com/login/oauth/access_token'

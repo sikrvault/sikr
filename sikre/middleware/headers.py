@@ -22,6 +22,6 @@ class BaseHeaders(object):
         resp.set_headers({
             'Access-Control-Allow-Credentials': 'true',
             'Access-Control-Allow-Origin': 'https://sikr.io',
-            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
             'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, UPDATE, DELETE'
         })

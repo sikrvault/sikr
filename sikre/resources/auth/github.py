@@ -82,8 +82,8 @@ class GithubAuth(object):
             except User.DoesNotExist:
                 u = User(User.github == profile['id'], User.username == profile['name'])
                 u.save()
-                db.session.add(u)
-                db.session.commit()
+                # db.session.add(u)
+                # db.session.commit()
                 token = utils.create_token(u)
                 res.body = json.dumps(token=token)
                 res.status = falcon.HTTP_200
@@ -99,8 +99,8 @@ class GithubAuth(object):
                 return
         except User.DoesNotExist:
             u = User(User.github == profile['id'], User.username == profile['name'])
-            db.session.add(u)
-            db.session.commit()
+            # db.session.add(u)
+            # db.session.commit()
             token = utils.create_token(u)
             res.body = json.dumps(token=token)
             res.status = falcon.HTTP_200

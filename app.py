@@ -16,7 +16,7 @@ import falcon
 
 from sikre.middleware import json, https, headers, handle_404
 from sikre.resources import groups, items, services, main, tests
-from sikre.resources.auth import github, facebook
+from sikre.resources.auth import github, facebook, google
 from sikre.utils.logs import logger
 from sikre import settings
 
@@ -60,7 +60,7 @@ else:
 
     # api.add_route(api_version + '/auth/forgotpassword', ForgotPasswordResource())
     api.add_route(api_version + '/auth/facebook/login', facebook.FacebookAuth())
-    # api.add_route(api_version + '/auth/google', GoogleAuth())
+    api.add_route(api_version + '/auth/google', google.GoogleAuth())
     # api.add_route(api_version + '/auth/twitter', Twitter())
     api.add_route(api_version + '/auth/github/login', github.GithubAuth())
     # api.add_route(api_version + '/auth/linkedin', LinkedinAuth())

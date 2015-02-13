@@ -60,7 +60,7 @@ else:
 
     # api.add_route(api_version + '/auth/forgotpassword', ForgotPasswordResource())
     api.add_route(api_version + '/auth/facebook/login', facebook.FacebookAuth())
-    api.add_route(api_version + '/auth/google', google.GoogleAuth())
+    api.add_route(api_version + '/auth/google/login', google.GoogleAuth())
     # api.add_route(api_version + '/auth/twitter', Twitter())
     api.add_route(api_version + '/auth/github/login', github.GithubAuth())
     # api.add_route(api_version + '/auth/linkedin', LinkedinAuth())

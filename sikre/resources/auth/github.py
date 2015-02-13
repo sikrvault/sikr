@@ -114,4 +114,12 @@ class GithubAuth(object):
                                href=settings.__docs__)
 
     def on_options(self, req, res):
+            stream = req.stream.read()
+            data = json.dumps(stream.decode('utf-8'))
+            res.set_headers({
+                'Access-Control-Allow-Credentials': 'true',
+                'Access-Control-Allow-Origin': data["redirectUri"],
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, UPDATE, DELETE'
+            })
             res.status = falcon.HTTP_200

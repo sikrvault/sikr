@@ -26,7 +26,7 @@ class BaseHeaders(object):
             'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, UPDATE, DELETE'
         })
 
-    def process_response(self, req, res):
+    def process_response(self, req, res, resource):
 
         res.set_headers({
             'Access-Control-Allow-Credentials': 'true',

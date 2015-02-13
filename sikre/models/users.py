@@ -26,8 +26,8 @@ class User(ConnectionModel):
     extra parameters for administration.
     """
     username = CharField(unique=True)
-    token = CharField(unique=True)
-    password = CharField(unique=True)
+    # token = CharField(unique=True)
+    # password = CharField(unique=True)
     email = CharField(unique=True)
 
     # Social JWT storage

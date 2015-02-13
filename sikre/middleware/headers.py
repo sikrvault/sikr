@@ -20,7 +20,8 @@ class BaseHeaders(object):
         headers for the API interaction.
         """
         resp.set_headers({
-            'Access-Control-Allow-Origin': req.host,
+            'Access-Control-Allow-Credentials': 'true',
+            'Access-Control-Allow-Origin': 'https://sikr.io',
             'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
             'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE'
         })

@@ -45,7 +45,9 @@ class GithubAuth(object):
 
         # Step 2. Retrieve information about the current user.
         r = requests.get(users_api_url, params=access_token, headers=headers)
+        print(r)
         profile = json.loads(r.text)
+        print(profile)
 
         # Step 3. (optional) Link accounts.
         if req.auth:

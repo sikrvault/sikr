@@ -21,6 +21,6 @@ class BaseHeaders(object):
         """
         resp.set_headers({
             'Access-Control-Allow-Origin': req.host,
-            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
+            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
             'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE'
         })

@@ -29,5 +29,5 @@ def create_jwt_token(user):
 
 
 def parse_token(req):
-    token = req.headers.get('Authorization').split()[1]
+    token = req.auth.split()[1]
     return jwt.decode(token, settings.SECRET)

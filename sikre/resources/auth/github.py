@@ -114,12 +114,9 @@ class GithubAuth(object):
                                href=settings.__docs__)
 
     def on_options(self, req, res):
-            stream = req.stream.read()
-            logger.debug(stream)
-            data = json.loads(stream.decode('utf-8'))
             res.set_headers({
                 'Access-Control-Allow-Credentials': 'true',
-                'Access-Control-Allow-Origin': data["redirectUri"],
+                'Access-Control-Allow-Origin': 'https://sikr.io',
                 'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
                 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, UPDATE, DELETE'
             })

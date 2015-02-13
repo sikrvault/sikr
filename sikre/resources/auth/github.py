@@ -112,3 +112,6 @@ class GithubAuth(object):
                                title="Client error",
                                description=req.method + " method not allowed.",
                                href=settings.__docs__)
+
+    def on_options(self, req, res):
+            res.status = falcon.HTTP_200

@@ -104,12 +104,6 @@ class GithubAuth(object):
             token = utils.create_jwt_token(u)
             res.body = json.dumps({"token":token})
             res.status = falcon.HTTP_200
-            res.set_headers({
-                'Access-Control-Allow-Credentials': 'true',
-                'Access-Control-Allow-Origin': 'https://sikr.io',
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, UPDATE, DELETE'
-            })
 
     def on_put(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
@@ -130,10 +124,4 @@ class GithubAuth(object):
                                href=settings.__docs__)
 
     def on_options(self, req, res):
-            res.set_headers({
-                'Access-Control-Allow-Credentials': 'true',
-                'Access-Control-Allow-Origin': 'https://sikr.io',
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, UPDATE, DELETE'
-            })
             res.status = falcon.HTTP_200

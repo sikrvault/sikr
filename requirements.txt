@@ -7,3 +7,4 @@ ipython
 sphinx
 pyjwt
 cryptography
+requests

@@ -12,8 +12,8 @@
 
 import json
 from urllib.parse import parse_qsl
-# from urlparse import parse_qsl
-# from urllib import urlencode
+
+import requests
 
 from sikre import settings
 from sikre.db.connector import db
@@ -27,24 +27,28 @@ class GithubAuth(object):
         access_token_url = 'https://github.com/login/oauth/access_token'
         users_api_url = 'https://api.github.com/user'
 
+        # Read the incoming data
+        stream = req.stream.read()
+        data = json.loads(stream.decode('utf-8'))
+
         params = {
-            'client_id': req.json['clientId'],
-            'redirect_uri': req.json['redirectUri'],
+            'client_id': data['clientId'],
+            'redirect_uri': data['redirectUri'],
             'client_secret': settings.GITHUB_SECRET,
-            'code': req.json['code']
+            'code': data['code']
         }
 
         # Step 1. Exchange authorization code for access token.
-        r = req.get(access_token_url, params=params)
+        r = requests.get(access_token_url, params=params)
         access_token = dict(parse_qsl(r.text))
         headers = {'User-Agent': 'Satellizer'}
 
         # Step 2. Retrieve information about the current user.
-        r = req.get(users_api_url, params=access_token, headers=headers)
+        r = requests.get(users_api_url, params=access_token, headers=headers)
         profile = json.loads(r.text)
 
         # Step 3. (optional) Link accounts.
-        if req.headers.get('Authorization'):
+        if req.auth:
             user = User.select().where(User.github == profile['id']).get()
             if user:
                 res = json.dumps(message='There is already a GitHub account that belongs to you')

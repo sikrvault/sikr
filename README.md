@@ -1,6 +1,6 @@
 # Sikre
 
-[![Build Status](https://travis-ci.org/clione/sikre.svg?branch=master)](https://travis-ci.org/clione/sikre) ![Issues closed](http://issuestats.com/github/clione/sikre/badge/issue?style=flat) ![PR closed](http://issuestats.com/github/clione/sikre/badge/pr?style=flat)
+[![Build Status](https://travis-ci.org/clione/sikre.svg?branch=master)](https://travis-ci.org/clione/sikre) [![Issues closed](http://issuestats.com/github/clione/sikre/badge/issue?style=flat)](http://issuestats.com/github/clione/sikre) [![PR closed](http://issuestats.com/github/clione/sikre/badge/pr?style=flat)](http://issuestats.com/github/clione/sikre)
 
 **Please note:** *Sikre is in early development stages, it's not recommended to use it in production yet.*
 

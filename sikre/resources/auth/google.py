@@ -42,22 +42,20 @@ class GoogleAuth(object):
         }
         logger.debug("Google OAuth: Built the code response correctly")
 
-        # dict(client_id=request.json['clientId'],
-        #                redirect_uri=request.json['redirectUri'],
-        #                client_secret=app.config['GOOGLE_SECRET'],
-        #                code=request.json['code'],
-        #                grant_type='authorization_code')
-
         # Step 1. Exchange authorization code for access token.
         r = requests.post(access_token_url, data=payload)
         token = json.loads(r.text)
         headers = {'Authorization': 'Bearer {0}'.format(token['access_token'])}
         logger.debug("Google OAuth: Auth code exchange for token success")
+        logger.debug(r)
+        logger.debug(token)
+        logger.debug(headers)
 
         # Step 2. Retrieve information about the current user.
         r = requests.get(people_api_url, headers=headers)
         profile = json.loads(r.text)
         logger.debug("Google OAuth: Retrieve user information success")
+        logger.debug(profile)
 
         try:
             user = User.select().where(User.google == profile['sub']).get()

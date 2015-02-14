@@ -1,6 +1,6 @@
 cython
-peewee
-falcon>=0.2.0rc1
+peewee>=2.4.7
+falcon>=0.2.0rc2
 talons
 pycrypto
 ipython

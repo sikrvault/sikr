@@ -14,29 +14,44 @@
 # databases according to the settings.
 # TODO: Move the connector out of the models
 
-from peewee import *
+import json
+
+import peewee as orm
 
 from sikre import settings
+from sikre.utils.logs import logger
 
 try:
     db_conf = settings.DATABASE
+    # Set the defaults in case something happens
+    db_user = settings.DATABASE["USER"] or 'root'
+    db_host = settings.DATABASE["HOST"] or 'localhost'
+    db_postgres_port = settings.DATABASE["PORT"] or '5432'
+    db_mysql_port = settings.DATABASE["PORT"] or '3306'
+
     if db_conf['ENGINE'] == 'postgres':
-        db = PostgresqlDatabase(
-            db_conf['NAME'], user=db_conf['USER'],
-            password=db_conf['PASSWORD'], host=db_conf['HOST'],
-            port=db_conf['PORT'])
+        db = orm.PostgresqlDatabase(
+            db_conf['NAME'], user=db_user, password=db_conf['PASSWORD'],
+            host=db_host, port=db_postgres_port)
+        logger.debug("Connected to the PostgreSQL database")
+    elif db_conf['ENGINE'] == 'mysql':
+        db = orm.MySQLDatabase(
+            db_conf['NAME'], user=db_user, password=db_conf['PASSWORD'],
+            host=db_host, port=db_mysql_port)
+        logger.debug("Connected to the MySQL database")
     else:
-        db = SqliteDatabase(settings.DATABASE['NAME'])
+        db = orm.SqliteDatabase(settings.DATABASE['NAME'])
+        logger.debug("Connected to the SQLite database")
 except Exception as e:
     message = ("Couldn't connect to the database. Please check that your "
                "configuration is okay and the database exists.")
-    logger.error(message)
+    logger.critical(message)
     # This will leave the message in the WSGI logfile in case the other logger
     # fails
     print(message)
 
 
-class ConnectionModel(Model):
+class ConnectionModel(orm.Model):
 
     """This model will abstract some of the functionality required across all
     the data models in the application.

@@ -11,8 +11,12 @@
 # under the License.
 
 import datetime
+import hashlib
+import uuid
+import hmac
+import crypt
 
-from peewee import *
+import peewee as pw
 from playhouse.shortcuts import ManyToManyField
 
 from sikre.db.connector import ConnectionModel
@@ -25,22 +29,22 @@ class User(ConnectionModel):
     authentication, like email, username, and auth token, apart from some
     extra parameters for administration.
     """
-    username = CharField(unique=True)
+    username = pw.CharField(unique=True)
     # token = CharField(unique=True)
     # password = CharField(unique=True)
-    email = CharField(unique=True)
+    email = pw.CharField(unique=True)
 
     # Social JWT storage
-    facebook = CharField(unique=True, null=True)
-    google = CharField(unique=True, null=True)
-    github = CharField(unique=True, null=True)
-    linkedin = CharField(unique=True, null=True)
-    twitter = CharField(unique=True, null=True)
+    facebook = pw.CharField(unique=True, null=True)
+    google = pw.CharField(unique=True, null=True)
+    github = pw.CharField(unique=True, null=True)
+    linkedin = pw.CharField(unique=True, null=True)
+    twitter = pw.CharField(unique=True, null=True)
 
     # Data
-    join_date = DateTimeField(default=datetime.datetime.now)
-    is_active = BooleanField(default=True)
-    is_superuser = BooleanField(default=False)
+    join_date = pw.DateTimeField(default=datetime.datetime.now)
+    is_active = pw.BooleanField(default=True)
+    is_superuser = pw.BooleanField(default=False)
 
     def set_password(self, password):
         """
@@ -69,8 +73,8 @@ class Group(ConnectionModel):
     """
     Basic model to group users.
     """
-    name = CharField(max_length=255, unique=True)
+    name = pw.CharField(max_length=255, unique=True)
     users = ManyToManyField(User, related_name='usergroups')
-    pub_date = DateTimeField(default=datetime.datetime.now)
+    pub_date = pw.DateTimeField(default=datetime.datetime.now)
 
 UserGroup = Group.users.get_through_model()

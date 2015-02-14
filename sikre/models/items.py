@@ -12,7 +12,7 @@
 
 import datetime
 
-from peewee import *
+import peewee as pw
 from playhouse.shortcuts import ManyToManyField
 
 from sikre.db.connector import ConnectionModel
@@ -20,18 +20,18 @@ from sikre.models.users import User
 
 
 class ItemGroup(ConnectionModel):
-    name = CharField(max_length=255, unique=True)
+    name = pw.CharField(max_length=255, unique=True)
     allowed_users = ManyToManyField(User, related_name='itemgroups')
 
 UserItemGroup = ItemGroup.allowed_users.get_through_model()
 
 
 class Item(ConnectionModel):
-    name = CharField()
-    description = TextField()
+    name = pw.CharField()
+    description = pw.TextField()
     allowed_users = ManyToManyField(User, related_name='allowed_users')
-    pub_date = DateTimeField(default=datetime.datetime.now)
-    tags = CharField(null=True)
-    group = ForeignKeyField(ItemGroup)
+    pub_date = pw.DateTimeField(default=datetime.datetime.now)
+    tags = pw.CharField(null=True)
+    group = pw.ForeignKeyField(ItemGroup)
 
 UserItem = Item.allowed_users.get_through_model()

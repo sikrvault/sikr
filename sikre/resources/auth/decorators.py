@@ -14,19 +14,25 @@ import datetime
 import json
 from functools import wraps
 
+from jwt import DecodeError, ExpiredSignature
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not request.headers.get('Authorization'):
-            response.body = 'Missing authorization header'
-            response.status_code = 401
+            response = jsonify(message='Missing authorization header')
+            response.status = 401
             return response
 
-        payload = parse_token(request)
-
-        if datetime.fromtimestamp(payload['exp']) < datetime.now():
+        try:
+            payload = parse_token(request)
+        except DecodeError:
+            response = jsonify(message='Token is invalid')
+            response.status = 401
+            return response
+        except ExpiredSignature:
             response = jsonify(message='Token has expired')
-            response.status_code = 401
+            response.status = 401
             return response
 
         g.user_id = payload['sub']

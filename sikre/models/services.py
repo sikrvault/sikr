@@ -12,18 +12,18 @@
 
 import datetime
 
-from peewee import *
+import peewee as pw
 
 from sikre.db.connector import ConnectionModel
 from sikre.models.items import Item
 
 
 class Service(ConnectionModel):
-    name = CharField(max_length=255)
-    username = CharField(max_length=255)
-    password = CharField(max_length=255)
-    url = CharField(max_length=255)
+    name = pw.CharField(max_length=255)
+    username = pw.CharField(max_length=255)
+    password = pw.CharField(max_length=255)
+    url = pw.CharField(max_length=255)
 
     # file =
-    item = ForeignKeyField(Item, related_name='items')
-    pub_date = DateTimeField(default=datetime.datetime.now)
+    item = pw.ForeignKeyField(Item, related_name='items')
+    pub_date = pw.DateTimeField(default=datetime.datetime.now)

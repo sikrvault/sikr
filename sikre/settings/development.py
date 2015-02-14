@@ -3,12 +3,11 @@ import os
 # Add the current directory to the python path
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# Specify here the database settings. Currently we support only PostgreSQL and
-# SQLite.
+# Specify here the database settings. We support MySQL, PostgreSQL and SQLite
 DATABASE = {
-    'ENGINE': 'sqlite',        # 'postgres' for PostgreSQL or 'sqlite' for SQLite. Any other defaults to sqlite
-    'NAME': 'development.db',  # Collection name. Filename for SQLite or DB name for PostgreSQL
-    'HOST': '',                # Server IP. Default: localhost
+    'ENGINE': 'sqlite',        # 'postgres', 'sqlite' or 'mysql'. Any other defaults to sqlite
+    'NAME': 'development.db',  # Filename for SQLite or DB name for PostgreSQL/MySQL
+    'HOST': '',                # Not needed for SQLite. Server IP. Default: localhost
     'PORT': '',                # Not needed for SQLite. PostgreSQL default: 5432
     'USER': '',                # Not needed for SQLite. User that has access to the DB
     'PASSWORD': '',            # Not needed for SQLite. Password for the user
@@ -36,11 +35,13 @@ LINKEDIN_SECRET = ''
 GOOGLEPLUS_SECRET = ''
 TWITTER_SECRET = ''
 
-# Main server token, this is used as the second cycle cryptography. Make it
-# unique and keep it away from strangers! This token is an example.
+# Main server token Make it unique and keep it away from strangers! This token
+# is used in authentication and part of the storage encryption.
 SECRET = '-&3whmt0f&h#zvyc@yk4bs3g6biu9l&a%0l=5u*q2+rz(sypdk'
 
-# Logging settings. This is a standard python logging configuration.
+# Logging settings. This is a standard python logging configuration. The levels
+# are supposed to change depending on the settings file, to avoid clogging the
+# logs with useless information.
 LOGFILE = 'sikr.log'
 LOG_CONFIG = {
     "version": 1,

@@ -47,33 +47,26 @@ class GoogleAuth(object):
         token = json.loads(r.text)
         headers = {'Authorization': 'Bearer {0}'.format(token['access_token'])}
         logger.debug("Google OAuth: Auth code exchange for token success")
-        logger.debug(r)
-        logger.debug(token)
-        logger.debug(headers)
 
         # Step 2. Retrieve information about the current user.
         r = requests.get(people_api_url, headers=headers)
         profile = json.loads(r.text)
         logger.debug("Google OAuth: Retrieve user information success")
-        logger.debug(profile)
 
         try:
             user = User.select().where(User.google == profile['sub']).get()
             if user:
                 logger.debug("Google OAuth: Account {0} already exists".format(profile["sub"]))
-                token = utils.create_jwt_token(user)
-                res.body = json.dumps({"token": token})
-                res.status = falcon.HTTP_200
-                return
         except User.DoesNotExist:
             logger.debug("Google OAuth: User does not exist")
-            user = User.create(google=profile['sub'], username=profile['name'])
+            user = User.create(google=profile['sub'], username=profile['name'], email=profile['email'])
             user.save()
             logger.debug("Google OAuth: Created user {0}".format(profile["name"]))
-            token = utils.create_jwt_token(user)
-            res.body = json.dumps({"token": token})
-            res.status = falcon.HTTP_200
-            return
+
+        token = utils.create_jwt_token(user)
+        res.body = json.dumps({"token": token})
+        res.status = falcon.HTTP_200
+        return
 
     def on_options(self, req, res):
 

@@ -61,8 +61,12 @@ class GithubAuth(object):
             try:
                 user = User.select().where(
                     (User.github == profile['id']) |
-                    (User.id == payload['sub'])
+                    (User.id == payload['sub']) |
+                    (User.email == profile['email'])
                 ).get()
+                # Set the github code again. This is a failsafe.
+                user.github = profile['id']
+                user.save()
                 logger.debug("GitHub OAuth: Account {0} already exists".format(profile["id"]))
             except User.DoesNotExist:
                 logger.debug("GitHub OAuth: User does not exist")
@@ -71,7 +75,13 @@ class GithubAuth(object):
                 logger.debug("GitHub OAuth: Created user {0}".format(profile["name"]))
         else:
             try:
-                user = User.select().where(User.github == profile['id']).get()
+                user = User.select().where(
+                    (User.github == profile['id']) |
+                    (User.email == profile['email'])
+                ).get()
+                # Set the github code again. This is a failsafe.
+                user.github = profile['id']
+                user.save()
             except User.DoesNotExist:
                 logger.debug("GitHub OAuth: User does not exist")
                 user = User.create(github=profile['id'], username=profile['name'], email=profile["email"])

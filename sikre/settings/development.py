@@ -36,7 +36,8 @@ GOOGLEPLUS_SECRET = ''
 TWITTER_SECRET = ''
 
 # Main server token Make it unique and keep it away from strangers! This token
-# is used in authentication and part of the storage encryption.
+# is used in authentication and part of the storage encryption. This token
+# is an example. **You MUST replace it!**
 SECRET = '-&3whmt0f&h#zvyc@yk4bs3g6biu9l&a%0l=5u*q2+rz(sypdk'
 
 # Logging settings. This is a standard python logging configuration. The levels

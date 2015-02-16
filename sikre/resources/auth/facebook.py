@@ -56,32 +56,39 @@ class FacebookAuth(object):
 
         # Step 3. (optional) Link accounts.
         if req.auth:
-            # Parse token
             payload = utils.parse_token(req)
-
-            # Try to see if there's already an account
             try:
                 user = User.select().where(
                     (User.github == profile['id']) |
-                    (User.id == payload['sub'])
+                    (User.id == payload['sub']) |
+                    (User.email == profile['email'])
                 ).get()
-
-                if user:
-                    logger.debug("GitHub OAuth: Account {0} already exists".format(profile["id"]))
-                    token = utils.create_jwt_token(user)
-                    res.body = json.dumps({"token": token})
-                    res.status = falcon.HTTP_200
-                    return
-            # Step 4. No account, let's create one!
+                # Set the facebook code again. This is a failsafe.
+                user.facebook = profile['id']
+                user.save()
+                logger.debug("Facebook OAuth: Account {0} already exists".format(profile["id"]))
             except User.DoesNotExist:
-                logger.debug("GitHub OAuth: User does not exist")
+                logger.debug("Facebook OAuth: User does not exist")
                 user = User.create(facebook=profile['id'], username=profile['name'], email=profile["email"])
                 user.save()
-                logger.debug("GitHub OAuth: Created user {0}".format(profile["name"]))
-                token = utils.create_jwt_token(user)
-                res.body = json.dumps({"token": token})
-                res.status = falcon.HTTP_200
-                return
+                logger.debug("Facebook OAuth: Created user {0}".format(profile["name"]))
+        else:
+            try:
+                user = User.select().where(
+                    (User.facebook == profile['id']) |
+                    (User.email == profile['email'])
+                ).get()
+                # Set the github code again. This is a failsafe.
+                user.facebook = profile['id']
+                user.save()
+            except User.DoesNotExist:
+                logger.debug("Facebook OAuth: User does not exist")
+                user = User.create(facebook=profile['id'], username=profile['name'], email=profile["email"])
+                user.save()
+                logger.debug("Facebook OAuth: Created user {0}".format(profile["name"]))
+        token = utils.create_jwt_token(user)
+        res.body = json.dumps({"token": token})
+        res.status = falcon.HTTP_200
 
     def on_options(self, req, res):
 

@@ -38,7 +38,7 @@ class FacebookAuth(object):
 
         params = {
             'client_id': data['clientId'],
-            'redirect_uri': data['redirectUri'],
+            'redirect_uri': data['redirectUri'] + '/',
             'client_secret': settings.FACEBOOK_SECRET,
             'code': data['code']
         }
@@ -59,7 +59,7 @@ class FacebookAuth(object):
             payload = utils.parse_token(req)
             try:
                 user = User.select().where(
-                    (User.github == profile['id']) |
+                    (User.facebook == profile['id']) |
                     (User.id == payload['sub']) |
                     (User.email == profile['email'])
                 ).get()

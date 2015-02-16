@@ -8,3 +8,4 @@ sphinx
 pyjwt
 cryptography
 requests
+requests-oauthlib

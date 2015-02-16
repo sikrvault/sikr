@@ -33,7 +33,9 @@ GITHUB_SECRET = ''
 FACEBOOK_SECRET = ''
 LINKEDIN_SECRET = ''
 GOOGLEPLUS_SECRET = ''
-TWITTER_SECRET = ''
+TWITTER_KEY = ''
+TWITTER_SECRET = ''  # Twitter consumer secret
+TWITTER_CALLBACK_URI = ''
 
 # Main server token Make it unique and keep it away from strangers! This token
 # is used in authentication and part of the storage encryption. This token

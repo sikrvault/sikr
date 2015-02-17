@@ -16,7 +16,7 @@ import falcon
 
 from sikre.middleware import json, https, headers, handle_404
 from sikre.resources import groups, items, services, main, tests
-from sikre.resources.auth import github, facebook, google
+from sikre.resources.auth import github, facebook, google, twitter, linkedin
 from sikre.utils.logs import logger
 from sikre import settings
 
@@ -45,7 +45,7 @@ else:
     # wsgi_app
     api = falcon.API(
         middleware=[
-            #json.RequireJSON(),
+            # json.RequireJSON(),
             https.RequireHTTPS(),
             headers.BaseHeaders(),
             handle_404.WrongURL()
@@ -55,16 +55,20 @@ else:
     # URLs
     api_version = '/' + settings.DEFAULT_API
     api.add_route(api_version, main.Version())
+
+    # Basic Auth
     # api.add_route(api_version + '/auth/login', auth.LoginResource())
     # api.add_route(api_version + '/auth/logout', LogoutResource())
-
     # api.add_route(api_version + '/auth/forgotpassword', ForgotPasswordResource())
+
+    # Social Auth
     api.add_route(api_version + '/auth/facebook/login', facebook.FacebookAuth())
     api.add_route(api_version + '/auth/google/login', google.GoogleAuth())
-    # api.add_route(api_version + '/auth/twitter', Twitter())
+    api.add_route(api_version + '/auth/twitter/login', twitter.TwitterAuth())
     api.add_route(api_version + '/auth/github/login', github.GithubAuth())
-    # api.add_route(api_version + '/auth/linkedin', LinkedinAuth())
+    api.add_route(api_version + '/auth/linkedin/login', linkedin.LinkedinAuth())
 
+    # Content
     api.add_route(api_version + '/groups', groups.Groups())
     api.add_route(api_version + '/groups/{id}', groups.DetailGroup())
     api.add_route(api_version + '/items', items.Items())

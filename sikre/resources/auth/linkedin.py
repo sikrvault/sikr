@@ -11,8 +11,7 @@
 # under the License.
 
 import json
-from urllib import urlencode
-from urllib.parse import parse_qsl
+from urllib.parse import parse_qsl, urlencode
 
 import falcon
 import requests

@@ -26,7 +26,7 @@ if sys.version_info <= (3, 0):
     sys.exit(1)
 
 # Are we running inside a virtual environment?
-if hasattr(sys, 'base_prefix'):
+if hasattr(sys, "real_prefix") or sys.prefix != sys.base_prefix:
     print(" * Virtual environment found")
 else:
     print(" * Virtual environment not detected. You will need to "

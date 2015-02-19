@@ -32,7 +32,7 @@ class User(ConnectionModel):
     username = pw.CharField(unique=True)
     # token = CharField(unique=True)
     # password = CharField(unique=True)
-    email = pw.CharField(unique=True)
+    email = pw.CharField(unique=True, null=True)
 
     # Social JWT storage
     facebook = pw.CharField(unique=True, null=True)

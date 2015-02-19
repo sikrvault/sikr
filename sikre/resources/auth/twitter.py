@@ -44,10 +44,11 @@ class TwitterAuth(object):
             logger.debug("Twitter OAuth: User profile retrieved")
 
             try:
-                user = User.select().where(User.twitter == profile['user_id']).get()
+                user = User.select().where(User.twitter == profile['user_id'] |
+                                           User.username == profile['screen_name']).get()
             except:
                 user = User.create(twitter=profile['user_id'],
-                                   display_name=profile['screen_name'])
+                                   username=profile['screen_name'])
 
             token = utils.create_jwt_token(user)
             res.body = json.dumps({"token": token})

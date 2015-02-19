@@ -25,7 +25,7 @@ from sikre.utils.logs import logger
 
 class TwitterAuth(object):
 
-    def on_post(self, req, res):
+    def on_get(self, req, res):
 
         """Create Twitter JWT token
         """
@@ -60,7 +60,20 @@ class TwitterAuth(object):
             oauth_token = dict(parse_qsl(r.text))
             logger.debug("Twitter OAuth: User profile retrieved")
             qs = urlencode(dict(oauth_token=oauth_token['oauth_token']))
-            return redirect(authenticate_url + '?' + qs)
+
+            # Falcon doesn't suppor redirects, so we have to fake it
+            # this implementation has been taken from werkzeug
+            final_url = authenticate_url + '?' + qs
+            res.body = (
+                '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">\n'
+                '<title>Redirecting...</title>\n'
+                '<h1>Redirecting...</h1>\n'
+                '<p>You should be redirected automatically to target URL: '
+                '<a href="{0}">{0}</a>.  If not click the link.'.format(final_url)
+            )
+            res.location = final_url
+            res.code = 301
+            # return redirect(authenticate_url + '?' + qs)
 
     def on_options(self, req, res):
 
@@ -68,7 +81,7 @@ class TwitterAuth(object):
         """
         res.status = falcon.HTTP_200
 
-    def on_get(self, req, res):
+    def on_post(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
                                description=req.method + " method not allowed.",

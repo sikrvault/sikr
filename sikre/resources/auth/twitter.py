@@ -15,7 +15,7 @@ from urllib.parse import parse_qsl, urlencode
 
 import falcon
 import requests
-from requests_oauthlib import OAuth1Session
+from requests_oauthlib import OAuth1
 
 from sikre import settings
 from sikre.models.users import User

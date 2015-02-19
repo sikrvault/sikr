@@ -43,14 +43,15 @@ class TwitterAuth(object):
             profile = dict(parse_qsl(r.text))
             logger.debug("Twitter OAuth: User profile retrieved")
 
-            user = User.select().where(User.twitter == profile['user_id']).get()
-            if user:
-                token = utils.create_jwt_token(user)
-                return json.dumps({"token": token})
-            u = User(twitter=profile['user_id'],
-                     display_name=profile['screen_name'])
-            token = utils.create_jwt_token(u)
-            return json.dumps({"token": token})
+            try:
+                user = User.select().where(User.twitter == profile['user_id']).get()
+            except:
+                user = User.create(twitter=profile['user_id'],
+                                   display_name=profile['screen_name'])
+
+            token = utils.create_jwt_token(user)
+            res.body = json.dumps({"token": token})
+            res.status = falcon.HTTP_200
         else:
             oauth = OAuth1(settings.TWITTER_KEY,
                            client_secret=settings.TWITTER_SECRET,
@@ -61,7 +62,7 @@ class TwitterAuth(object):
             logger.debug("Twitter OAuth: User profile retrieved")
             qs = urlencode(dict(oauth_token=oauth_token['oauth_token']))
 
-            # Falcon doesn't suppor redirects, so we have to fake it
+            # Falcon doesn't support redirects, so we have to fake it
             # this implementation has been taken from werkzeug
             final_url = authenticate_url + '?' + qs
             res.body = (
@@ -73,7 +74,6 @@ class TwitterAuth(object):
             )
             res.location = final_url
             res.status = falcon.HTTP_301
-            # return redirect(authenticate_url + '?' + qs)
 
     def on_options(self, req, res):
 

@@ -72,7 +72,7 @@ class TwitterAuth(object):
                 '<a href="{0}">{0}</a>.  If not click the link.'.format(final_url)
             )
             res.location = final_url
-            res.code = 301
+            res.status = falcon.HTTP_301
             # return redirect(authenticate_url + '?' + qs)
 
     def on_options(self, req, res):

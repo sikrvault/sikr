@@ -34,10 +34,10 @@ class TwitterAuth(object):
         authenticate_url = 'https://api.twitter.com/oauth/authenticate'
 
         if req.get_param('oauth_token') and req.get_param('oauth_verifier'):
-            auth = OAuth1Session(settings.TWITTER_KEY,
-                                 client_secret=settings.TWITTER_SECRET,
-                                 resource_owner_key=req.get_param('oauth_token'),
-                                 verifier=req.get_param('oauth_verifier'))
+            auth = OAuth1(settings.TWITTER_KEY,
+                          client_secret=settings.TWITTER_SECRET,
+                          resource_owner_key=req.get_param('oauth_token'),
+                          verifier=req.get_param('oauth_verifier'))
             logger.debug("Twitter OAuth: Got auth session. Previous auth.")
             r = requests.post(access_token_url, auth=auth)
             profile = dict(parse_qsl(r.text))
@@ -52,9 +52,9 @@ class TwitterAuth(object):
             token = utils.create_jwt_token(u)
             return json.dumps({"token": token})
         else:
-            oauth = OAuth1Session(settings.TWITTER_KEY,
-                                  client_secret=settings.TWITTER_SECRET,
-                                  callback_uri=settings.TWITTER_CALLBACK_URI)
+            oauth = OAuth1(settings.TWITTER_KEY,
+                           client_secret=settings.TWITTER_SECRET,
+                           callback_uri=settings.TWITTER_CALLBACK_URI)
             logger.debug("Twitter OAuth: Got auth session. No previous auth")
             r = requests.post(request_token_url, auth=oauth)
             oauth_token = dict(parse_qsl(r.text))

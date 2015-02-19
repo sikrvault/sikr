@@ -11,32 +11,57 @@
 # under the License.
 
 import datetime
-import json
-from functools import wraps
 
-from jwt import DecodeError, ExpiredSignature
+import falcon
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if not request.headers.get('Authorization'):
-            response = jsonify(message='Missing authorization header')
-            response.status = 401
-            return response
+from sikre import settings
+from sikre.resources.auth import utils
+from sikre.utils.logs import logger
 
-        try:
-            payload = parse_token(request)
-        except DecodeError:
-            response = jsonify(message='Token is invalid')
-            response.status = 401
-            return response
-        except ExpiredSignature:
-            response = jsonify(message='Token has expired')
-            response.status = 401
-            return response
 
-        g.user_id = payload['sub']
+def login_required(req, res, resource, params):
 
-        return f(*args, **kwargs)
+    """Check the token to validate login state
 
-    return decorated_function
+    Check the JWT token sent by the frontend to see if the following conditions
+    are NOT met:
+        - Issuer host doesn't match the one specified in the settings file
+        - Expiry timestamp is lower than the current timestamp
+        - Issued timestamp is lower than the current timestamp minus SESSION_EXPIRES
+
+    :returns: Redirect to the LOGIN_URL or HTTP 200
+    """
+    if req.auth:
+        logger.debug("Login required: The user has a token in the header")
+        payload = utils.parse_token(req)
+        current_time = datetime.datetime.now()
+        issue_time = current_time - datetime.timedelta(hours=settings.SESSION_EXPIRES)
+        if payload['iss'] != settings.SITE_DOMAIN or \
+           payload['exp'] <= int(current_time.timestamp()) or \
+           payload['iat'] <= int(issue_time):
+
+            logger.debug("Auth token expired of malformed")
+            res.body = (
+                '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">\n'
+                '<title>Redirecting...</title>\n'
+                '<h1>Redirecting...</h1>\n'
+                '<p>You should be redirected automatically to target URL: '
+                '<a href="{0}">{0}</a>.  If not click the link.'.format(settings.LOGIN_URL)
+            )
+            res.location = settings.LOGIN_URL
+            res.status = falcon.HTTP_301
+            return
+        else:
+            res.status = falcon.HTTP_200
+    else:
+        logger.debug("Auth token expired of malformed")
+        res.body = (
+            '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">\n'
+            '<title>Redirecting...</title>\n'
+            '<h1>Redirecting...</h1>\n'
+            '<p>You should be redirected automatically to target URL: '
+            '<a href="{0}">{0}</a>.  If not click the link.'.format(settings.LOGIN_URL)
+        )
+        res.location = settings.LOGIN_URL
+        res.status = falcon.HTTP_301
+        return

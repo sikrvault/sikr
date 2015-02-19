@@ -19,7 +19,7 @@ from sikre import settings
 
 def create_jwt_token(user):
     payload = {
-        'iss': 'localhost',
+        'iss': settings.SITE_DOMAIN,
         'sub': user.id,
         'iat': datetime.now(),
         'exp': datetime.now() + timedelta(hours=settings.SESSION_EXPIRES)

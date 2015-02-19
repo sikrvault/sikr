@@ -38,7 +38,7 @@ class TwitterAuth(object):
                           client_secret=settings.TWITTER_SECRET,
                           resource_owner_key=req.get_param('oauth_token'),
                           verifier=req.get_param('oauth_verifier'))
-            logger.debug("Twitter OAuth: Got auth session. Previous auth.")
+            logger.debug("Twitter OAuth: Got auth session.")
             r = requests.post(access_token_url, auth=auth)
             profile = dict(parse_qsl(r.text))
             logger.debug("Twitter OAuth: User profile retrieved")
@@ -58,7 +58,7 @@ class TwitterAuth(object):
             oauth = OAuth1(settings.TWITTER_KEY,
                            client_secret=settings.TWITTER_SECRET,
                            callback_uri=settings.TWITTER_CALLBACK_URI)
-            logger.debug("Twitter OAuth: Got auth session. No previous auth")
+            logger.debug("Twitter OAuth: Got auth session.")
             r = requests.post(request_token_url, auth=oauth)
             oauth_token = dict(parse_qsl(r.text))
             logger.debug("Twitter OAuth: User profile retrieved")

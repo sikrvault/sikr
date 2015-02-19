@@ -23,6 +23,11 @@ ALLOWED_EXTENSIONS = [
 # logic in the app.
 DEFAULT_API = 'v1'
 
+# Site domain, you usually want this to be your frontend url. This is used for
+# login verification between other things
+SITE_DOMAIN = 'https://sikr.io'
+LOGIN_URL = 'http://sikr.io/login.html'
+
 # How long the user session will last (in hours). Default: 168 (7 days)
 SESSION_EXPIRES = 168
 

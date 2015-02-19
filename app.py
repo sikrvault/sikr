@@ -27,16 +27,19 @@ if sys.version_info <= (3, 0):
 
 if __name__ == "__main__":
     if len(sys.argv) >= 2:
+        from sikre.db import generator, syncdb, superuser
         if sys.argv[1] == "syncdb":
-            from sikre.db import syncdb
             syncdb.generate_db_schema()
+        if sys.argv[1] == "createsuperuser":
+            superuser.create_superuser()
         if sys.argv[1] == "generate":
-            from sikre.db import generator
-            generator.generate_database()
+            user = superuser.create_superuser()
+            generator.generate_database(user=user)
     else:
         print("No option specified.\n\n"
-              "    syncdb   - Create the database schema\n"
-              "    generate - Fill the database with random data. Useful for testing\n\n"
+              "    syncdb          - Create the database schema\n"
+              "    createsuperuser - Create a superuser account"
+              "    generate        - Fill the database with random data. Useful for testing\n\n"
               "If you intended to run the application itself you must call the constructor\n"
               "in the following fashion (uwsgi example):\n\n"
               "    uwsgi --http :8080 --wsgi-file app.py --callable api\n\n")

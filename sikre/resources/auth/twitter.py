@@ -49,6 +49,7 @@ class TwitterAuth(object):
             except:
                 user = User.create(twitter=profile['user_id'],
                                    username=profile['screen_name'])
+                user.save()
 
             token = utils.create_jwt_token(user)
             res.body = json.dumps({"token": token})

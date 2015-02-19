@@ -13,16 +13,10 @@
 # under the License.
 
 import sys
-import getpass
-# path = os.path.dirname(os.path.realpath(__file__)).strip('/utils')
-# sys.path.append(path)
-# print(sys.path)
-import hashlib
-import uuid
 import random
 import string
 
-from peewee import *
+import peewee as orm
 
 from sikre.models import users, items, services
 from sikre.utils.logs import logger
@@ -33,37 +27,10 @@ def send_message(string):
     sys.stdout.write("\033[K")
 
 
-def generate_database():
+def generate_database(user=None):
     logger.info("Starting database generation")
-    ############################
-    # Admin user creation      #
-    ############################
-
-    create_admin = input("\nDo you want to create an admin user? (Y/n) ")
-    if create_admin in ['y', 'Y', 'yes', 'YES', None]:
-        name = input("Full name: ")
-        email = input("E-Mail address: ")
-        username = input("Username (no spaces): ")
-        password = getpass.getpass("Password (we don't ask twice!): ")
-
-        # Process the password for storage
-        salt = uuid.uuid4().hex.encode('utf-8')
-        hashed_password = hashlib.sha512(password.encode('utf-8') + salt).hexdigest()
-
-        # Create the user object in the database
-        new_user = users.User.create(name=name, email=email, username=username,
-                                     password=hashed_password, token='dummytoken',
-                                     is_superuser=True)
-        new_user.save()
-    else:
-        logger.info("Admin user not created. You can create it afterwards.\n")
-
-    ##########################
-    # Database generation    #
-    ##########################
-
     # Create a dummy user if there's no admin
-    if create_admin != 'y' and create_admin != 'Y':
+    if not user:
         new_user = users.User.create(name="Dummy", email="dummy@example.com",
                                      username="dummy", password="dummy", token="dummy")
         new_user.save()
@@ -89,7 +56,7 @@ def generate_database():
             digits = "".join([random.choice(string.digits) for i in range(8)])
             new_item = items.Item(name=chars, description=chars * 2, group=new_group)
             new_item.save()
-            new_item.allowed_users.add(random.choice([new_user, secondary_user]))
+            new_item.allowed_users.add(random.choice([secondary_user]))
             items_counter -= 1
 
             # Create some services

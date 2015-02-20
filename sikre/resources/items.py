@@ -19,7 +19,7 @@ from sikre.utils.logs import logger
 from sikre.models.users import User
 from sikre.models.items import ItemGroup, Item
 from sikre.models.services import Service
-from sikre.resources.decorators import login_required
+from sikre.resources.auth.decorators import login_required
 
 
 class Items(object):

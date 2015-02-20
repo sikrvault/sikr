@@ -17,6 +17,7 @@ import falcon
 from sikre import settings
 from sikre.models.users import User
 from sikre.models.items import ItemGroup
+from sikre.resources.auth.decorators import login_required
 
 
 @falcon.before(login_required)

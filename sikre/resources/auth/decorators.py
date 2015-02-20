@@ -39,7 +39,7 @@ def login_required(req, res, resource, params):
         issue_time = current_time - datetime.timedelta(hours=settings.SESSION_EXPIRES)
         if payload['iss'] != settings.SITE_DOMAIN or \
            payload['exp'] <= int(current_time.timestamp()) or \
-           payload['iat'] <= int(issue_time):
+           payload['iat'] <= int(issue_time.timestamp()):
 
             logger.debug("Active token expired of malformed")
             raise falcon.HTTPError(falcon.HTTP_401, title="Credentials expired",

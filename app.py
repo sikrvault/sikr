@@ -50,7 +50,7 @@ else:
         media_type='application/json',
         middleware=[
             # json.RequireJSON(),
-            json.JSONTranslator(),
+            # json.JSONTranslator(),
             https.RequireHTTPS(),
             headers.BaseHeaders(),
             handle_404.WrongURL()

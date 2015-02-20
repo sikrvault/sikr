@@ -1,11 +1,12 @@
-cython
+# Core
+cython>=0.22
+falcon>=0.2
 peewee>=2.4.7
-falcon>=0.2.0rc2
-talons
-pycrypto
+jwt>=0.3.2
+pycrypto>=2.6.1
+cryptography
+requests>=2.5.1
+requests-oauthlib>=0.4.2
+# Optional
 ipython
 sphinx
-pyjwt
-cryptography
-requests
-requests-oauthlib

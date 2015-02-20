@@ -22,9 +22,9 @@ from sikre.models.services import Service
 from sikre.resources.auth.decorators import login_required
 
 
+@falcon.before(login_required)
 class Items(object):
 
-    @falcon.before(login_required)
     def on_get(self, req, res):
         """Get the items that belong to that user.
 

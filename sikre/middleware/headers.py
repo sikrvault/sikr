@@ -20,6 +20,7 @@ class BaseHeaders(object):
         headers for the API interaction.
         """
         res.set_headers({
+            'Content-Type': 'application/json',
             'Access-Control-Allow-Credentials': 'true',
             'Access-Control-Allow-Origin': 'https://sikr.io',
             'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
@@ -29,6 +30,7 @@ class BaseHeaders(object):
     def process_response(self, req, res, resource):
 
         res.set_headers({
+            'Content-Type': 'application/json',
             'Access-Control-Allow-Credentials': 'true',
             'Access-Control-Allow-Origin': 'https://sikr.io',
             'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',

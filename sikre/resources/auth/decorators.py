@@ -11,6 +11,7 @@
 # under the License.
 
 import datetime
+import json
 
 import falcon
 
@@ -32,7 +33,7 @@ def login_required(req, res, resource, params):
     :returns: Redirect to the LOGIN_URL or HTTP 200
     """
     if req.auth:
-        logger.debug("Login required: The user has a token in the header")
+        logger.debug("The user has a token in the header")
         payload = utils.parse_token(req)
         current_time = datetime.datetime.now()
         issue_time = current_time - datetime.timedelta(hours=settings.SESSION_EXPIRES)
@@ -40,28 +41,13 @@ def login_required(req, res, resource, params):
            payload['exp'] <= int(current_time.timestamp()) or \
            payload['iat'] <= int(issue_time):
 
-            logger.debug("Auth token expired of malformed")
-            res.body = (
-                '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">\n'
-                '<title>Redirecting...</title>\n'
-                '<h1>Redirecting...</h1>\n'
-                '<p>You should be redirected automatically to target URL: '
-                '<a href="{0}">{0}</a>.  If not click the link.'.format(settings.LOGIN_URL)
-            )
-            res.location = settings.LOGIN_URL
-            res.status = falcon.HTTP_301
-            return
+            logger.debug("Active token expired of malformed")
+            raise falcon.HTTPError(falcon.HTTP_401, title="Credentials expired",
+                                   description="Your crendentials have expired")
+
         else:
             res.status = falcon.HTTP_200
     else:
         logger.debug("Auth token expired of malformed")
-        res.body = (
-            '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">\n'
-            '<title>Redirecting...</title>\n'
-            '<h1>Redirecting...</h1>\n'
-            '<p>You should be redirected automatically to target URL: '
-            '<a href="{0}">{0}</a>.  If not click the link.'.format(settings.LOGIN_URL)
-        )
-        res.location = settings.LOGIN_URL
-        res.status = falcon.HTTP_301
-        return
+        raise falcon.HTTPError(falcon.HTTP_401, title="Credentials expired",
+                               description="Your crendentials have expired")

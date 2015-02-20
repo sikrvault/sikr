@@ -27,8 +27,7 @@ class WrongURL(object):
         return an error json
         """
         if resp.status == falcon.HTTP_404:
-            resp.body = json.dumps({"message": "This endpoint doesn't exist",
-                                    "code": 404,
+            resp.body = json.dumps({"message": "Not found",
                                     "documentation": settings.__docs__,
                                     "api_version": settings.__version__,
                                     "api_codename": settings.__codename__,

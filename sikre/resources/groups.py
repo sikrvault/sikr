@@ -19,6 +19,7 @@ from sikre.models.users import User
 from sikre.models.items import ItemGroup
 
 
+@falcon.before(login_required)
 class Groups(object):
 
     """Show all the groups that the current user has read permission.
@@ -70,6 +71,7 @@ class Groups(object):
                                href=settings.__docs__)
 
 
+@falcon.before(login_required)
 class DetailGroup(object):
 
     """Show details of a specific group or add/delete a group

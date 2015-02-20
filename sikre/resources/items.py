@@ -90,6 +90,7 @@ class Items(object):
                                href=settings.__docs__)
 
 
+@falcon.before(login_required)
 class DetailItem(object):
 
     """Show details of a specific group or add/delete a group

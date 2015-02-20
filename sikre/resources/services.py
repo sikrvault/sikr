@@ -15,11 +15,11 @@ import json
 import falcon
 
 from sikre import settings
-from sikre.models.users import User
-from sikre.models.items import ItemGroup, Item
 from sikre.models.services import Service
+from sikre.resources.auth.decorators import login_required
 
 
+@falcon.before(login_required)
 class DetailService(object):
 
     """
@@ -70,6 +70,7 @@ class DetailService(object):
                                href=settings.__docs__)
 
 
+@falcon.before(login_required)
 class Services(object):
 
     def on_get(self, req, res):
@@ -85,7 +86,7 @@ class Services(object):
         """
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
     def on_post(self, request, response, pk):

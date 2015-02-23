@@ -48,6 +48,12 @@ class APIInfo(object):
             }
         )
 
+    def on_options(self, req, res):
+
+        """Acknowledge the OPTIONS method.
+        """
+        res.status = falcon.HTTP_200
+
     def on_post(self, request, response):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",

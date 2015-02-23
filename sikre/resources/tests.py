@@ -32,3 +32,9 @@ class TestResource(object):
             raise falcon.HTTPError(falcon.HTTP_500,
                                    "Server error",
                                    "Either there are no items or something went terribly wrong.")
+
+    def on_options(self, req, res):
+
+        """Acknowledge the OPTIONS method.
+        """
+        res.status = falcon.HTTP_200

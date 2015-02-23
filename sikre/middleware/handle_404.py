@@ -28,7 +28,4 @@ class WrongURL(object):
         """
         if resp.status == falcon.HTTP_404:
             resp.body = json.dumps({"message": "Not found",
-                                    "documentation": settings.__docs__,
-                                    "api_version": settings.__version__,
-                                    "api_codename": settings.__codename__,
-                                    "api_status": settings.__status__})
+                                    "documentation": settings.__docs__})

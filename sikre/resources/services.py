@@ -51,6 +51,12 @@ class DetailService(object):
     def on_post(self, req, res, id):
         pass
 
+    def on_options(self, req, res):
+
+        """Acknowledge the OPTIONS method.
+        """
+        res.status = falcon.HTTP_200
+
     def on_put(self, req, res, id):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",

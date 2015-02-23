@@ -71,6 +71,12 @@ class Items(object):
     def on_post(self, req, res):
         pass
 
+    def on_options(self, req, res):
+
+        """Acknowledge the OPTIONS method.
+        """
+        res.status = falcon.HTTP_200
+
     def on_put(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
@@ -119,6 +125,12 @@ class DetailItem(object):
                                title="Client error",
                                description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
+
+    def on_options(self, req, res):
+
+        """Acknowledge the OPTIONS method.
+        """
+        res.status = falcon.HTTP_200
 
     def on_put(self, req, res, id):
         try:

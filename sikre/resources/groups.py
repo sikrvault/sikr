@@ -20,7 +20,6 @@ from sikre.models.items import ItemGroup
 from sikre.resources.auth.decorators import login_required
 
 
-@falcon.before(login_required)
 class Groups(object):
 
     """Show all the groups that the current user has read permission.
@@ -28,6 +27,7 @@ class Groups(object):
     This resource will send the ItemGroups that belong to the user in the
     matter of ID and NAME
     """
+    @falcon.before(login_required)
     def on_get(self, req, res):
         # Check user authentication
         try:
@@ -50,6 +50,7 @@ class Groups(object):
                                                 retry_after=30,
                                                 href=settings.__docs__)
 
+    @falcon.before(login_required)
     def on_post(self, req, res):
         pass
 
@@ -83,6 +84,7 @@ class DetailGroup(object):
 
     """Show details of a specific group or add/delete a group
     """
+    @falcon.before(login_required)
     def on_get(self, req, res, id):
         # Check user authentication
         try:
@@ -102,6 +104,7 @@ class DetailGroup(object):
                                                 retry_after=30,
                                                 href=settings.__docs__)
 
+    @falcon.before(login_required)
     def on_post(self, req, res, id):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",

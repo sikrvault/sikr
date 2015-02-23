@@ -22,9 +22,9 @@ from sikre.models.services import Service
 from sikre.resources.auth.decorators import login_required
 
 
-@falcon.before(login_required)
 class Items(object):
 
+    @falcon.before(login_required)
     def on_get(self, req, res):
         """Get the items that belong to that user.
 
@@ -68,6 +68,7 @@ class Items(object):
                                                 retry_after=30,
                                                 href=settings.__docs__)
 
+    @falcon.before(login_required)
     def on_post(self, req, res):
         pass
 
@@ -96,11 +97,11 @@ class Items(object):
                                href=settings.__docs__)
 
 
-@falcon.before(login_required)
 class DetailItem(object):
 
     """Show details of a specific group or add/delete a group
     """
+    @falcon.before(login_required)
     def on_get(self, req, res, id):
         # Check user authentication
         try:
@@ -120,6 +121,7 @@ class DetailItem(object):
                                                 retry_after=30,
                                                 href=settings.__docs__)
 
+    @falcon.before(login_required)
     def on_post(self, req, res, id):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",

@@ -19,12 +19,12 @@ from sikre.models.services import Service
 from sikre.resources.auth.decorators import login_required
 
 
-@falcon.before(login_required)
 class DetailService(object):
 
     """
     This resource handles the /services/ url.
     """
+    @falcon.before(login_required)
     def on_get(self, req, res, id):
         # Get the data
         try:
@@ -48,6 +48,7 @@ class DetailService(object):
                                                 retry_after=30,
                                                 href=settings.__docs__)
 
+    @falcon.before(login_required)
     def on_post(self, req, res, id):
         pass
 

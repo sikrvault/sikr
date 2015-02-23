@@ -14,16 +14,14 @@ import sys
 
 import falcon
 
-from sikre.middleware import json, https, headers, handle_404
+from sikre.middleware import json, https, headers, handle_404, auth
 from sikre.resources import groups, items, services, main, tests
 from sikre.resources.auth import github, facebook, google, twitter, linkedin
 from sikre.utils.logs import logger
+from sikre.utils.checks import check_python
 from sikre import settings
 
-# Check if we are running on python 3
-if sys.version_info <= (3, 0):
-    sys.stdout.write("Sorry, requires Python 3.3.x or better, not Python 2.x\n")
-    sys.exit(1)
+check_python()
 
 if __name__ == "__main__":
     if len(sys.argv) >= 2:
@@ -49,6 +47,7 @@ else:
     api = falcon.API(
         media_type='application/json',
         middleware=[
+            auth.LoginRequired(),
             # json.RequireJSON(),
             # json.JSONTranslator(),
             https.RequireHTTPS(),
@@ -59,7 +58,7 @@ else:
 
     # URLs
     api_version = '/' + settings.DEFAULT_API
-    api.add_route(api_version, main.Version())
+    api.add_route(api_version, main.APIInfo())
 
     # Basic Auth
     # api.add_route(api_version + '/auth/login', auth.LoginResource())
@@ -77,7 +76,7 @@ else:
     api.add_route(api_version + '/groups', groups.Groups())
     api.add_route(api_version + '/groups/{id}', groups.DetailGroup())
     api.add_route(api_version + '/items', items.Items())
-    api.add_route(api_version + '/item/{id}', items.DetailItem())
+    api.add_route(api_version + '/items/{id}', items.DetailItem())
     api.add_route(api_version + '/services', services.Services())
     api.add_route(api_version + '/services/{id}', services.DetailService())
 

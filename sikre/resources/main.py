@@ -17,24 +17,36 @@ import falcon
 from sikre import settings
 
 
-class Version(object):
+class APIInfo(object):
 
-    """Returns the API version details
-
-    Args:
-        object
-    Returns:
-        JSON data
+    """Show the main information about the API like endpoints, version, etc.
     """
 
-    def on_get(self, request, response):
-
-        """Return the version of the API"""
-        response.status = falcon.HTTP_200
-        response.body = json.dumps({"api_version": settings.__version__,
-                                    "api_codename": settings.__codename__,
-                                    "api_status": settings.__status__,
-                                    "documentation": settings.__docs__})
+    def on_get(self, req, res):
+        res.status = falcon.HTTP_200
+        res.body = json.dumps(
+            {
+                "endpoints": {
+                    "facebook_login": settings.DEFAULT_API + '/auth/facebook/login',
+                    "google_login": settings.DEFAULT_API + '/auth/google/login',
+                    "github_login": settings.DEFAULT_API + '/auth/github/login',
+                    "twitter_login": settings.DEFAULT_API + '/auth/twitter/login',
+                    "linkedin_login": settings.DEFAULT_API + '/auth/linkedin/login',
+                    "groups": settings.DEFAULT_API + '/groups',
+                    "group_detail": settings.DEFAULT_API + '/groups/{id}',
+                    "items": settings.DEFAULT_API + '/items',
+                    "item_detail": settings.DEFAULT_API + '/items/{id}',
+                    "services": settings.DEFAULT_API + '/services',
+                    "service_detail": settings.DEFAULT_API + '/services/{id}',
+                },
+                "version": {
+                    "api_version": settings.__version__,
+                    "api_codename": settings.__codename__,
+                    "api_status": settings.__status__,
+                    "documentation": settings.__docs__
+                }
+            }
+        )
 
     def on_post(self, request, response):
         raise falcon.HTTPError(falcon.HTTP_405,

@@ -14,6 +14,9 @@
 from sikre.db.connector import db
 from sikre.models import users, items, services
 from sikre.utils.logs import logger
+from sikre.utils.checks import check_python
+
+check_python()
 
 
 def generate_db_schema():

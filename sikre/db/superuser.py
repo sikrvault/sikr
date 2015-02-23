@@ -13,9 +13,11 @@ import getpass
 import hashlib
 import uuid
 
-from sikre.db.connector import db
 from sikre.models import users
 from sikre.utils.logs import logger
+from sikre.utils.checks import check_python
+
+check_python()
 
 
 def create_superuser():

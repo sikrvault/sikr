@@ -52,7 +52,7 @@ class DetailService(object):
     def on_post(self, req, res, id):
         pass
 
-    def on_options(self, req, res):
+    def on_options(self, req, res, id):
 
         """Acknowledge the OPTIONS method.
         """
@@ -77,7 +77,6 @@ class DetailService(object):
                                href=settings.__docs__)
 
 
-@falcon.before(login_required)
 class Services(object):
 
     def on_get(self, req, res):
@@ -96,23 +95,29 @@ class Services(object):
                                description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
-    def on_post(self, request, response, pk):
+    def on_options(self, req, res):
+
+        """Acknowledge the OPTIONS method.
+        """
+        res.status = falcon.HTTP_200
+
+    def on_post(self, req, res):
         pass
 
-    def on_put(self, request, response, pk):
+    def on_put(self, req, res, pk):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
-    def on_update(self, request, response):
+    def on_update(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
-    def on_delete(self, request, response):
+    def on_delete(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)

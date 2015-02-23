@@ -123,18 +123,6 @@ class DetailItem(object):
 
     @falcon.before(login_required)
     def on_post(self, req, res, id):
-        raise falcon.HTTPError(falcon.HTTP_405,
-                               title="Client error",
-                               description="{0} method not allowed.".format(req.method),
-                               href=settings.__docs__)
-
-    def on_options(self, req, res):
-
-        """Acknowledge the OPTIONS method.
-        """
-        res.status = falcon.HTTP_200
-
-    def on_put(self, req, res, id):
         try:
             payload = json.loads(req.stream)
             group = ItemGroup.get(ItemGroup.pk == id)
@@ -147,6 +135,18 @@ class DetailItem(object):
                                                 description=error_msg,
                                                 retry_after=30,
                                                 href=settings.__docs__)
+
+    def on_options(self, req, res, id):
+
+        """Acknowledge the OPTIONS method.
+        """
+        res.status = falcon.HTTP_200
+
+    def on_put(self, req, res, id):
+        raise falcon.HTTPError(falcon.HTTP_405,
+                               title="Client error",
+                               description="{0} method not allowed.".format(req.method),
+                               href=settings.__docs__)
 
     def on_update(self, req, res, id):
         raise falcon.HTTPError(falcon.HTTP_405,

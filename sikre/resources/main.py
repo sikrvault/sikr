@@ -54,26 +54,26 @@ class APIInfo(object):
         """
         res.status = falcon.HTTP_200
 
-    def on_post(self, request, response):
+    def on_post(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
-    def on_put(self, request, response):
+    def on_put(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
-    def on_update(self, request, response):
+    def on_update(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)
 
-    def on_delete(self, request, response):
+    def on_delete(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(request.method),
+                               description="{0} method not allowed.".format(req.method),
                                href=settings.__docs__)

@@ -16,8 +16,10 @@ import falcon
 
 from sikre import settings
 from sikre.models.services import Service
+from sikre.resources.auth.decorators import login_required
 
 
+@falcon.before(login_required)
 class DetailService(object):
 
     """
@@ -68,6 +70,7 @@ class DetailService(object):
                                href=settings.__docs__)
 
 
+@falcon.before(login_required)
 class Services(object):
 
     def on_get(self, req, res):

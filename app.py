@@ -14,7 +14,7 @@ import sys
 
 import falcon
 
-from sikre.middleware import json, https, headers, handle_404, auth
+from sikre.middleware import json, https, headers, handle_404
 from sikre.resources import groups, items, services, main, tests
 from sikre.resources.auth import github, facebook, google, twitter, linkedin
 from sikre.utils.logs import logger
@@ -47,7 +47,6 @@ else:
     api = falcon.API(
         media_type='application/json',
         middleware=[
-            auth.LoginRequired(),
             # json.RequireJSON(),
             # json.JSONTranslator(),
             https.RequireHTTPS(),

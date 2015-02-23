@@ -19,8 +19,10 @@ from sikre.utils.logs import logger
 from sikre.models.users import User
 from sikre.models.items import ItemGroup, Item
 from sikre.models.services import Service
+from sikre.resources.auth.decorators import login_required
 
 
+@falcon.before(login_required)
 class Items(object):
 
     def on_get(self, req, res):
@@ -88,6 +90,7 @@ class Items(object):
                                href=settings.__docs__)
 
 
+@falcon.before(login_required)
 class DetailItem(object):
 
     """Show details of a specific group or add/delete a group

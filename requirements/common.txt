@@ -1,7 +1,7 @@
 cython>=0.22
 falcon>=0.2
 peewee>=2.4.7
-jwt>=0.3.2
+pyjwt>=0.4.3
 pycrypto>=2.6.1
 cryptography
 requests>=2.5.1

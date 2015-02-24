@@ -46,9 +46,11 @@ To install please follow these steps:
 
     `$ source <virtualenv folder>/bin/activate`
 
-* Install the dependencies
+* Install the dependencies. There is two options:
 
-    `$ python install.py`
+    `$ python install.py dev  # If you're going to develop`
+
+    `$ python install.py      # If it is a normal deploy`
 
 That will install Cython wait for it to finish and then Falcon and its
 dependencies. The reason is to win a bit more of speed with a precompiled
@@ -86,7 +88,8 @@ the moment of writing this document these are the functions:
 
 * `syncdb` Creates the database schema necessary to run the application
 * `createsuperuser` Creates a superuser in the database
-* `generate` Creates a superuser and fills the database with random data. Useful for testing
+* `generate` Creates a superuser and fills the database with random data.
+  This command only runs if DEBUG=True
 
 ## License and copyright
 

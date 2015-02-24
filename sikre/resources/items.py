@@ -20,6 +20,7 @@ from sikre.models.users import User
 from sikre.models.items import ItemGroup, Item
 from sikre.models.services import Service
 from sikre.resources.auth.decorators import login_required
+from sikre.resources.auth.utils import parse_token
 
 
 class Items(object):
@@ -38,21 +39,30 @@ class Items(object):
         and return the results dictionary wrapped in a list like the REsT
         standard says.
         """
+        # Parse token and get user id
+        user_id = parse_token(req)['sub']
+
         try:
             payload = []
+            # Get the user
+            user = User.get(User.id == int(user_id))
+            # See if we have to filter by group
             filter_group = req.get_param("group", required=False)
             if filter_group:
                 items = (Item.select(Item.name, Item.description, Item.id)
-                             .where(Item.group == int(filter_group))
+                             .where(Item.group == int(filter_group) &
+                                    Item.allowed_users << user.username)
                              .dicts())
-                logger.debug("Got items filtered by group")
+                logger.debug("Got items filtered by group and user")
             else:
                 items = (Item.select(Item.name, Item.description, Item.id)
+                             .where(Item.allowed_users << user.username)
                              .dicts())
                 logger.debug("Got all items")
             for item in items:
                 services = list(Service.select(Service.id, Service.name)
-                                       .where(Service.item == item["id"])
+                                       .where(Service.item == item["id"] &
+                                              Service.allowed_users << user.username)
                                        .dicts())
                 item["services"] = services
                 payload.append(item)
@@ -70,7 +80,36 @@ class Items(object):
 
     @falcon.before(login_required)
     def on_post(self, req, res):
-        pass
+
+        """Save a new item
+        """
+        try:
+            raw_json = req.stream.read()
+            logger.debug("Got incoming JSON data")
+        except Exception as e:
+            logger.error("Can't read incoming data stream")
+            raise falcon.HTTPBadRequest(title="Bad request",
+                                        description=e.message,
+                                        href=settings.__docs__)
+
+        try:
+            result_json = json.loads(raw_json, encoding='utf-8')
+        except ValueError:
+            raise falcon.HTTPError(falcon.HTTP_400,
+                                   'Malformed JSON',
+                                   'Could not decode the request body. The '
+                                   'JSON was incorrect.')
+
+        try:
+            new_item = Item.create(name=result_json['name'],
+                                   description=result_json["description"],
+                                   group=result_json["group"],
+                                   tags=result_json["tags"])
+            new_item.save()
+        except Exception as e:
+            raise falcon.HTTPInternalServerError(title="Error while saving the item",
+                                                 description=e.message,
+                                                 href=settings.__docs__)
 
     def on_options(self, req, res):
 

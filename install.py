@@ -17,7 +17,13 @@ import os
 import sys
 import pip
 
-REQUIREMENTS = os.path.join(os.getcwd(), 'requirements.txt')
+if len(sys.argv) >= 2:
+    if sys.argv[1] == 'dev':
+        REQUIREMENTS = os.path.join(os.getcwd(), 'requirements/dev.txt')
+        print(" * Selected development requirements")
+    else:
+        REQUIREMENTS = os.path.join(os.getcwd(), 'requirements/common.txt')
+        print(" * Selected common requirements")
 
 # Check if we are running on python 3
 if sys.version_info <= (3, 0):

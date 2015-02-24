@@ -16,7 +16,7 @@ import uuid
 import hmac
 import crypt
 
-import peewee as pw
+import peewee as orm
 from playhouse.shortcuts import ManyToManyField
 
 from sikre.db.connector import ConnectionModel
@@ -29,24 +29,24 @@ class User(ConnectionModel):
     authentication, like email, username, and auth token, apart from some
     extra parameters for administration.
     """
-    username = pw.CharField(unique=True)
+    username = orm.CharField(unique=True)
     # token = CharField(unique=True)
-    # password = CharField(unique=True)
-    email = pw.CharField(unique=True, null=True)
+    master_password = orm.CharField(max_length=255, null=True)
+    email = orm.CharField(unique=True, null=True)
 
     # Social JWT storage
-    facebook = pw.CharField(unique=True, null=True)
-    google = pw.CharField(unique=True, null=True)
-    github = pw.CharField(unique=True, null=True)
-    linkedin = pw.CharField(unique=True, null=True)
-    twitter = pw.CharField(unique=True, null=True)
+    facebook = orm.CharField(unique=True, null=True)
+    google = orm.CharField(unique=True, null=True)
+    github = orm.CharField(unique=True, null=True)
+    linkedin = orm.CharField(unique=True, null=True)
+    twitter = orm.CharField(unique=True, null=True)
 
     # Data
-    join_date = pw.DateTimeField(default=datetime.datetime.now)
-    is_active = pw.BooleanField(default=True)
-    is_superuser = pw.BooleanField(default=False)
+    join_date = orm.DateTimeField(default=datetime.datetime.now)
+    is_active = orm.BooleanField(default=True)
+    is_superuser = orm.BooleanField(default=False)
 
-    def set_password(self, password):
+    def set_master_password(self, password):
         """
         Method to set the password of the user. If the user registers through
         social networks, this method will be called to create a scrambled
@@ -54,10 +54,10 @@ class User(ConnectionModel):
         """
         salt = uuid.uuid4().hex.encode('utf-8')
         hashed_password = hashlib.sha512(password.encode('utf-8') + salt).hexdigest()
-        self.password = hashed_password
+        self.master_password = hashed_password
         self.save()
 
-    def check_password(self, password):
+    def check_master_password(self, password):
         """
         Method to check that the sent password matches the password in
         """
@@ -73,8 +73,8 @@ class Group(ConnectionModel):
     """
     Basic model to group users.
     """
-    name = pw.CharField(max_length=255, unique=True)
+    name = orm.CharField(max_length=255, unique=True)
     users = ManyToManyField(User, related_name='usergroups')
-    pub_date = pw.DateTimeField(default=datetime.datetime.now)
+    pub_date = orm.DateTimeField(default=datetime.datetime.now)
 
 UserGroup = Group.users.get_through_model()

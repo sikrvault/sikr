@@ -31,8 +31,11 @@ if __name__ == "__main__":
         if sys.argv[1] == "createsuperuser":
             superuser.create_superuser()
         if sys.argv[1] == "generate":
-            user = superuser.create_superuser()
-            generator.generate_database(user=user)
+            if settings.DEBUG:
+                user = superuser.create_superuser()
+                generator.generate_database(user=user)
+            else:
+                sys.exit(" * `generate` command not available when DEBUG=False. Please set DEBUG=True and remember to install the development requirements.")
     else:
         print("No option specified.\n\n"
               "    syncdb          - Create the database schema\n"

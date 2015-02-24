@@ -1,0 +1,4 @@
+-r common.txt
+fake-factory
+ipython
+sphinx

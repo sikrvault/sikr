@@ -13,13 +13,13 @@
 # under the License.
 
 import sys
-import random
-import string
 
-import peewee as orm
+from faker import Faker
 
 from sikre.models import users, items, services
 from sikre.utils.logs import logger
+
+fake = Faker()
 
 
 def send_message(string):
@@ -31,42 +31,47 @@ def generate_database(user=None):
     logger.info("Starting database generation")
     # Create a dummy user if there's no admin
     if not user:
-        new_user = users.User.create(name="Dummy", email="dummy@example.com",
-                                     username="dummy", password="dummy", token="dummy")
+        new_user = users.User.create(username="admin", email="example@example.com",
+                                     is_superuser=True)
+        new_user.set_master_password("admin")
         new_user.save()
 
-    # Create a secondary user
-    secondary_user = users.User.create(name="Second", email="example@example.com",
-                                       username="second", password="second", token="dummy1")
-    secondary_user.save()
-    # Create some groups
-    groups_counter = 5
-    while groups_counter > 0:
-        send_message(" * Creating groups, {0} remaining".format(groups_counter))
-        chars = "".join([random.choice(string.ascii_letters) for i in range(10)])
-        new_group = items.ItemGroup.create(name=chars,)
-        new_group.save()
-        groups_counter -= 1
+    # Create 3 users
+    user_counter = 3
+    while user_counter > 0:
+        user = users.User.create(username=fake.user_name(), email=fake.email())
+        user.set_master_password("test")
+        user.save()
+        user_counter -= 1
 
-        # Create some items
-        items_counter = 10
-        while items_counter > 0:
-            send_message(" * Creating items for group {0}. {1} remaining".format(new_group.id, items_counter))
-            chars = "".join([random.choice(string.ascii_letters) for i in range(15)])
-            digits = "".join([random.choice(string.digits) for i in range(8)])
-            new_item = items.Item(name=chars, description=chars * 2, group=new_group)
-            new_item.save()
-            new_item.allowed_users.add(random.choice([secondary_user]))
-            items_counter -= 1
+        # Create some groups
+        groups_counter = 3
+        while groups_counter > 0:
+            send_message(" * Creating groups, {0} remaining".format(groups_counter))
+            new_group = items.ItemGroup.create(name=fake.user_name())
+            new_group.allowed_users.add(user)
+            new_group.save()
+            groups_counter -= 1
 
-            # Create some services
-            services_counter = 4
-            while services_counter > 0:
-                send_message(" * Creating services for item {0}. {1} remaining".format(new_item.id, services_counter))
-                chars = "".join([random.choice(string.ascii_letters) for i in range(15)])
-                digits = "".join([random.choice(string.digits) for i in range(8)])
-                new_service = services.Service(name=chars, username=chars, password=chars, url=chars,
-                                               item=new_item)
-                new_service.save()
-                services_counter -= 1
-    logger.info("Database generation completed successfully")
+            # Create some items
+            items_counter = 5
+            while items_counter > 0:
+                send_message(" * Creating items for group {0}. {1} remaining".format(new_group.id, items_counter))
+                new_item = items.Item.create(name=fake.name(), description=fake.text(), group=new_group)
+                new_item.allowed_users.add(user)
+                new_item.save()
+                items_counter -= 1
+
+                # Create some services
+                services_counter = 4
+                while services_counter > 0:
+                    send_message(" * Creating services for item {0}. {1} remaining".format(new_item.id, services_counter))
+                    new_service = services.Service.create(name=fake.company(),
+                                                          username=fake.user_name(),
+                                                          password=fake.password(),
+                                                          url=fake.url(),
+                                                          item=new_item)
+                    new_service.allowed_users.add(user)
+                    new_service.save()
+                    services_counter -= 1
+        logger.info("Database generation completed successfully")

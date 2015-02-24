@@ -33,7 +33,8 @@ def generate_db_schema():
             items.UserItemGroup,
             items.UserItem,
             items.Item,
-            services.Service
+            services.Service,
+            services.UserService
         ])
         print(" * Database tables created")
     except Exception as e:

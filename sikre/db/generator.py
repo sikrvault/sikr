@@ -49,8 +49,8 @@ def generate_database(user=None):
         while groups_counter > 0:
             send_message(" * Creating groups, {0} remaining".format(groups_counter))
             new_group = items.ItemGroup.create(name=fake.user_name())
-            user.allowed_itemgroups.add(user)
             new_group.save()
+            new_group.allowed_users.add(user)
             groups_counter -= 1
 
             # Create some items
@@ -58,8 +58,8 @@ def generate_database(user=None):
             while items_counter > 0:
                 send_message(" * Creating items for group {0}. {1} remaining".format(new_group.id, items_counter))
                 new_item = items.Item.create(name=fake.name(), description=fake.text(), group=new_group)
-                user.allowed_items.add(user)
                 new_item.save()
+                new_item.allowed_users.add(user)
                 items_counter -= 1
 
                 # Create some services
@@ -71,7 +71,7 @@ def generate_database(user=None):
                                                           password=fake.password(),
                                                           url=fake.url(),
                                                           item=new_item)
-                    user.allowed_services.add(user)
                     new_service.save()
+                    new_service.allowed_users.add(user)
                     services_counter -= 1
         logger.info("Database generation completed successfully")

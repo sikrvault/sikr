@@ -18,6 +18,7 @@ from sikre import settings
 from sikre.models.users import User
 from sikre.models.items import ItemGroup
 from sikre.resources.auth.decorators import login_required
+from sikre.resources.auth.utils import parse_token
 
 
 class Groups(object):
@@ -29,19 +30,28 @@ class Groups(object):
     """
     @falcon.before(login_required)
     def on_get(self, req, res):
+        # Parse token and get user id
+        user_id = parse_token(req)['sub']
+
         # Check user authentication
         try:
-            payload = []
-            groups = ItemGroup.select()
+            # Get the user
+            user = User.get(User.id == int(user_id))
 
-            for group in groups:
-                group_dict = {}
-                group_dict["id"] = group.id
-                group_dict["name"] = group.name
-                payload.append(group_dict)
+            groups = list(user.allowed_itemgroups
+                              .select(ItemGroup.id, ItemGroup.name)
+                              .dicts())
+            # payload = []
+            # groups = ItemGroup.select()
+
+            # for group in groups:
+            #     group_dict = {}
+            #     group_dict["id"] = group.id
+            #     group_dict["name"] = group.name
+            #     payload.append(group_dict)
 
             res.status = falcon.HTTP_200
-            res.body = json.dumps(payload)
+            res.body = json.dumps(groups)
         except Exception as e:
             print(e)
             error_msg = ("Unable to get the groups. Please try again later")

@@ -43,31 +43,33 @@ class Items(object):
         user_id = parse_token(req)['sub']
 
         try:
-            payload = []
             # Get the user
             user = User.get(User.id == int(user_id))
             # See if we have to filter by group
             filter_group = req.get_param("group", required=False)
             if filter_group:
-                items = (Item.select(Item.name, Item.description, Item.id)
-                             .where(Item.group == int(filter_group) &
-                                    Item.allowed_users << user.username)
-                             .dicts())
+                items = list(user.allowed_items
+                                 .select(Item.name, Item.description, Item.id)
+                                 .where(Item.group == int(filter_group))
+                                 .dicts())
                 logger.debug("Got items filtered by group and user")
             else:
-                items = (Item.select(Item.name, Item.description, Item.id)
-                             .where(Item.allowed_users << user.username)
+                items = list(user.allowed_items
+                             .select(Item.name, Item.description, Item.id)
                              .dicts())
                 logger.debug("Got all items")
             for item in items:
-                services = list(Service.select(Service.id, Service.name)
-                                       .where(Service.item == item["id"] &
-                                              Service.allowed_users << user.username)
-                                       .dicts())
+                services = list(user.allowed_services
+                                    .select(Service.id, Service.name)
+                                    .where(Service.item == item["id"])
+                                    .dicts())
+                # services = list(Service.select(Service.id, Service.name)
+                #                        .where(Service.item == item["id"] &
+                #                               Service.allowed_users << user.username)
+                #                        .dicts())
                 item["services"] = services
-                payload.append(item)
             res.status = falcon.HTTP_200
-            res.body = json.dumps(payload)
+            res.body = json.dumps(items)
             logger.debug("Items request succesful")
         except Exception as e:
             print(e)

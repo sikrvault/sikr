@@ -41,15 +41,6 @@ class Groups(object):
             groups = list(user.allowed_itemgroups
                               .select(ItemGroup.id, ItemGroup.name)
                               .dicts())
-            # payload = []
-            # groups = ItemGroup.select()
-
-            # for group in groups:
-            #     group_dict = {}
-            #     group_dict["id"] = group.id
-            #     group_dict["name"] = group.name
-            #     payload.append(group_dict)
-
             res.status = falcon.HTTP_200
             res.body = json.dumps(groups)
         except Exception as e:

@@ -63,10 +63,6 @@ class Items(object):
                                     .select(Service.id, Service.name)
                                     .where(Service.item == item["id"])
                                     .dicts())
-                # services = list(Service.select(Service.id, Service.name)
-                #                        .where(Service.item == item["id"] &
-                #                               Service.allowed_users << user.username)
-                #                        .dicts())
                 item["services"] = services
             res.status = falcon.HTTP_200
             res.body = json.dumps(items)

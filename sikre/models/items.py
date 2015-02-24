@@ -21,7 +21,7 @@ from sikre.models.users import User
 
 class ItemGroup(ConnectionModel):
     name = pw.CharField(max_length=255, unique=True)
-    allowed_users = ManyToManyField(User, related_name='itemgroups')
+    allowed_users = ManyToManyField(User, related_name='allowed_itemgroups')
 
 UserItemGroup = ItemGroup.allowed_users.get_through_model()
 
@@ -29,7 +29,7 @@ UserItemGroup = ItemGroup.allowed_users.get_through_model()
 class Item(ConnectionModel):
     name = pw.CharField()
     description = pw.TextField()
-    allowed_users = ManyToManyField(User, related_name='allowed_users')
+    allowed_users = ManyToManyField(User, related_name='allowed_items')
     pub_date = pw.DateTimeField(default=datetime.datetime.now)
     tags = pw.CharField(null=True)
     group = pw.ForeignKeyField(ItemGroup)

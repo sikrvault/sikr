@@ -77,7 +77,7 @@ class Items(object):
                                                 href=settings.__docs__)
 
     @falcon.before(login_required)
-    def on_put(self, req, res):
+    def on_post(self, req, res):
 
         """Save a new item
         """
@@ -127,7 +127,7 @@ class Items(object):
         """
         res.status = falcon.HTTP_200
 
-    def on_post(self, req, res):
+    def on_put(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
                                description=req.method + " method not allowed.",

@@ -24,7 +24,7 @@ class BaseHeaders(object):
             'Access-Control-Allow-Credentials': 'true',
             'Access-Control-Allow-Origin': 'https://sikr.io',
             'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
-            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE'
+            'Access-Control-Allow-Methods': 'GET, PUT, POST, OPTIONS, DELETE'
         })
 
     def process_response(self, req, res, resource):
@@ -34,5 +34,5 @@ class BaseHeaders(object):
             'Access-Control-Allow-Credentials': 'true',
             'Access-Control-Allow-Origin': 'https://sikr.io',
             'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
-            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE'
+            'Access-Control-Allow-Methods': 'GET, PUT, POST, OPTIONS, DELETE'
         })

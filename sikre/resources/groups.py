@@ -52,7 +52,7 @@ class Groups(object):
                                                 href=settings.__docs__)
 
     @falcon.before(login_required)
-    def on_put(self, req, res):
+    def on_post(self, req, res):
         try:
             # Parse token and get user id
             user_id = parse_token(req)['sub']
@@ -96,7 +96,7 @@ class Groups(object):
         """
         res.status = falcon.HTTP_200
 
-    def on_post(self, req, res):
+    def on_put(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
                                description="{0} method not allowed.".format(req.method),

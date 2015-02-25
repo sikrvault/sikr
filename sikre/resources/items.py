@@ -110,10 +110,10 @@ class Items(object):
                                    'JSON was incorrect.')
 
         try:
-            new_item = Item.create(name=result_json['name'] or '',
-                                   description=result_json["description"] or '',
-                                   group=result_json["group"] or '',
-                                   tags=result_json["tags"] or '')
+            new_item = Item.create(name=result_json.get('name'),
+                                   description=result_json.get("description", ''),
+                                   group=result_json.get("group"),
+                                   tags=result_json.get("tags", ''))
             new_item.save()
             new_item.allowed_users.add(user)
         except Exception as e:
@@ -204,9 +204,10 @@ class DetailItem(object):
                 raise falcon.HTTPForbidden(title="Permission denied",
                                            description="You don't have access to this resource",
                                            href=settings.__docs__)
-            item.name = result_json["name"]
-            item.description = result_json["description"]
-            item.tags = result_json["tags"]
+            item.name = result_json.get("name", item.name)
+            item.description = result_json.get("description", item.description)
+            item.group = result_json.get("group", item.group)
+            item.tags = result_json.get("tags", item.tags)
             item.save()
             res.status = falcon.HTTP_200
             res.body = json.dumps({"message": "Item updated"})

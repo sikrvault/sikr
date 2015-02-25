@@ -102,7 +102,7 @@ class Items(object):
                                         href=settings.__docs__)
 
         try:
-            result_json = json.loads(str(raw_json), encoding='utf-8')
+            result_json = json.loads(raw_json.decode("utf-8"), encoding='utf-8')
         except ValueError:
             raise falcon.HTTPError(falcon.HTTP_400,
                                    'Malformed JSON',

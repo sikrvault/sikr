@@ -82,6 +82,17 @@ class Items(object):
         """Save a new item
         """
         try:
+            # Parse token and get user id
+            user_id = parse_token(req)['sub']
+            # Get the user
+            user = User.get(User.id == int(user_id))
+        except Exception as e:
+            logger.error("Can't verify user")
+            raise falcon.HTTPBadRequest(title="Bad request",
+                                        description=e.message,
+                                        href=settings.__docs__)
+
+        try:
             raw_json = req.stream.read()
             logger.debug("Got incoming JSON data")
         except Exception as e:
@@ -91,7 +102,7 @@ class Items(object):
                                         href=settings.__docs__)
 
         try:
-            result_json = json.loads(raw_json, encoding='utf-8')
+            result_json = json.loads(str(raw_json), encoding='utf-8')
         except ValueError:
             raise falcon.HTTPError(falcon.HTTP_400,
                                    'Malformed JSON',

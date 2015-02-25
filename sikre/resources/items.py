@@ -77,7 +77,7 @@ class Items(object):
                                                 href=settings.__docs__)
 
     @falcon.before(login_required)
-    def on_post(self, req, res):
+    def on_put(self, req, res):
 
         """Save a new item
         """
@@ -127,7 +127,7 @@ class Items(object):
         """
         res.status = falcon.HTTP_200
 
-    def on_put(self, req, res):
+    def on_post(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
                                description=req.method + " method not allowed.",
@@ -152,25 +152,108 @@ class DetailItem(object):
     """
     @falcon.before(login_required)
     def on_get(self, req, res, id):
-        # Check user authentication
+        user_id = parse_token(req)['sub']
         try:
-            group = ItemGroup.get(ItemGroup.id == id)
-
-            payload = {}
-            payload["name"] = group.name
-            payload["id"] = group.pk
-
+            user = User.get(User.id == int(user_id))
+            item = Item.get(Item.id == int(id))
+            if user not in item.allowed_users:
+                raise falcon.HTTPForbidden(title="Permission denied",
+                                           description="You don't have access to this resource",
+                                           href=settings.__docs__)
             res.status = falcon.HTTP_200
-            res.body = json.dumps(payload)
+            res.body = json.dumps(item)
+            logger.debug("Items request succesful")
         except Exception as e:
             print(e)
-            error_msg = ("Unable to get the group. Please try again later.")
+            error_msg = ("Unable to get the item. Please try again later.")
             raise falcon.HTTPServiceUnavailable(req.method + " failed",
                                                 description=error_msg,
                                                 retry_after=30,
                                                 href=settings.__docs__)
 
     @falcon.before(login_required)
+    def on_put(self, req, res, id):
+        try:
+            # Parse token and get user id
+            user_id = parse_token(req)['sub']
+            # Get the user
+            user = User.get(User.id == int(user_id))
+        except Exception as e:
+            logger.error("Can't verify user")
+            raise falcon.HTTPBadRequest(title="Bad request",
+                                        description=e,
+                                        href=settings.__docs__)
+        try:
+            raw_json = req.stream.read()
+            logger.debug("Got incoming JSON data")
+        except Exception as e:
+            logger.error("Can't read incoming data stream")
+            raise falcon.HTTPBadRequest(title="Bad request",
+                                        description=e,
+                                        href=settings.__docs__)
+        try:
+            result_json = json.loads(raw_json.decode("utf-8"), encoding='utf-8')
+        except ValueError:
+            raise falcon.HTTPError(falcon.HTTP_400,
+                                   'Malformed JSON',
+                                   'Could not decode the request body. The '
+                                   'JSON was incorrect.')
+        try:
+            item = Item.get(Item.id == int(id))
+            if user not in item.allowed_users:
+                raise falcon.HTTPForbidden(title="Permission denied",
+                                           description="You don't have access to this resource",
+                                           href=settings.__docs__)
+            item.name = result_json["name"]
+            item.description = result_json["description"]
+            item.tags = result_json["tags"]
+            item.save()
+            res.status = falcon.HTTP_200
+            res.body = json.dumps({"message": "Item updated"})
+        except Exception as e:
+            print(e)
+            error_msg = ("Unable to get the item. Please try again later.")
+            raise falcon.HTTPServiceUnavailable(req.method + " failed",
+                                                description=error_msg,
+                                                retry_after=30,
+                                                href=settings.__docs__)
+
+    @falcon.before(login_required)
+    def on_delete(self, req, res, id):
+        try:
+            # Parse token and get user id
+            user_id = parse_token(req)['sub']
+            # Get the user
+            user = User.get(User.id == int(user_id))
+        except Exception as e:
+            logger.error("Can't verify user")
+            raise falcon.HTTPBadRequest(title="Bad request",
+                                        description=e,
+                                        href=settings.__docs__)
+        try:
+            item = Item.get(Item.id == int(id))
+            if user not in item.allowed_users:
+                raise falcon.HTTPForbidden(title="Permission denied",
+                                           description="You don't have access to this resource",
+                                           href=settings.__docs__)
+            item.delete_instance()
+            res.status = falcon.HTTP_200
+            res.body = json.dumps({"message": "Deletion successful"})
+
+        except Exception as e:
+            print(e)
+            error_msg = ("Unable to delete group. Please try again later.")
+            raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
+                                                description=error_msg,
+                                                retry_after=30,
+                                                href=settings.__docs__)
+
+    def on_options(self, req, res, id):
+
+        """Acknowledge the OPTIONS method.
+        """
+        res.status = falcon.HTTP_200
+
     def on_post(self, req, res, id):
         try:
             payload = json.loads(req.stream)
@@ -185,36 +268,8 @@ class DetailItem(object):
                                                 retry_after=30,
                                                 href=settings.__docs__)
 
-    def on_options(self, req, res, id):
-
-        """Acknowledge the OPTIONS method.
-        """
-        res.status = falcon.HTTP_200
-
-    def on_put(self, req, res, id):
+    def on_update(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,
                                title="Client error",
-                               description="{0} method not allowed.".format(req.method),
+                               description=req.method + " method not allowed.",
                                href=settings.__docs__)
-
-    def on_update(self, req, res, id):
-        raise falcon.HTTPError(falcon.HTTP_405,
-                               title="Client error",
-                               description="{0} method not allowed.".format(req.method),
-                               href=settings.__docs__)
-
-    def on_delete(self, req, res, id):
-        try:
-            group = ItemGroup.get(ItemGroup.pk == id)
-            group.delete_instance(recursive=True)
-
-            res.status = falcon.HTTP_200
-            res.body = json.dumps({"status": "Deletion successful"})
-
-        except Exception as e:
-            print(e)
-            error_msg = ("Unable to delete group. Please try again later.")
-            raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
-                                                description=error_msg,
-                                                retry_after=30,
-                                                href=settings.__docs__)

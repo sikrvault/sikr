@@ -115,6 +115,7 @@ class Items(object):
                                    group=result_json["group"] or '',
                                    tags=result_json["tags"] or '')
             new_item.save()
+            new_item.allowed_users.add(user)
         except Exception as e:
             raise falcon.HTTPInternalServerError(title="Error while saving the item",
                                                  description=e,

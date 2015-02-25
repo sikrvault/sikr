@@ -89,7 +89,7 @@ class Items(object):
         except Exception as e:
             logger.error("Can't verify user")
             raise falcon.HTTPBadRequest(title="Bad request",
-                                        description=e.message,
+                                        description=e,
                                         href=settings.__docs__)
 
         try:
@@ -98,7 +98,7 @@ class Items(object):
         except Exception as e:
             logger.error("Can't read incoming data stream")
             raise falcon.HTTPBadRequest(title="Bad request",
-                                        description=e.message,
+                                        description=e,
                                         href=settings.__docs__)
 
         try:
@@ -110,14 +110,14 @@ class Items(object):
                                    'JSON was incorrect.')
 
         try:
-            new_item = Item.create(name=result_json['name'],
-                                   description=result_json["description"],
-                                   group=result_json["group"],
-                                   tags=result_json["tags"])
+            new_item = Item.create(name=result_json['name'] or '',
+                                   description=result_json["description"] or '',
+                                   group=result_json["group"] or '',
+                                   tags=result_json["tags"] or '')
             new_item.save()
         except Exception as e:
             raise falcon.HTTPInternalServerError(title="Error while saving the item",
-                                                 description=e.message,
+                                                 description=e,
                                                  href=settings.__docs__)
 
     def on_options(self, req, res):

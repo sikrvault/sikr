@@ -61,7 +61,7 @@ class Items(object):
                                  .dicts())
                 logger.debug("Got items filtered by group and user")
             else:
-                payload["group"] = "All"
+                payload["group_name"] = "All"
                 items = list(user.allowed_items
                              .select(Item.name, Item.description, Item.id)
                              .dicts())

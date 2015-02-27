@@ -50,8 +50,11 @@ class Items(object):
             filter_group = req.get_param("group", required=False)
             if filter_group:
                 # Get the group
-                group = ItemGroup.select(ItemGroup.name).where(ItemGroup.id == int(filter_group))
-                payload["group"] = group
+                group = (ItemGroup.select(ItemGroup.name, ItemGroup.id)
+                                  .where(ItemGroup.id == int(filter_group))
+                                  .get())
+                payload["group_name"] = str(group.name)
+                payload["group_id"] = int(group.id)
                 items = list(user.allowed_items
                                  .select(Item.name, Item.description, Item.id)
                                  .where(Item.group == int(filter_group))
@@ -262,18 +265,10 @@ class DetailItem(object):
         res.status = falcon.HTTP_200
 
     def on_post(self, req, res, id):
-        try:
-            payload = json.loads(req.stream)
-            group = ItemGroup.get(ItemGroup.pk == id)
-            pass
-
-        except Exception as e:
-            print(e)
-            error_msg = ("Unable to update the group. Please try again later.")
-            raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
-                                                description=error_msg,
-                                                retry_after=30,
-                                                href=settings.__docs__)
+        raise falcon.HTTPError(falcon.HTTP_405,
+                               title="Client error",
+                               description=req.method + " method not allowed.",
+                               href=settings.__docs__)
 
     def on_update(self, req, res):
         raise falcon.HTTPError(falcon.HTTP_405,

@@ -39,6 +39,7 @@ class Items(object):
         and return the results dictionary wrapped in a list like the REsT
         standard says.
         """
+        payload = {}
         # Parse token and get user id
         user_id = parse_token(req)['sub']
 
@@ -48,12 +49,16 @@ class Items(object):
             # See if we have to filter by group
             filter_group = req.get_param("group", required=False)
             if filter_group:
+                # Get the group
+                group = ItemGroup.select(ItemGroup.name).where(ItemGroup.id == int(filter_group))
+                payload["group"] = group
                 items = list(user.allowed_items
                                  .select(Item.name, Item.description, Item.id)
                                  .where(Item.group == int(filter_group))
                                  .dicts())
                 logger.debug("Got items filtered by group and user")
             else:
+                payload["group"] = "All"
                 items = list(user.allowed_items
                              .select(Item.name, Item.description, Item.id)
                              .dicts())
@@ -64,8 +69,9 @@ class Items(object):
                                     .where(Service.item == item["id"])
                                     .dicts())
                 item["services"] = services
+            payload["items"] = items
             res.status = falcon.HTTP_200
-            res.body = json.dumps(items)
+            res.body = json.dumps(payload)
             logger.debug("Items request succesful")
         except Exception as e:
             print(e)

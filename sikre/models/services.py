@@ -40,6 +40,9 @@ class Service(ConnectionModel):
 
     # SSL
     ssl_title = orm.CharField(max_length=255, null=True)
-    #filename = orm.CharField()
+    ssl_filename = orm.CharField(max_length=255, null=True)
+
+    # Other
+    other = orm.TextField(null=True)
 
 UserService = Service.allowed_users.get_through_model()

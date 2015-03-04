@@ -45,10 +45,10 @@ print(" * Installing cython... ")
 # falcon more efficient by bytecompiling it.
 try:
     pip.main(['install', '-q', 'cython'])
+    print(" * Cython installed, installing the rest of dependencies....")
 except Exception as e:
     print(" ERROR: Couldn't install Cython, message: {e}".format(e))
     sys.exit(1)
-print(" * Cython installed, installing the rest of dependencies....")
 try:
     pip.main(['install', '-qr', REQUIREMENTS])
 except Exception as e:

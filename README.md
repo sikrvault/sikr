@@ -23,13 +23,14 @@ The official password storage service called `Sikr` (as Sikre/Sikr in Danish, to
 ## What does it use?
 
 * [Falcon microframework](http://falconframework.org/)
-* [Talons (Falcon auth)](https://pypi.python.org/pypi/talons/0.1)
+* [Python Requests](http://docs.python-requests.org/en/latest/)
+* [PyJWT](https://github.com/jpadilla/pyjwt)
 * [Peewee ORM](http://peewee.readthedocs.org/en/latest/)
 
 ## Requirements
 
 * A GNU/Linux server
-* Python 3.4+
+* Python 3.3+
 * A valid SSL certificate (not necessary if DEBUG=True)
 
 Please note that this project **won't run** on Python 2.7.x series.
@@ -54,7 +55,10 @@ To install please follow these steps:
 
 That will install Cython wait for it to finish and then Falcon and its
 dependencies. The reason is to win a bit more of speed with a precompiled
-falcon version.
+falcon version. If you can't compile cython on your host machine you can still
+install the rest of the dependencies through a standard pip install
+
+    `$ pip install -r requirements/no-cython.txt`
 
 ## How to run
 

@@ -58,7 +58,7 @@ dependencies. The reason is to win a bit more of speed with a precompiled
 falcon version. If you can't compile cython on your host machine you can still
 install the rest of the dependencies through a standard pip install:
 
-    `$ pip install -r requirements/no-cython.txt`
+`$ pip install -r requirements/no-cython.txt`
 
 That should install all the requirements without cython.
 

@@ -20,8 +20,7 @@ class BaseHeaders(object):
         headers for the API interaction.
         """
         res.set_headers({
-            # 'Cache-Control': 'no-store, must-revalidate, no-cache, max-age=0',
-            'Cache-Control': 'must-revalidate, no-cache, max-age=0',
+            'Cache-Control': 'no-store, must-revalidate, no-cache, max-age=0',
             'Content-Type': 'application/json',
             'Access-Control-Allow-Credentials': 'true',
             'Access-Control-Allow-Origin': 'https://sikr.io',
@@ -32,8 +31,7 @@ class BaseHeaders(object):
     def process_response(self, req, res, resource):
 
         res.set_headers({
-            # 'Cache-Control': 'no-store, must-revalidate, no-cache, max-age=0',
-            'Cache-Control': 'must-revalidate, no-cache, max-age=0',
+            'Cache-Control': 'no-store, must-revalidate, no-cache, max-age=0',
             'Content-Type': 'application/json',
             'Access-Control-Allow-Credentials': 'true',
             'Access-Control-Allow-Origin': 'https://sikr.io',

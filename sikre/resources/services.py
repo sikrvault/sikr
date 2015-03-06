@@ -104,7 +104,7 @@ class Services(object):
                                          username=result_json.get("username", ''),
                                          password=result_json.get("password", ''),
                                          url=result_json.get("url", ''),
-                                         port=result_json.get("port", ''),
+                                         port=result_json.get("port", 0),
                                          extra=result_json.get("extra", ''),
                                          ssh_title=result_json.get("ssh_title", ''),
                                          ssh_public=result_json.get("ssh_public", ''),

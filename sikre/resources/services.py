@@ -91,6 +91,7 @@ class Services(object):
 
         try:
             result_json = json.loads(raw_json.decode("utf-8"), encoding='utf-8')
+            logger.debug(result_json)
         except ValueError:
             raise falcon.HTTPError(falcon.HTTP_400,
                                    'Malformed JSON',
@@ -105,12 +106,12 @@ class Services(object):
                                          url=result_json.get("url", ''),
                                          port=result_json.get("port", ''),
                                          extra=result_json.get("extra", ''),
-                                         ssh_title=result_json("ssh_title", ''),
-                                         ssh_public=result_json("ssh_public", ''),
-                                         ssh_private=result_json("ssh_private", ''),
-                                         ssl_title=result_json("ssl_title", ''),
-                                         ssl_filename=result_json("ssh_title", ''),
-                                         other=result_json("other", ''))
+                                         ssh_title=result_json.get("ssh_title", ''),
+                                         ssh_public=result_json.get("ssh_public", ''),
+                                         ssh_private=result_json.get("ssh_private", ''),
+                                         ssl_title=result_json.get("ssl_title", ''),
+                                         ssl_filename=result_json.get("ssh_title", ''),
+                                         other=result_json.get("other", ''))
             new_service.save()
             new_service.allowed_users.add(user)
         except Exception as e:

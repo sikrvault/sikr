@@ -162,19 +162,20 @@ class DetailService(object):
                                         description=e,
                                         href=settings.__docs__)
         try:
-            service = Service.get(Service.id == id)
+            service = list(Service.select(Service.id, Service.name,
+                                          Service.username, Service.password,
+                                          Service.url, Service.port, Service.extra,
+                                          Service.ssh_title, Service.ssh_public,
+                                          Service.ssh_private, Service.ssl_title,
+                                          Service.ssl_filename, Service.other)
+                                  .where(Service.id == id)
+                                  .dicts())
+            # service = Service.get(Service.id == id)
             if user not in service.allowed_users:
                 raise falcon.HTTPForbidden(title="Permission denied",
                                            description="You don't have access to this resource",
                                            href=settings.__docs__)
-            # service = list(Service.select(Service.id, Service.name,
-            #                               Service.username, Service.password,
-            #                               Service.url, Service.port, Service.extra,
-            #                               Service.ssh_title, Service.ssh_public,
-            #                               Service.ssh_private, Service.ssl_title,
-            #                               Service.ssl_filename, Service.other)
-            #                       .where(Service.id == id)
-            #                       .dicts())
+
             res.status = falcon.HTTP_200
             res.body = json.dumps(service)
         except Exception as e:

@@ -47,6 +47,14 @@ TWITTER_CALLBACK_URI = ''
 # is an example. **You MUST replace it!**
 SECRET = '-&3whmt0f&h#zvyc@yk4bs3g6biu9l&a%0l=5u*q2+rz(sypdk'
 
+# Email SMTP settings.
+DEFAULT_EMAIL_ADDRESS = 'noreply@sikr.io'
+SMTP_SERVER = ''
+SMTP_PORT = 25
+SMTP_USER = ''
+SMTP_PASSWORD = ''
+SMTP_TLS = True
+
 # Logging settings. This is a standard python logging configuration. The levels
 # are supposed to change depending on the settings file, to avoid clogging the
 # logs with useless information.

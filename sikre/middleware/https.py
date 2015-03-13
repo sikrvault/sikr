@@ -24,7 +24,7 @@ class RequireHTTPS(object):
     in which we allow connections from non-HTTPS sources.
     """
     def process_request(self, req, resp):
-        if not settings.DEBUG:
+        if req.protocol == "http" and not settings.DEBUG:
             raise falcon.HTTPBadRequest(title="Client error. HTTP Not Allowed",
                                         description="API connections over HTTPS only.",
                                         href=settings.__docs__)

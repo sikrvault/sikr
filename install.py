@@ -52,5 +52,5 @@ except Exception as e:
 try:
     pip.main(['install', '-qr', REQUIREMENTS])
 except Exception as e:
-    print(" * Couldn't install dependencies. Retry with `pip install -r requirements.txt")
+    print(" * Couldn't install dependencies. Retry with `pip install -r requirements/common.txt")
     sys.exit(1)

@@ -15,7 +15,7 @@ import sys
 import falcon
 
 from sikre.middleware import json, https, headers, handle_404
-from sikre.resources import groups, items, services, main, tests
+from sikre.resources import groups, items, services, main, tests, sharing
 from sikre.resources.auth import github, facebook, google, twitter, linkedin
 from sikre.utils.logs import logger
 from sikre.utils.checks import check_python
@@ -81,6 +81,11 @@ else:
     api.add_route(api_version + '/items/{id}', items.DetailItem())
     api.add_route(api_version + '/services', services.Services())
     api.add_route(api_version + '/services/{id}', services.DetailService())
+
+    # Sharing
+    api.add_route(api_version + '/share/group/{id}', sharing.ShareGroup())
+    api.add_route(api_version + '/share/item/{id}', sharing.ShareItem())
+    api.add_route(api_version + '/share/service/{id}', sharing.ShareService())
 
     logger.debug("API service started")
 

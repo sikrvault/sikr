@@ -20,6 +20,10 @@ will probably need a frontend to work with. You can use the default
 
 The official password storage service called `Sikr` (as Sikre/Sikr in Danish, to ensure, protect) is going to use it. It's still on development (tied to the project) but you can reach it on http://sikr.io and http://api.sikr.io
 
+## Follow the development
+
+You can follow the development of the application at [the trello board](https://trello.com/b/QeeX9b7l)
+
 ## What does it use?
 
 * [Falcon microframework](http://falconframework.org/)

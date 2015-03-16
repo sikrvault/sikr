@@ -12,7 +12,7 @@
 
 
 from sikre.db.connector import db
-from sikre.models import users, items, services
+from sikre.models import users, items, services, shares
 from sikre.utils.logs import logger
 from sikre.utils.checks import check_python
 
@@ -34,7 +34,8 @@ def generate_db_schema():
             items.UserItem,
             items.Item,
             services.Service,
-            services.UserService
+            services.UserService,
+            shares.ShareToken,
         ])
         print(" * Database tables created")
     except Exception as e:

@@ -33,6 +33,10 @@ class GoogleAuth(object):
         data = json.loads(stream.decode('utf-8'))
         logger.debug("Google OAuth: Incoming data read successfully")
 
+        # See if the user has a share token
+        share_token = req.get_param("share_token", required=False)
+        logger.debug("Google OAuth: User carries a share token")
+
         payload = {
             'client_id': data['clientId'],
             'redirect_uri': data['redirectUri'],
@@ -64,6 +68,10 @@ class GoogleAuth(object):
             logger.debug("Google OAuth: Created user {0}".format(profile["name"]))
 
         token = utils.create_jwt_token(user)
+
+        if share_token:
+
+
         res.body = json.dumps({"token": token})
         res.status = falcon.HTTP_200
         return

@@ -83,9 +83,7 @@ else:
     api.add_route(api_version + '/services/{id}', services.DetailService())
 
     # Sharing
-    api.add_route(api_version + '/share/group/{id}', sharing.ShareGroup())
-    api.add_route(api_version + '/share/item/{id}', sharing.ShareItem())
-    api.add_route(api_version + '/share/service/{id}', sharing.ShareService())
+    api.add_route(api_version + '/share', sharing.Share())
 
     logger.debug("API service started")
 

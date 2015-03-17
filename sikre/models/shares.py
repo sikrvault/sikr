@@ -16,6 +16,7 @@ from sikre.db.connector import ConnectionModel
 from sikre.models.users import User
 from sikre.models.items import Category, Item
 from sikre.models.services import Service
+from sikre.utils.tokens import generate_token
 
 
 RESOURCE = (
@@ -38,11 +39,11 @@ class ShareToken(ConnectionModel):
     extra parameters for administration.
     """
     user = orm.ForeignKeyField(User)
-    token = orm.CharField(unique=True)
-    resource = orm.IntegerField(choices=RESOURCE)
-    resource_id = orm.IntegerField()
-    email = orm.CharField()
-    used = orm.IntegerField(choices=USED)
+    token = orm.CharField(unique=True, null=True)
+    resource = orm.IntegerField(choices=RESOURCE, null=True)
+    resource_id = orm.IntegerField(null=True)
+    email = orm.CharField(null=True)
+    used = orm.IntegerField(choices=USED, null=True)
 
     def is_valid(self):
         if self.used:
@@ -50,6 +51,9 @@ class ShareToken(ConnectionModel):
         else:
             return True
 
+    def save(self, *args, **kwargs):
+        # Generate new token
+        return super(ShareToken, self).save(*args, **kwargs)
     # def activate_share(self, user_id):
     #     # Get the user
     #     user = User.get(User.id == int(user_id))

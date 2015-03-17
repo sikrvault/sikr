@@ -32,6 +32,6 @@ class Item(ConnectionModel):
     allowed_users = ManyToManyField(User, related_name='allowed_items')
     pub_date = pw.DateTimeField(default=datetime.datetime.now)
     tags = pw.CharField(null=True)
-    group = pw.ForeignKeyField(Category)
+    category = pw.ForeignKeyField(Category)
 
 UserItem = Item.allowed_users.get_through_model()

@@ -46,22 +46,22 @@ class Items(object):
         try:
             # Get the user
             user = User.get(User.id == int(user_id))
-            # See if we have to filter by group
-            filter_group = req.get_param("group", required=False)
-            if filter_group:
-                # Get the group
-                group = (Category.select(Category.name, Category.id)
-                                  .where(Category.id == int(filter_group))
+            # See if we have to filter by category
+            filter_category = req.get_param("category", required=False)
+            if filter_category:
+                # Get the category
+                category = (Category.select(Category.name, Category.id)
+                                  .where(Category.id == int(filter_category))
                                   .get())
-                payload["group_name"] = str(group.name)
-                payload["group_id"] = int(group.id)
+                payload["category_name"] = str(category.name)
+                payload["category_id"] = int(category.id)
                 items = list(user.allowed_items
                                  .select(Item.name, Item.description, Item.id)
-                                 .where(Item.group == int(filter_group))
+                                 .where(Item.category == int(filter_category))
                                  .dicts())
-                logger.debug("Got items filtered by group and user")
+                logger.debug("Got items filtered by category and user")
             else:
-                payload["group_name"] = "All"
+                payload["category_name"] = "All"
                 items = list(user.allowed_items
                              .select(Item.name, Item.description, Item.id)
                              .dicts())
@@ -121,7 +121,7 @@ class Items(object):
         try:
             new_item = Item.create(name=result_json.get('name'),
                                    description=result_json.get("description", ''),
-                                   group=result_json.get("group"),
+                                   category=result_json.get("category"),
                                    tags=result_json.get("tags", ''))
             new_item.save()
             new_item.allowed_users.add(user)
@@ -157,7 +157,7 @@ class Items(object):
 
 class DetailItem(object):
 
-    """Show details of a specific group or add/delete a group
+    """Show details of a specific category or add/delete a category
     """
     @falcon.before(login_required)
     def on_get(self, req, res, id):
@@ -215,7 +215,7 @@ class DetailItem(object):
                                            href=settings.__docs__)
             item.name = result_json.get("name", item.name)
             item.description = result_json.get("description", item.description)
-            item.group = result_json.get("group", item.group)
+            item.category = result_json.get("category", item.category)
             item.tags = result_json.get("tags", item.tags)
             item.save()
             res.status = falcon.HTTP_200
@@ -252,7 +252,7 @@ class DetailItem(object):
 
         except Exception as e:
             print(e)
-            error_msg = ("Unable to delete group. Please try again later.")
+            error_msg = ("Unable to delete category. Please try again later.")
             raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
                                                 description=error_msg,
                                                 retry_after=30,

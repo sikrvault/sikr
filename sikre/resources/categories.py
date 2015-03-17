@@ -26,7 +26,7 @@ class Categories(object):
 
     """Show all the groups that the current user has read permission.
 
-    This resource will send the Categorys that belong to the user in the
+    This resource will send the Categories that belong to the user in the
     matter of ID and NAME
     """
     @falcon.before(login_required)
@@ -38,7 +38,7 @@ class Categories(object):
             # Get the user
             user = User.get(User.id == int(user_id))
 
-            groups = list(user.allowed_Categorys
+            groups = list(user.allowed_categories
                               .select(Category.id, Category.name)
                               .dicts())
             res.status = falcon.HTTP_200
@@ -82,9 +82,9 @@ class Categories(object):
                                    'JSON was incorrect.')
 
         try:
-            new_Category = Category.create(name=result_json['name'] or '')
-            new_Category.save()
-            new_Category.allowed_users.add(user)
+            new_category = Category.create(name=result_json['name'] or '')
+            new_category.save()
+            new_category.allowed_users.add(user)
         except Exception as e:
             raise falcon.HTTPInternalServerError(title="Error while saving the group",
                                                  description=e,
@@ -168,18 +168,18 @@ class DetailCategory(object):
                                    'Could not decode the request body. The '
                                    'JSON was incorrect.')
         try:
-            group = Category.get(Category.id == int(id))
-            if user not in group.allowed_users:
+            category = Category.get(Category.id == int(id))
+            if user not in category.allowed_users:
                 raise falcon.HTTPForbidden(title="Permission denied",
                                            description="You don't have access to this resource",
                                            href=settings.__docs__)
-            group.name = result_json["name"]
-            group.save()
+            category.name = result_json["name"]
+            category.save()
             res.status = falcon.HTTP_200
-            res.body = json.dumps({"message": "Group updated"})
+            res.body = json.dumps({"message": "Category updated"})
         except Exception as e:
             print(e)
-            error_msg = ("Unable to get the group. Please try again later.")
+            error_msg = ("Unable to get the category. Please try again later.")
             raise falcon.HTTPServiceUnavailable(req.method + " failed",
                                                 description=error_msg,
                                                 retry_after=30,
@@ -198,15 +198,15 @@ class DetailCategory(object):
                                         description=e,
                                         href=settings.__docs__)
         try:
-            group = Category.get(Category.id == int(id))
-            group.delete_instance(recursive=True)
+            category = Category.get(Category.id == int(id))
+            category.delete_instance(recursive=True)
 
             res.status = falcon.HTTP_200
             res.body = json.dumps({"status": "Deletion successful"})
 
         except Exception as e:
             print(e)
-            error_msg = ("Unable to delete group. Please try again later.")
+            error_msg = ("Unable to delete category. Please try again later.")
             raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
                                                 description=error_msg,
                                                 retry_after=30,

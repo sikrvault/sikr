@@ -44,20 +44,20 @@ def generate_database(user=None):
         user.save()
         user_counter -= 1
 
-        # Create some groups
-        groups_counter = 3
-        while groups_counter > 0:
-            send_message(" * Creating groups, {0} remaining".format(groups_counter))
-            new_group = items.Category.create(name=fake.user_name())
-            new_group.save()
-            new_group.allowed_users.add(user)
-            groups_counter -= 1
+        # Create some categories
+        categories_counter = 3
+        while categories_counter > 0:
+            send_message(" * Creating groups, {0} remaining".format(categories_counter))
+            new_category = items.Category.create(name=fake.user_name())
+            new_category.save()
+            new_category.allowed_users.add(user)
+            categories_counter -= 1
 
             # Create some items
             items_counter = 5
             while items_counter > 0:
-                send_message(" * Creating items for group {0}. {1} remaining".format(new_group.id, items_counter))
-                new_item = items.Item.create(name=fake.name(), description=fake.text(), group=new_group)
+                send_message(" * Creating items for group {0}. {1} remaining".format(new_category.id, items_counter))
+                new_item = items.Item.create(name=fake.name(), description=fake.text(), group=new_category)
                 new_item.save()
                 new_item.allowed_users.add(user)
                 items_counter -= 1

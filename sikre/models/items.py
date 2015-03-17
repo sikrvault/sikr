@@ -21,7 +21,7 @@ from sikre.models.users import User
 
 class Category(ConnectionModel):
     name = pw.CharField(max_length=255, unique=True)
-    allowed_users = ManyToManyField(User, related_name='allowed_Categories')
+    allowed_users = ManyToManyField(User, related_name='allowed_categories')
 
 UserCategory = Category.allowed_users.get_through_model()
 

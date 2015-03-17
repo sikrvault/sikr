@@ -17,7 +17,7 @@ import falcon
 from sikre import settings
 from sikre.utils.logs import logger
 from sikre.models.users import User
-from sikre.models.items import ItemGroup, Item
+from sikre.models.items import Category, Item
 from sikre.models.services import Service
 from sikre.resources.auth.decorators import login_required
 from sikre.resources.auth.utils import parse_token
@@ -50,8 +50,8 @@ class Items(object):
             filter_group = req.get_param("group", required=False)
             if filter_group:
                 # Get the group
-                group = (ItemGroup.select(ItemGroup.name, ItemGroup.id)
-                                  .where(ItemGroup.id == int(filter_group))
+                group = (Category.select(Category.name, Category.id)
+                                  .where(Category.id == int(filter_group))
                                   .get())
                 payload["group_name"] = str(group.name)
                 payload["group_id"] = int(group.id)

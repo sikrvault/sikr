@@ -48,7 +48,7 @@ def generate_database(user=None):
         groups_counter = 3
         while groups_counter > 0:
             send_message(" * Creating groups, {0} remaining".format(groups_counter))
-            new_group = items.ItemGroup.create(name=fake.user_name())
+            new_group = items.Category.create(name=fake.user_name())
             new_group.save()
             new_group.allowed_users.add(user)
             groups_counter -= 1

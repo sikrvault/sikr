@@ -15,7 +15,7 @@ import sys
 import falcon
 
 from sikre.middleware import json, https, headers, handle_404
-from sikre.resources import groups, items, services, main, tests, sharing
+from sikre.resources import categories, items, services, main, tests, sharing
 from sikre.resources.auth import github, facebook, google, twitter, linkedin
 from sikre.utils.logs import logger
 from sikre.utils.checks import check_python
@@ -75,8 +75,8 @@ else:
     api.add_route(api_version + '/auth/linkedin/login', linkedin.LinkedinAuth())
 
     # Content
-    api.add_route(api_version + '/groups', groups.Groups())
-    api.add_route(api_version + '/groups/{id}', groups.DetailGroup())
+    api.add_route(api_version + '/categories', categories.Categories())
+    api.add_route(api_version + '/categories/{id}', categories.DetailCategory())
     api.add_route(api_version + '/items', items.Items())
     api.add_route(api_version + '/items/{id}', items.DetailItem())
     api.add_route(api_version + '/services', services.Services())

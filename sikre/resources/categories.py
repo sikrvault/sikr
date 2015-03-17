@@ -17,16 +17,16 @@ import falcon
 from sikre import settings
 from sikre.utils.logs import logger
 from sikre.models.users import User
-from sikre.models.items import ItemGroup
+from sikre.models.items import Category
 from sikre.resources.auth.decorators import login_required
 from sikre.resources.auth.utils import parse_token
 
 
-class Groups(object):
+class Categories(object):
 
     """Show all the groups that the current user has read permission.
 
-    This resource will send the ItemGroups that belong to the user in the
+    This resource will send the Categorys that belong to the user in the
     matter of ID and NAME
     """
     @falcon.before(login_required)
@@ -38,8 +38,8 @@ class Groups(object):
             # Get the user
             user = User.get(User.id == int(user_id))
 
-            groups = list(user.allowed_itemgroups
-                              .select(ItemGroup.id, ItemGroup.name)
+            groups = list(user.allowed_Categorys
+                              .select(Category.id, Category.name)
                               .dicts())
             res.status = falcon.HTTP_200
             res.body = json.dumps(groups)
@@ -82,9 +82,9 @@ class Groups(object):
                                    'JSON was incorrect.')
 
         try:
-            new_itemgroup = ItemGroup.create(name=result_json['name'] or '')
-            new_itemgroup.save()
-            new_itemgroup.allowed_users.add(user)
+            new_Category = Category.create(name=result_json['name'] or '')
+            new_Category.save()
+            new_Category.allowed_users.add(user)
         except Exception as e:
             raise falcon.HTTPInternalServerError(title="Error while saving the group",
                                                  description=e,
@@ -115,7 +115,7 @@ class Groups(object):
                                href=settings.__docs__)
 
 
-class DetailGroup(object):
+class DetailCategory(object):
 
     """Show details of a specific group or add/delete a group
     """
@@ -124,7 +124,7 @@ class DetailGroup(object):
         user_id = parse_token(req)['sub']
         try:
             user = User.get(User.id == int(user_id))
-            group = ItemGroup.get(ItemGroup.id == int(id))
+            group = Category.get(Category.id == int(id))
             if user not in group.allowed_users:
                 raise falcon.HTTPForbidden(title="Permission denied",
                                            description="You don't have access to this resource",
@@ -168,7 +168,7 @@ class DetailGroup(object):
                                    'Could not decode the request body. The '
                                    'JSON was incorrect.')
         try:
-            group = ItemGroup.get(ItemGroup.id == int(id))
+            group = Category.get(Category.id == int(id))
             if user not in group.allowed_users:
                 raise falcon.HTTPForbidden(title="Permission denied",
                                            description="You don't have access to this resource",
@@ -198,7 +198,7 @@ class DetailGroup(object):
                                         description=e,
                                         href=settings.__docs__)
         try:
-            group = ItemGroup.get(ItemGroup.id == int(id))
+            group = Category.get(Category.id == int(id))
             group.delete_instance(recursive=True)
 
             res.status = falcon.HTTP_200

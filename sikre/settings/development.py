@@ -48,11 +48,11 @@ TWITTER_CALLBACK_URI = ''
 SECRET = '-&3whmt0f&h#zvyc@yk4bs3g6biu9l&a%0l=5u*q2+rz(sypdk'
 
 # Email SMTP settings.
-DEFAULT_EMAIL_ADDRESS = 'noreply@sikr.io'
-SMTP_SERVER = ''
-SMTP_PORT = 25
-SMTP_USER = ''
-SMTP_PASSWORD = ''
+DEFAULT_EMAIL_FROM = 'noreply@sikr.io'
+SMTP_SERVER = 'mail.gandi.net'
+SMTP_PORT = 587
+SMTP_USER = 'noreply@sikr.io'
+SMTP_PASSWORD = '+CloseThisWorld:OpenTheNext1984+'
 SMTP_TLS = True
 
 # Logging settings. This is a standard python logging configuration. The levels

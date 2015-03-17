@@ -18,6 +18,7 @@ import requests
 
 from sikre import settings
 from sikre.models.users import User
+from sikre.models.shares import ShareToken
 from sikre.resources.auth import utils
 from sikre.utils.logs import logger
 
@@ -69,7 +70,14 @@ class GoogleAuth(object):
 
         token = utils.create_jwt_token(user)
 
-        if share_token:
+        # if share_token:
+        #     try:
+        #         token = ShareToken.get(token=share_token)
+        #         if token.is_valid():
+        #             if token.resource == 0:
+
+        #     except:
+        #         logger.error("Token does not exist")
 
 
         res.body = json.dumps({"token": token})

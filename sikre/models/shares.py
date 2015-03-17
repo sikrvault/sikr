@@ -14,6 +14,8 @@ import peewee as orm
 
 from sikre.db.connector import ConnectionModel
 from sikre.models.users import User
+from sikre.models.items import Category, Item
+from sikre.models.services import Service
 
 
 RESOURCE = (
@@ -47,3 +49,8 @@ class ShareToken(ConnectionModel):
             return False
         else:
             return True
+
+    # def activate_share(self, user_id):
+    #     # Get the user
+    #     user = User.get(User.id == int(user_id))
+    #     if self.resource == 0:

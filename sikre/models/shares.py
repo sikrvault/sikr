@@ -10,13 +10,15 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import binascii
+import os
+
 import peewee as orm
 
 from sikre.db.connector import ConnectionModel
 from sikre.models.users import User
 from sikre.models.items import Category, Item
 from sikre.models.services import Service
-from sikre.utils.tokens import generate_token
 
 
 RESOURCE = (
@@ -52,9 +54,4 @@ class ShareToken(ConnectionModel):
             return True
 
     def save(self, *args, **kwargs):
-        # Generate new token
         return super(ShareToken, self).save(*args, **kwargs)
-    # def activate_share(self, user_id):
-    #     # Get the user
-    #     user = User.get(User.id == int(user_id))
-    #     if self.resource == 0:

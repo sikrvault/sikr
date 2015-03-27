@@ -18,12 +18,16 @@ from sikre import settings
 from sikre.utils.logs import logger
 from sikre.models.users import User
 from sikre.models.services import Service
+from sikre.models.shares import ShareToken
 from sikre.resources.auth.decorators import login_required
 from sikre.resources.auth.utils import parse_token
+from sikre.utils.tokens import generate_token
 
 
 class Share(object):
 
+    """Share a object from the platform with someone
+    """
     @falcon.before(login_required)
     def on_post(self, req, res):
         try:
@@ -55,6 +59,9 @@ class Share(object):
                                    'Could not decode the request body. The '
                                    'JSON was incorrect.')
 
+        try:
+            new_share = ShareToken(user=user, token=generate_token(),
+                                   resource=int(result_json.get()))
     def on_options(self, req, res):
 
         """Acknowledge the OPTIONS method.

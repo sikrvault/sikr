@@ -59,12 +59,3 @@ Contents:
    endpoints
    support
    faq
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-

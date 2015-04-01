@@ -1,6 +1,8 @@
 # Sikre
 
-[![Build Status](https://travis-ci.org/clione/sikre.svg?branch=master)](https://travis-ci.org/clione/sikre) [![Coverage Status](https://coveralls.io/repos/clione/sikre/badge.svg)](https://coveralls.io/r/clione/sikre) [![Issues closed](http://issuestats.com/github/clione/sikre/badge/issue?style=flat)](http://issuestats.com/github/clione/sikre) [![PR closed](http://issuestats.com/github/clione/sikre/badge/pr?style=flat)](http://issuestats.com/github/clione/sikre)
+[![Build Status](https://travis-ci.org/clione/sikre.svg?branch=master)](https://travis-ci.org/clione/sikre) [![Coverage Status](https://coveralls.io/repos/clione/sikre/badge.svg)](https://coveralls.io/r/clione/sikre)
+[![Issues closed](http://issuestats.com/github/clione/sikre/badge/issue?style=flat)](http://issuestats.com/github/clione/sikre) [![PR closed](http://issuestats.com/github/clione/sikre/badge/pr?style=flat)](http://issuestats.com/github/clione/sikre)
+[![Docs Status](https://readthedocs.org/projects/sikre/badge/?version=latest)](https://sikre.readthedocs.org/)
 
 **Please note:** *Sikre is in early development stages, it's not recommended to use it in production yet.*
 

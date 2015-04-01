@@ -28,6 +28,10 @@ DEFAULT_API = 'v1'
 SITE_DOMAIN = 'https://sikr.io'
 LOGIN_URL = 'http://sikr.io/login.html'
 
+# This rewrites the response "Server" header, so you can hide your server name
+# for protection
+SERVER_NAME = "sikr.io"
+
 # How long the user session will last (in hours). Default: 168 (7 days)
 SESSION_EXPIRES = 168
 

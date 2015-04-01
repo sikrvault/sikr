@@ -62,6 +62,9 @@ class Share(object):
         try:
             new_share = ShareToken(user=user, token=generate_token(),
                                    resource=int(result_json.get()))
+        except:
+            pass
+
     def on_options(self, req, res):
 
         """Acknowledge the OPTIONS method.

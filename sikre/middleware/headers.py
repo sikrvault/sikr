@@ -21,9 +21,9 @@ class BaseHeaders(object):
         """
         res.set_headers({
             'Cache-Control': 'no-store, must-revalidate, no-cache, max-age=0',
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json; charset=utf-8',
             'Access-Control-Allow-Credentials': 'true',
-            'Access-Control-Allow-Origin': 'https://sikr.io',
+            'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
             'Access-Control-Allow-Methods': 'GET, PUT, POST, OPTIONS, DELETE'
         })
@@ -33,8 +33,9 @@ class BaseHeaders(object):
         res.set_headers({
             'Cache-Control': 'no-store, must-revalidate, no-cache, max-age=0',
             'Content-Type': 'application/json',
+            'Server': 'sikr.io',
             'Access-Control-Allow-Credentials': 'true',
-            'Access-Control-Allow-Origin': 'https://sikr.io',
+            'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
             'Access-Control-Allow-Methods': 'GET, PUT, POST, OPTIONS, DELETE'
         })

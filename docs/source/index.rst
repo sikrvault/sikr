@@ -27,29 +27,6 @@ Yes there is, I actively develop this application, and I'm all ears regarding
 new features or bugs that you might have find, specially if they're related
 to the security of the API.
 
-Features
-========
-
-* No personal data in our servers. We don't want your information, so we
-  implemented all the possible OAuth2 methods from external services so we
-  can trust them authenticating you instead of storing your information.
-
-* Quad encryption, the API uses multiple values to encrypt your data so
-  no one (not even us) can tamper with it.
-
-* Data separation. The service doesn't provide all the data at the same time
-  and it uses randomly deferred IDs, so in the unfortunate case that someone gets
-  hands on some of your data it can't use it
-
-* Sharing. You might be asking yourself: "WHAT?" Yes, we provide a sharing
-  mechanishm, because that way you can share service passwords with other
-  people that might need access (think of work teams)
-
-Future features
-===============
-
-* Timed sharing.
-
 Contents:
 
 .. toctree::

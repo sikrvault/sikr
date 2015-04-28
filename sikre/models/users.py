@@ -30,7 +30,6 @@ class User(ConnectionModel):
     extra parameters for administration.
     """
     username = orm.CharField(unique=True)
-    # token = CharField(unique=True)
     master_password = orm.CharField(max_length=255, null=True)
     email = orm.CharField(unique=True, null=True)
 
@@ -44,7 +43,6 @@ class User(ConnectionModel):
     # Data
     join_date = orm.DateTimeField(default=datetime.datetime.now)
     is_active = orm.BooleanField(default=True)
-    is_superuser = orm.BooleanField(default=False)
 
     def set_master_password(self, password):
         """

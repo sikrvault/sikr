@@ -24,21 +24,23 @@ from sikre.utils.logs import logger
 try:
     db_conf = settings.DATABASE
     # Set the defaults in case something happens
-    db_user = settings.DATABASE["USER"] or 'root'
-    db_host = settings.DATABASE["HOST"] or 'localhost'
-    db_postgres_port = settings.DATABASE["PORT"] or '5432'
-    db_mysql_port = settings.DATABASE["PORT"] or '3306'
+    db_user = settings.DATABASE.get("USER", 'root')
+    db_host = settings.DATABASE.get("HOST", 'localhost')
+    db_postgres_port = settings.DATABASE.get("PORT", '5432')
+    db_mysql_port = settings.DATABASE.get("PORT", '3306')
 
     if db_conf['ENGINE'] == 'postgres':
-        db = orm.PostgresqlDatabase(
-            db_conf['NAME'], user=db_user, password=db_conf['PASSWORD'],
-            host=db_host, port=db_postgres_port)
+        db = orm.PostgresqlDatabase(db_conf['NAME'], user=db_user,
+                                    password=db_conf['PASSWORD'],
+                                    host=db_host, port=db_postgres_port)
         logger.debug("Connected to the PostgreSQL database")
+
     elif db_conf['ENGINE'] == 'mysql':
-        db = orm.MySQLDatabase(
-            db_conf['NAME'], user=db_user, password=db_conf['PASSWORD'],
-            host=db_host, port=db_mysql_port)
+        db = orm.MySQLDatabase(db_conf['NAME'], user=db_user,
+                               password=db_conf['PASSWORD'],
+                               host=db_host, port=db_mysql_port)
         logger.debug("Connected to the MySQL database")
+
     else:
         db = orm.SqliteDatabase(settings.DATABASE['NAME'])
         logger.debug("Connected to the SQLite database")

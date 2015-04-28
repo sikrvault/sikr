@@ -31,8 +31,7 @@ def generate_database(user=None):
     logger.info("Starting database generation")
     # Create a dummy user if there's no admin
     if not user:
-        new_user = users.User.create(username="admin", email="example@example.com",
-                                     is_superuser=True)
+        new_user = users.User.create(username="admin", email="example@example.com")
         new_user.set_master_password("admin")
         new_user.save()
 

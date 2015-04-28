@@ -24,7 +24,8 @@ ALLOWED_EXTENSIONS = [
 DEFAULT_API = 'v1'
 
 # Site domain, you usually want this to be your frontend url. This is used for
-# login verification between other things
+# login verification between other things like CORS
+CORS_ACTIVE = True
 SITE_DOMAIN = 'https://sikr.io'
 LOGIN_URL = 'http://sikr.io/login.html'
 

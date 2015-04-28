@@ -25,15 +25,12 @@ check_python()
 
 if __name__ == "__main__":
     if len(sys.argv) >= 2:
-        from sikre.db import generator, syncdb, superuser
+        from sikre.db import generator, syncdb
         if sys.argv[1] == "syncdb":
             syncdb.generate_db_schema()
-        if sys.argv[1] == "createsuperuser":
-            superuser.create_superuser()
         if sys.argv[1] == "generate":
             if settings.DEBUG:
-                user = superuser.create_superuser()
-                generator.generate_database(user=user)
+                generator.generate_database()
             else:
                 sys.exit(" * `generate` command not available when DEBUG=False. Please set DEBUG=True and remember to install the development requirements.")
     else:
@@ -61,11 +58,6 @@ else:
     # URLs
     api_version = '/' + settings.DEFAULT_API
     api.add_route(api_version, main.APIInfo())
-
-    # Basic Auth
-    # api.add_route(api_version + '/auth/login', auth.LoginResource())
-    # api.add_route(api_version + '/auth/logout', LogoutResource())
-    # api.add_route(api_version + '/auth/forgotpassword', ForgotPasswordResource())
 
     # Social Auth
     api.add_route(api_version + '/auth/facebook/login', facebook.FacebookAuth())

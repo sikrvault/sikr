@@ -30,6 +30,14 @@ class BaseHeaders(object):
         Args:
             Access-Control-Allow-Origin: Change the origin to the URL that made
                 the request.
+
+        Raises:
+            HTTP Error: An HTTP error in case the Origin header doesn't match
+                        the predefined regular expression.
+
+        Return:
+            HTTP headers: A modified set of headers.
+
         """
 
         origin_domain = req.get_header("Origin", required=True)
@@ -67,6 +75,13 @@ class BaseHeaders(object):
             Access-Control-Allow-Origin (string): Change the origin name to
                 match the one that made the request. That way we can allow CORS
                 anywhere.
+
+        Raises:
+            HTTP Error: An HTTP error in case the Origin header doesn't match
+            the predefined regular expression.
+
+        Returns:
+            HTTP headers: A modified set of headers
         """
         origin_domain = req.get_header("Origin", required=True)
         if self.expression.match(origin_domain):

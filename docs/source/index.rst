@@ -7,7 +7,7 @@ Sikre: Password storage API
 ===========================
 
 What is Sikre?
-==============
+--------------
 
 Sikre (or the service equivalent, sikr.io) is a secure password storage API to
 protect all your passwords, SSH keys, SSL certificates, or other sensible
@@ -21,7 +21,7 @@ that we don't implement any methods for recovering data, so if you forget
 you master password or accidentally delete something, **no one can recover it**.
 
 Is there any support then?
-==========================
+--------------------------
 
 Yes there is, I actively develop this application, and I'm all ears regarding
 new features or bugs that you might have find, specially if they're related

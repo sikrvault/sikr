@@ -21,10 +21,16 @@ class WrongURL(object):
 
     def process_response(self, req, resp, resource=''):
 
-        """Intercept the main falcon 404
+        """Intercept main 404 response by Falcon
 
-        If we hit a nonexistent resource, we change the response and
-        return an error json
+        If the API hits a non existing endpoint, it will trigger a customized
+        404 response that will redirect people to the documentation.
+
+        Raises:
+            HTTP 404: A falcon.HTTP_404 error
+
+        Returns:
+            JSON: A customized JSON response
         """
         if resp.status == falcon.HTTP_404:
             resp.body = json.dumps({"message": "Not found",

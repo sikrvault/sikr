@@ -34,5 +34,6 @@ Contents:
 
    installation
    endpoints
+   reference
    support
    faq

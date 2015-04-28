@@ -165,7 +165,11 @@ html_last_updated_fmt = '%b %d, %Y'
 # html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
-# html_sidebars = {}
+html_sidebars = {
+    'index':    ['side-primary.html', 'searchbox.html'],
+    '**':       ['side-secondary.html', 'localtoc.html',
+                 'relations.html', 'searchbox.html']
+}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.

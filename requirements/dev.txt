@@ -1,3 +1,4 @@
 -r common.txt
 fake-factory
 ipython
+sphinx-rtd-theme==0.1.7

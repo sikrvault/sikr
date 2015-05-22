@@ -101,9 +101,7 @@ This script contains multiple actions that take care of the service. At
 the moment of writing this document these are the functions:
 
 * `syncdb` Creates the database schema necessary to run the application
-* `createsuperuser` Creates a superuser in the database
-* `generate` Creates a superuser and fills the database with random data.
-  This command only runs if DEBUG=True
+* `generate` Fills the database with random data. This command only runs if DEBUG=True
 
 ## License and copyright
 

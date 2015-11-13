@@ -17,7 +17,7 @@ import hmac
 import crypt
 
 import peewee as orm
-from playhouse.shortcuts import ManyToManyField
+from playhouse.fields import ManyToManyField
 
 from sikre.db.connector import ConnectionModel
 

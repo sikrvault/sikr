@@ -13,7 +13,7 @@
 import datetime
 
 import peewee as pw
-from playhouse.shortcuts import ManyToManyField
+from playhouse.fields import ManyToManyField
 
 from sikre.db.connector import ConnectionModel
 from sikre.models.users import User

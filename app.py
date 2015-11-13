@@ -36,7 +36,6 @@ if __name__ == "__main__":
     else:
         print("No option specified.\n\n"
               "    syncdb          - Create the database schema\n"
-              "    createsuperuser - Create a superuser account"
               "    generate        - Fill the database with random data. Useful for testing\n\n"
               "If you intended to run the application itself you must call the constructor\n"
               "in the following fashion (uwsgi example):\n\n"

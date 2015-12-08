@@ -40,19 +40,20 @@ class BaseHeaders(object):
 
         """
 
-        origin_domain = req.get_header("Origin", required=True)
-        if self.expression.match(origin_domain):
-            res.set_headers({
-                'Cache-Control': 'no-store, must-revalidate, no-cache, max-age=0',
-                'Content-Type': 'application/json; charset=utf-8',
-                'Access-Control-Allow-Credentials': 'true',
-                'Access-Control-Allow-Origin': origin_domain,
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
-                'Access-Control-Allow-Methods': 'GET, PUT, POST, OPTIONS, DELETE'
-            })
-        else:
-            raise falcon.HTTPError(falcon.HTTP_400, "Bad request",
-                                   "The Origin header is invalid.")
+        # origin_domain = req.get_header("Origin", required=True)
+        # if self.expression.match(origin_domain):
+        res.set_headers({
+            'Cache-Control': 'no-store, must-revalidate, no-cache, max-age=0',
+            'Content-Type': 'application/json; charset=utf-8',
+            'Access-Control-Allow-Credentials': 'true',
+            # 'Access-Control-Allow-Origin': origin_domain,
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
+            'Access-Control-Allow-Methods': 'GET, PUT, POST, OPTIONS, DELETE'
+        })
+        # else:
+        #     raise falcon.HTTPError(falcon.HTTP_400, "Bad request",
+        #                            "The Origin header is invalid.")
 
     def process_response(self, req, res, resource):
 
@@ -83,17 +84,18 @@ class BaseHeaders(object):
         Returns:
             HTTP headers: A modified set of headers
         """
-        origin_domain = req.get_header("Origin", required=True)
-        if self.expression.match(origin_domain):
-            res.set_headers({
-                'Cache-Control': 'no-store, must-revalidate, no-cache, max-age=0',
-                'Content-Type': 'application/json; charset=utf-8',
-                'Server': settings.SERVER_NAME,
-                'Access-Control-Allow-Credentials': 'true',
-                'Access-Control-Allow-Origin': [origin_domain if settings.CORS_ACTIVE else settings.SERVER_NAME],
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
-                'Access-Control-Allow-Methods': 'GET, PUT, POST, OPTIONS, DELETE'
-            })
-        else:
-            raise falcon.HTTPError(falcon.HTTP_400, "Bad request",
-                                   "The Origin header is invalid.")
+        # origin_domain = req.get_header("Origin", required=True)
+        # if self.expression.match(origin_domain):
+        res.set_headers({
+            'Cache-Control': 'no-store, must-revalidate, no-cache, max-age=0',
+            'Content-Type': 'application/json; charset=utf-8',
+            'Server': settings.SERVER_NAME,
+            'Access-Control-Allow-Credentials': 'true',
+            # 'Access-Control-Allow-Origin': [origin_domain if settings.CORS_ACTIVE else settings.SERVER_NAME],
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization',
+            'Access-Control-Allow-Methods': 'GET, PUT, POST, OPTIONS, DELETE'
+        })
+        # else:
+        #     raise falcon.HTTPError(falcon.HTTP_400, "Bad request",
+        #                            "The Origin header is invalid.")

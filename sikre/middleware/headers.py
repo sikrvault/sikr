@@ -44,7 +44,7 @@ class BaseHeaders(object):
 
         origin_domain = req.get_header('Origin')
         logger.debug("Origin domain is: {}, type: {}".format(origin_domain, type(origin_domain)))
-        origin_header = [origin_domain if settings.CORS_ACTIVE else settings.SERVER_NAME]
+        origin_header = origin_domain if settings.CORS_ACTIVE else settings.SERVER_NAME
         logger.debug("Origin header is: {}, type: {}".format(origin_header, type(origin_header)))
 
         res.set_headers([
@@ -88,7 +88,7 @@ class BaseHeaders(object):
 
         origin_domain = req.get_header('Origin')
         logger.debug("Origin domain is: {}, type: {}".format(origin_domain, type(origin_domain)))
-        origin_header = [origin_domain if settings.CORS_ACTIVE else settings.SERVER_NAME]
+        origin_header = origin_domain if settings.CORS_ACTIVE else settings.SERVER_NAME
         logger.debug("Origin header is: {}, type: {}".format(origin_header, type(origin_header)))
 
         res.set_headers([

@@ -15,6 +15,7 @@ import re
 import falcon
 
 from sikre import settings
+from sikre.utils.logs import logger
 
 
 class BaseHeaders(object):
@@ -40,8 +41,8 @@ class BaseHeaders(object):
 
         """
 
-        origin_domain = req.get_header("Origin")
-
+        origin_domain = req.get_header('Origin')
+        logger.debug("Origin domain is: ", origin_domain, " Type: ", type(origin_domain))
         res.set_headers([
             ('Cache-Control', 'no-store, must-revalidate, no-cache, max-age=0'),
             ('Content-Type', 'application/json; charset=utf-8'),
@@ -81,8 +82,8 @@ class BaseHeaders(object):
             HTTP headers: A modified set of headers
         """
 
-        origin_domain = req.get_header("Origin")
-
+        origin_domain = req.get_header('Origin')
+        logger.debug("Origin domain is: ", origin_domain, " Type: ", type(origin_domain))
         res.set_headers([
             ('Cache-Control', 'no-store, must-revalidate, no-cache, max-age=0'),
             ('Content-Type', 'application/json; charset=utf-8'),

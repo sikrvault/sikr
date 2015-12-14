@@ -44,7 +44,7 @@ else:
     # Create the API instance, referenced internally as api and externally as
     # wsgi_app
     api = falcon.API(
-        media_type='application/json',
+        media_type='application/json; charset=utf-8',
         middleware=[
             # json.RequireJSON(),
             # json.JSONTranslator(),

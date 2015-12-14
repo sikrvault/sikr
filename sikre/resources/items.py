@@ -95,6 +95,7 @@ class Items(object):
             user_id = parse_token(req)['sub']
             # Get the user
             user = User.get(User.id == int(user_id))
+            logger.debug("Got user data")
         except Exception as e:
             logger.error("Can't verify user")
             raise falcon.HTTPBadRequest(title="Bad request",
@@ -112,6 +113,7 @@ class Items(object):
 
         try:
             result_json = json.loads(raw_json.decode("utf-8"), encoding='utf-8')
+            logger.debug("Parsed JSON data")
         except ValueError:
             raise falcon.HTTPError(falcon.HTTP_400,
                                    'Malformed JSON',
@@ -125,6 +127,7 @@ class Items(object):
                                    tags=result_json.get("tags", ''))
             new_item.save()
             new_item.allowed_users.add(user)
+            logger.debug("Saved new item into the database")
         except Exception as e:
             raise falcon.HTTPInternalServerError(title="Error while saving the item",
                                                  description=e,

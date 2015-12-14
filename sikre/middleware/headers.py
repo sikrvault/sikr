@@ -19,7 +19,8 @@ from sikre.utils.logs import logger
 
 
 class BaseHeaders(object):
-    expression = re.compile("^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$")
+    # Unused regular expression to check that origin is always a website.
+    # expression = re.compile("^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$")
 
     def process_request(self, req, res):
 
@@ -43,11 +44,14 @@ class BaseHeaders(object):
 
         origin_domain = req.get_header('Origin')
         logger.debug("Origin domain is: {}, type: {}".format(origin_domain, type(origin_domain)))
+        origin_header = [origin_domain if settings.CORS_ACTIVE else settings.SERVER_NAME]
+        logger.debug("Origin header is: {}, type: {}".format(origin_header, type(origin_header)))
+
         res.set_headers([
             ('Cache-Control', 'no-store, must-revalidate, no-cache, max-age=0'),
             ('Content-Type', 'application/json; charset=utf-8'),
             ('Access-Control-Allow-Credentials', 'true'),
-            ('Access-Control-Allow-Origin', origin_domain),
+            ('Access-Control-Allow-Origin', origin_header),
             ('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization'),
             ('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS, DELETE')
         ])
@@ -84,12 +88,15 @@ class BaseHeaders(object):
 
         origin_domain = req.get_header('Origin')
         logger.debug("Origin domain is: {}, type: {}".format(origin_domain, type(origin_domain)))
+        origin_header = [origin_domain if settings.CORS_ACTIVE else settings.SERVER_NAME]
+        logger.debug("Origin header is: {}, type: {}".format(origin_header, type(origin_header)))
+
         res.set_headers([
             ('Cache-Control', 'no-store, must-revalidate, no-cache, max-age=0'),
             ('Content-Type', 'application/json; charset=utf-8'),
             ('Server', settings.SERVER_NAME),
             ('Access-Control-Allow-Credentials', 'true'),
-            ('Access-Control-Allow-Origin', [origin_domain if settings.CORS_ACTIVE else settings.SERVER_NAME]),
+            ('Access-Control-Allow-Origin', origin_header),
             ('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, x-auth-user, x-auth-password, Authorization'),
             ('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS, DELETE')
         ])

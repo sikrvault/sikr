@@ -54,6 +54,7 @@ class GithubAuth(object):
         r = requests.get(users_api_url, params=access_token, headers=headers)
         profile = json.loads(r.text)
         logger.debug("GitHub OAuth: Retrieve user information success")
+        logger.debug("GitHub OAuth: Profile: {}".format(profile))
 
         # Step 3. (optional) Link accounts.
         if req.auth:

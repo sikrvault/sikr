@@ -1,18 +1,9 @@
-# Copyright 2014-2015 Clione Software and Havas Worldwide London
-#
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License. You may obtain a copy
-# of the License at http:#www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-# License for the specific language governing permissions and limitations
-# under the License.
+"""Main database connector module.
 
-# Set the database. This creates a connection to the PostgreSQL or SQLite
-# databases according to the settings.
-# TODO: Move the connector out of the models
+This module organizes the connections to teh database accrding to the settings
+file and values provided. It also creates a base model from where the rest of
+models have to inherit from so they connect to the same database.
+"""
 
 import json
 
@@ -54,18 +45,18 @@ except Exception as e:
 
 
 class ConnectionModel(orm.Model):
+    """Connection abstract model.
 
-    """This model will abstract some of the functionality required across all
+    This model will abstract some of the functionality required across all
     the data models in the application.
 
     Returns:
         database: the database connection for the model
         __str__: the data returned as a JSON string
     """
+
     def __str__(self):
-        """
-        Return JSON ready data if any model is accesed through the str method
-        """
+        """Return JSON data if any model is accesed through the str method."""
         r = {}
         for k in self._data.keys():
             try:
@@ -75,7 +66,6 @@ class ConnectionModel(orm.Model):
         return str(r)
 
     class Meta:
-        """
-        Connect all the models to the same database.
-        """
+        """Connect all the models to the same database."""
+
         database = db

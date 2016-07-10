@@ -1,14 +1,9 @@
-# Copyright 2014-2015 Clione Software and Havas Worldwide London
-#
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License. You may obtain a copy
-# of the License at http:#www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-# License for the specific language governing permissions and limitations
-# under the License.
+"""Main application functions.
+
+This file is the core of the application and it defines the intantiation of the
+API and their URLs, as well as some extra functionality if it's run from the
+command line to generate or syncronize the database.
+"""
 
 import sys
 
@@ -32,12 +27,15 @@ if __name__ == "__main__":
             if settings.DEBUG:
                 generator.generate_database()
             else:
-                sys.exit(" * `generate` command not available when DEBUG=False. Please set DEBUG=True and remember to install the development requirements.")
+                sys.exit(" * `generate` command not available when "
+                         "DEBUG=False. Please set DEBUG=True and remember "
+                         "to install the development requirements.")
     else:
         print("No option specified.\n\n"
               "    syncdb          - Create the database schema\n"
-              "    generate        - Fill the database with random data. Useful for testing\n\n"
-              "If you intended to run the application itself you must call the constructor\n"
+              "    generate        - Fill the database with random data.\n\n"
+              "If you intended to run the application itself you must call "
+              "the constructor\n"
               "in the following fashion (uwsgi example):\n\n"
               "    uwsgi --http :8080 --wsgi-file app.py --callable api\n\n")
 else:
@@ -46,8 +44,8 @@ else:
     api = falcon.API(
         media_type='application/json; charset=utf-8',
         middleware=[
-            # json.RequireJSON(),
-            # json.JSONTranslator(),
+            json.RequireJSON(),
+            json.JSONTranslator(),
             https.RequireHTTPS(),
             headers.BaseHeaders(),
             handle_404.WrongURL()

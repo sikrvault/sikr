@@ -1,4 +1,4 @@
-# Copyright 2014-2015 Clione Software and Havas Worldwide London
+# Copyright 2014-2016 Oscar Carballal Prego <oscar@oscarcp.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy
@@ -23,12 +23,12 @@ from sikre.resources.auth.utils import parse_token
 
 
 class Categories(object):
-
     """Show all the groups that the current user has read permission.
 
     This resource will send the Categories that belong to the user in the
     matter of ID and NAME
     """
+
     @falcon.before(login_required)
     def on_get(self, req, res):
         # Parse token and get user id
@@ -46,7 +46,8 @@ class Categories(object):
         except Exception as e:
             print(e)
             error_msg = ("Unable to get the groups. Please try again later")
-            raise falcon.HTTPServiceUnavailable(title="{0} failed".format(req.method),
+            raise falcon.HTTPServiceUnavailable(title="{0} failed".format(
+                                                req.method),
                                                 description=error_msg,
                                                 retry_after=30,
                                                 href=settings.__docs__)
@@ -74,7 +75,8 @@ class Categories(object):
                                         href=settings.__docs__)
 
         try:
-            result_json = json.loads(raw_json.decode("utf-8"), encoding='utf-8')
+            result_json = json.loads(raw_json.decode("utf-8"),
+                                     encoding='utf-8')
         except ValueError:
             raise falcon.HTTPError(falcon.HTTP_400,
                                    'Malformed JSON',
@@ -91,9 +93,7 @@ class Categories(object):
                                                  href=settings.__docs__)
 
     def on_options(self, req, res):
-
-        """Acknowledge the OPTIONS method.
-        """
+        """Acknowledge the OPTIONS method."""
         res.status = falcon.HTTP_200
 
     def on_put(self, req, res):
@@ -116,9 +116,8 @@ class Categories(object):
 
 
 class DetailCategory(object):
+    """Show details of a specific group or add/delete a group."""
 
-    """Show details of a specific group or add/delete a group
-    """
     @falcon.before(login_required)
     def on_get(self, req, res, id):
         user_id = parse_token(req)['sub']

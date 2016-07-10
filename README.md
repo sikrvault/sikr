@@ -103,7 +103,7 @@ the moment of writing this document these are the functions:
 
 ## License and copyright
 
-This project is licensed under the Apache 2.0 license. Copyright belongs to Clione Software and Havas Worldwide London
+This project is licensed under the MIT license. Copyright belongs to Oscar Carballal Prego and Clione Software
 
 ## Authors
 

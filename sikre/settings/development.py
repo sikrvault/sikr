@@ -1,3 +1,5 @@
+"""Main development settings."""
+
 import os
 
 # Add the current directory to the python path

@@ -1,14 +1,8 @@
-# Copyright 2014-2015 Clione Software and Havas Worldwide London
-#
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License. You may obtain a copy
-# of the License at http:#www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-# License for the specific language governing permissions and limitations
-# under the License.
+"""Email sender.
+
+Basic module to send emails from the platform using the standard Python SMTP
+mechanishm.
+"""
 
 from email.mime.text import MIMEText
 from datetime import date
@@ -24,8 +18,7 @@ EMAIL_SPACE = ", "
 
 
 def send_email(subject='', to_address=[], from_address=from_addr, content=''):
-
-    """Send an email to a specified user or users
+    """Send an email to a specified user or users.
 
     This is a basic wrapper around python's STMPLIB library that allows us to
     send emails to the users in case it's necessary. Any failure of this
@@ -33,7 +26,8 @@ def send_email(subject='', to_address=[], from_address=from_addr, content=''):
     """
     try:
         msg = MIMEText(content)
-        msg['Subject'] = "[{0}] {1} {2}".format(site_domain, subject, date.today().strftime("%Y%m%d"))
+        msg['Subject'] = "[{0}] {1} {2}".format(site_domain, subject,
+                                                date.today().strftime("%Y%m%d"))
         msg['To'] = EMAIL_SPACE.join(to_address)
         msg['From'] = from_address
         logger.debug("All parameters set")

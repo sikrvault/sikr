@@ -1,16 +1,14 @@
-# Copyright 2014-2015 Clione Software and Havas Worldwide London
-#
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License. You may obtain a copy
-# of the License at http:#www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-# License for the specific language governing permissions and limitations
-# under the License.
+"""Installation script for sikr.
 
-"""Install script for sikre
+This script will make the necessary checks and install the dependencies
+according to what the user has selected.
+
+How to use:
+    $ python install.py <environment>
+
+    Environments:
+        - dev      - Development environment and toolset
+        - <other>  - Install the common environment
 """
 
 import os
@@ -26,7 +24,7 @@ if len(sys.argv) >= 2:
         print(" * Selected common requirements")
 
 # Check if we are running on python 3
-if sys.version_info <= (3, 0):
+if sys.version_info <= (3, 3):
     sys.stdout.write(" * Python 3 not detected.")
     sys.stdout.write("sikre requires Python 3.3.x or better\n")
     sys.exit(1)
@@ -52,5 +50,6 @@ except Exception as e:
 try:
     pip.main(['install', '-qr', REQUIREMENTS])
 except Exception as e:
-    print(" * Couldn't install dependencies. Retry with `pip install -r requirements/common.txt")
+    print(" * Couldn't install dependencies. Retry with `pip install"
+          " -r requirements/common.txt")
     sys.exit(1)

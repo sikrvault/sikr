@@ -11,14 +11,15 @@ from sikre.db.connector import ConnectionModel
 
 
 class User(ConnectionModel):
+    """Standard user model.
 
-    """
-    Standard user model. Stores minimal data about the user to handle the
+    Stores minimal data about the user to handle the
     authentication, like email, username, and auth token, apart from some
     extra parameters for administration.
     """
+
     username = orm.CharField(unique=True)
-    master_password = orm.CharField(max_length=255, null=True)
+    master_password = orm.CharField(max_length=255)
     email = orm.CharField(unique=True, null=True)
 
     # Social JWT storage
@@ -32,16 +33,16 @@ class User(ConnectionModel):
     join_date = orm.DateTimeField(default=datetime.datetime.now)
     is_active = orm.BooleanField(default=True)
 
-    def set_master_password(self, password):
-        """
-        Method to set the password of the user. If the user registers through
-        social networks, this method will be called to create a scrambled
-        password.
-        """
-        salt = uuid.uuid4().hex.encode('utf-8')
-        hashed_password = hashlib.sha512(password.encode('utf-8') + salt).hexdigest()
-        self.master_password = hashed_password
-        self.save()
+    # def set_master_password(self, password):
+    #     """Method to set the password of the user.
+
+    #     If the user registers through social networks, this method will be
+    #     called to create a scrambled password.
+    #     """
+    #     salt = uuid.uuid4().hex.encode('utf-8')
+    #     hashed_password = hashlib.sha512(password.encode('utf-8') + salt).hexdigest()
+    #     self.master_password = hashed_password
+    #     self.save()
 
     def check_master_password(self, password):
         """

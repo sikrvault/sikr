@@ -22,10 +22,6 @@ will probably need a frontend to work with. You can use the default
 
 The official password storage service called `Sikr` (as Sikre/Sikr in Danish, to ensure, protect) is going to use it. It's still on development (tied to the project) but you can reach it on http://sikr.io and http://api.sikr.io
 
-## Follow the development
-
-You can follow the development of the application at [the trello board](https://trello.com/b/QeeX9b7l)
-
 ## What does it use?
 
 * [Falcon microframework](http://falconframework.org/)
@@ -36,7 +32,7 @@ You can follow the development of the application at [the trello board](https://
 ## Requirements
 
 * A GNU/Linux server
-* Python 3.3+
+* Python >= 3.3 (tested up to 3.5.2)
 * A valid SSL certificate (not necessary if DEBUG=True)
 
 Please note that this project **won't run** on Python 2.7.x series.
@@ -58,15 +54,6 @@ To install please follow these steps:
     `$ python install.py dev  # If you're going to develop`
 
     `$ python install.py      # If it is a normal deploy`
-
-That will install Cython wait for it to finish and then Falcon and its
-dependencies. The reason is to win a bit more of speed with a precompiled
-falcon version. If you can't compile cython on your host machine you can still
-install the rest of the dependencies through a standard pip install:
-
-`$ pip install -r requirements/no-cython.txt`
-
-That should install all the requirements without cython.
 
 ## How to run
 

@@ -26,8 +26,7 @@ class User(ConnectionModel):
     facebook = orm.CharField(unique=True, null=True)
     google = orm.CharField(unique=True, null=True)
     github = orm.CharField(unique=True, null=True)
-    linkedin = orm.CharField(unique=True, null=True)
-    twitter = orm.CharField(unique=True, null=True)
+    bitbucket
 
     # Data
     join_date = orm.DateTimeField(default=datetime.datetime.now)

@@ -6,6 +6,7 @@ command line to generate or syncronize the database.
 """
 
 import sys
+import argparse
 
 import falcon
 
@@ -18,31 +19,39 @@ from sikre import settings
 
 check_python()
 
+# If the aplication is run directly through terminal, run this.
 if __name__ == "__main__":
-    if len(sys.argv) >= 2:
-        from sikre.db import generator, syncdb
-        if sys.argv[1] == "syncdb":
-            syncdb.generate_db_schema()
-        if sys.argv[1] == "generate":
-            if settings.DEBUG:
-                generator.generate_database()
-            else:
-                sys.exit(" * `generate` command not available when "
-                         "DEBUG=False. Please set DEBUG=True and remember "
-                         "to install the development requirements.")
-    else:
-        print("No option specified.\n\n"
-              "    syncdb          - Create the database schema\n"
-              "    generate        - Fill the database with random data.\n\n"
-              "If you intended to run the application itself you must call "
-              "the constructor\n"
-              "in the following fashion (uwsgi example):\n\n"
-              "    uwsgi --http :8080 --wsgi-file app.py --callable api\n\n")
+    from sikre.db import generator, syncdb
+
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+                                     epilog="If you are trying to run the "
+                                     "application itself, you must call "
+                                     "the constructor \nin the following "
+                                     "fashion (uWSGI example):\n\n"
+                                     "uwsgi --http :8080 --wsgi-file app.py --callable api \n\n")
+    parser.add_argument("-s", "--syncdb", help="Create the database schema",
+                        action="store_true")
+    parser.add_argument("-g", "--generate", help="Fill the database with random data",
+                        action="store_true")
+    args = parser.parse_args()
+
+    # If there's no input print help
+    if not len(sys.argv) > 1:
+        parser.print_help()
+
+    if args.syncdb:
+        syncdb.generate_db_schema()
+    if args.generate:
+        if not settings.DEBUG:
+            sys.stdout.write("\n`generate` command is not available when debug "
+                             " mode is active. Please set DEBUG=True in the "
+                             "settings to use it.\n")
+        else:
+            generator.generate_database()
+# Else create the API instance, referenced as api
 else:
-    # Create the API instance, referenced internally as api and externally as
-    # wsgi_app
     api = falcon.API(
-        media_type='application/json; charset=utf-8',
+        media_type='application/json; charset=UTF-8',
         middleware=[
             json.RequireJSON(),
             json.JSONTranslator(),
@@ -61,7 +70,6 @@ else:
     api.add_route(api_version + '/auth/google/login', google.GoogleAuth())
     api.add_route(api_version + '/auth/twitter/login', twitter.TwitterAuth())
     api.add_route(api_version + '/auth/github/login', github.GithubAuth())
-    api.add_route(api_version + '/auth/linkedin/login', linkedin.LinkedinAuth())
 
     # Content
     api.add_route(api_version + '/categories', categories.Categories())

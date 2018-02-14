@@ -1,7 +1,6 @@
 import datetime
 
 import peewee as orm
-from playhouse.fields import ManyToManyField
 
 from sikre.db.connector import ConnectionModel
 from sikre.models.items import Item
@@ -10,9 +9,9 @@ from sikre.models.users import User
 
 class Service(ConnectionModel):
     name = orm.CharField(max_length=255)
-    item = orm.ForeignKeyField(Item, related_name='items')
+    item = orm.ForeignKeyField(Item, backref='items')
     pub_date = orm.DateTimeField(default=datetime.datetime.now)
-    allowed_users = ManyToManyField(User, related_name='allowed_services')
+    allowed_users = orm.ManyToManyField(User, backref='allowed_services')
 
     # Password
     username = orm.CharField(max_length=255, null=True)

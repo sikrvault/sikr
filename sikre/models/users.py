@@ -5,7 +5,6 @@ import hmac
 import crypt
 
 import peewee as orm
-from playhouse.fields import ManyToManyField
 
 from sikre.db.connector import ConnectionModel
 
@@ -26,7 +25,6 @@ class User(ConnectionModel):
     facebook = orm.CharField(unique=True, null=True)
     google = orm.CharField(unique=True, null=True)
     github = orm.CharField(unique=True, null=True)
-    bitbucket
 
     # Data
     join_date = orm.DateTimeField(default=datetime.datetime.now)
@@ -60,7 +58,7 @@ class Group(ConnectionModel):
     Basic model to group users.
     """
     name = orm.CharField(max_length=255, unique=True)
-    users = ManyToManyField(User, related_name='usergroups')
+    users = orm.ManyToManyField(User, backref='usergroups')
     pub_date = orm.DateTimeField(default=datetime.datetime.now)
 
 UserGroup = Group.users.get_through_model()

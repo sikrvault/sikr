@@ -27,12 +27,12 @@ The official password storage service called `Sikr` (as Sikre/Sikr in Danish, to
 * [Falcon microframework](http://falconframework.org/)
 * [Python Requests](http://docs.python-requests.org/en/latest/)
 * [PyJWT](https://github.com/jpadilla/pyjwt)
-* [Peewee ORM](http://peewee.readthedocs.org/en/latest/)
+* [SQLAlchemy ORM](http://www.sqlalchemy.org/)
 
 ## Requirements
 
 * A GNU/Linux server
-* Python >= 3.3 (tested up to 3.5.2)
+* Python >= 3.5 (tested up to 3.7)
 * A valid SSL certificate (not necessary if DEBUG=True)
 
 Please note that this project **won't run** on Python 2.7.x series.
@@ -90,8 +90,8 @@ the moment of writing this document these are the functions:
 
 ## License and copyright
 
-This project is licensed under the MIT license. Copyright belongs to Oscar Carballal Prego and Clione Software
+This project is licensed under the MIT license.
 
 ## Authors
 
-Oscar Carballal Prego <oscar.carballal@clione.io>
+Oscar Carballal Prego <oscar.carballal@esmorga.eu>

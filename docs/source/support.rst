@@ -1,4 +1,0 @@
-Support
-=======
-
-To be written

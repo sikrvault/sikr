@@ -10,18 +10,18 @@ import argparse
 
 import falcon
 
-from sikre.middleware import json, https, headers, handle_404
-from sikre.resources import categories, items, services, main, tests, sharing
-from sikre.resources.auth import github, facebook, google, twitter, linkedin
-from sikre.utils.logs import logger
-from sikre.utils.checks import check_python
-from sikre import settings
+from sikr.middleware import json, https, headers, handle_404
+from sikr.resources import categories, items, services, main, tests, sharing
+from sikr.resources.auth import github, facebook, google, twitter, linkedin
+from sikr.utils.logs import logger
+from sikr.utils.checks import check_python
+from sikr import settings
 
 check_python()
 
 # If the aplication is run directly through terminal, run this.
 if __name__ == "__main__":
-    from sikre.db import generator, syncdb
+    from sikr.db import generator, syncdb
 
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                      epilog="If you are trying to run the "

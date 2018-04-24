@@ -1,13 +1,12 @@
 language: python
 python:
-  - "3.3"
-  - "3.4"
   - "3.5"
-  - "nightly"
+  - "3.6"
+  - "3.7-dev"
 install:
   - "pip install cython"
   - "pip install -r requirements/common.txt"
 script: nosetests
 notifications:
   email:
-    - oscar.carballal@clione.io
+    - oscar.carballal@esmorga.eu

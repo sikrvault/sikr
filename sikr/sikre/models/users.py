@@ -1,19 +1,23 @@
-from sqlalchemy import Column, Integer, String
+import datetime
+import hashlib
+import uuid
+import hmac
+import crypt
 
-from sikr.db.connector import Base
+import peewee as orm
+
+from sikre.db.connector import ConnectionModel
 
 
-class User(Base):
+class User(ConnectionModel):
     """Standard user model.
 
     Stores minimal data about the user to handle the
     authentication, like email, username, and auth token, apart from some
     extra parameters for administration.
     """
-    __tablename__ = 'users'
 
-    id = Column('ID', Integer, primary_key=True)
-    username = Column('Username', String, unique=True)
+    username = orm.CharField(unique=True)
     master_password = orm.CharField(max_length=255)
     email = orm.CharField(unique=True, null=True)
 
@@ -21,8 +25,6 @@ class User(Base):
     facebook = orm.CharField(unique=True, null=True)
     google = orm.CharField(unique=True, null=True)
     github = orm.CharField(unique=True, null=True)
-    linkedin = orm.CharField(unique=True, null=True)
-    twitter = orm.CharField(unique=True, null=True)
 
     # Data
     join_date = orm.DateTimeField(default=datetime.datetime.now)
@@ -56,7 +58,7 @@ class Group(ConnectionModel):
     Basic model to group users.
     """
     name = orm.CharField(max_length=255, unique=True)
-    users = ManyToManyField(User, related_name='usergroups')
+    users = orm.ManyToManyField(User, backref='usergroups')
     pub_date = orm.DateTimeField(default=datetime.datetime.now)
 
 UserGroup = Group.users.get_through_model()

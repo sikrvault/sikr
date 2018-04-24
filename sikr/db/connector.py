@@ -4,68 +4,43 @@ This module organizes the connections to teh database accrding to the settings
 file and values provided. It also creates a base model from where the rest of
 models have to inherit from so they connect to the same database.
 """
+import logging
 
-import json
+import sqlalchemy
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
-import peewee as orm
+from sikr import settings
 
-from sikre import settings
-from sikre.utils.logs import logger
-
-try:
-    db_conf = settings.DATABASE
-    # Set the defaults in case something happens
-    db_user = settings.DATABASE.get("USER", 'root')
-    db_host = settings.DATABASE.get("HOST", 'localhost')
-    db_postgres_port = settings.DATABASE.get("PORT", '5432')
-    db_mysql_port = settings.DATABASE.get("PORT", '3306')
-
-    if db_conf['ENGINE'] == 'postgres':
-        db = orm.PostgresqlDatabase(db_conf['NAME'], user=db_user,
-                                    password=db_conf['PASSWORD'],
-                                    host=db_host, port=db_postgres_port)
-        logger.debug("Connected to the PostgreSQL database")
-
-    elif db_conf['ENGINE'] == 'mysql':
-        db = orm.MySQLDatabase(db_conf['NAME'], user=db_user,
-                               password=db_conf['PASSWORD'],
-                               host=db_host, port=db_mysql_port)
-        logger.debug("Connected to the MySQL database")
-
-    else:
-        db = orm.SqliteDatabase(settings.DATABASE['NAME'])
-        logger.debug("Connected to the SQLite database")
-except Exception as e:
-    message = ("Couldn't connect to the database. Please check that your "
-               "configuration is okay and the database exists.")
-    logger.critical(message)
-    # This will leave the message in the WSGI logfile in case the other logger
-    # fails
-    print(message)
+logger = logging.getLogger(__name__)
 
 
-class ConnectionModel(orm.Model):
-    """Connection abstract model.
+db_conf = settings.DATABASE
+db_user = db_conf.get('USER', 'root')
+db_host = db_conf.get('HOST', 'localhost')
+db_name = db_conf.get('NAME', 'mydatabase')
+db_engine = db_conf.get('ENGINE')
+db_password = db_conf.get('PASSWORD')
+db_postgres_port = db_conf.get('PORT', '5432')
+db_mysql_port = db_conf.get('PORT', '3306')
 
-    This model will abstract some of the functionality required across all
-    the data models in the application.
+if db_engine == 'postgresql':
+    engine = sqlalchemy.create_engine("{}://{}:{}@{}:{}/{}".format(
+        db_engine, db_user, db_password, db_host, db_postgres_port, db_name
+    ))
+elif db_engine == 'mysql':
+    engine = sqlalchemy.create_engine("{}://{}:{}@{}:{}/{}".format(
+        db_engine, db_user, db_password, db_host, db_mysql_port, db_name
+    ))
+elif db_engine == 'sqlite':
+    engine = sqlalchemy.create_engine("{}://{}.db".format(db_engine, db_name))
+else:
+    error_msg = "Database engine not supported. Valid options are: postgresql, mysql, sqlite"
+    logger.error(error_msg)
+    sys.exit(error_msg)
 
-    Returns:
-        database: the database connection for the model
-        __str__: the data returned as a JSON string
-    """
+# Establish declarative mapping for models
+Base = declarative_base()
 
-    def __str__(self):
-        """Return JSON data if any model is accesed through the str method."""
-        r = {}
-        for k in self._data.keys():
-            try:
-                r[k] = str(getattr(self, k))
-            except:
-                r[k] = json.dumps(getattr(self, k))
-        return str(r)
-
-    class Meta:
-        """Connect all the models to the same database."""
-
-        database = db
+# Establish ORM DB session
+Session = sessionmaker(bind=engine)

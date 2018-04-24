@@ -2,13 +2,13 @@ import json
 
 import falcon
 
-from sikre import settings
-from sikre.utils.logs import logger
-from sikre.models.users import User
-from sikre.models.items import Category, Item
-from sikre.models.services import Service
-from sikre.resources.auth.decorators import login_required
-from sikre.resources.auth.utils import parse_token
+from sikr import settings
+from sikr.utils.logs import logger
+from sikr.models.users import User
+from sikr.models.items import Category, Item
+from sikr.models.services import Service
+from sikr.resources.auth.decorators import login_required
+from sikr.resources.auth.utils import parse_token
 
 
 class Items(object):

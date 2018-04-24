@@ -3,9 +3,9 @@ import datetime
 import peewee as orm
 from playhouse.fields import ManyToManyField
 
-from sikre.db.connector import ConnectionModel
-from sikre.models.items import Item
-from sikre.models.users import User
+from sikr.db.connector import ConnectionModel
+from sikr.models.items import Item
+from sikr.models.users import User
 
 
 class Service(ConnectionModel):

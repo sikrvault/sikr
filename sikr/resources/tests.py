@@ -1,7 +1,7 @@
 import falcon
 import json
 
-from sikre import settings
+from sikr import settings
 
 
 def get_platform_info():

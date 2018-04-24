@@ -2,14 +2,14 @@ import json
 
 import falcon
 
-from sikre import settings
-from sikre.utils.logs import logger
-from sikre.models.users import User
-from sikre.models.services import Service
-from sikre.models.shares import ShareToken
-from sikre.resources.auth.decorators import login_required
-from sikre.resources.auth.utils import parse_token
-from sikre.utils.tokens import generate_token
+from sikr import settings
+from sikr.utils.logs import logger
+from sikr.models.users import User
+from sikr.models.services import Service
+from sikr.models.shares import ShareToken
+from sikr.resources.auth.decorators import login_required
+from sikr.resources.auth.utils import parse_token
+from sikr.utils.tokens import generate_token
 
 
 class Share(object):

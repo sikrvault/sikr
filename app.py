@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """Main application functions.
 
 This file is the core of the application and it defines the intantiation of the

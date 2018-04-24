@@ -3,8 +3,8 @@ import datetime
 import peewee as pw
 from playhouse.fields import ManyToManyField
 
-from sikre.db.connector import ConnectionModel
-from sikre.models.users import User
+from sikr.db.connector import ConnectionModel
+from sikr.models.users import User
 
 
 class Category(ConnectionModel):

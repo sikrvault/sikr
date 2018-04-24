@@ -2,7 +2,7 @@ import json
 
 import falcon
 
-from sikre import settings
+from sikr import settings
 
 
 class WrongURL(object):

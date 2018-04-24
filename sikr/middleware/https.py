@@ -1,6 +1,6 @@
 import falcon
 
-from sikre import settings
+from sikr import settings
 
 
 class RequireHTTPS(object):

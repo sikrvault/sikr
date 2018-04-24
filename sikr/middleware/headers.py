@@ -2,8 +2,8 @@ import re
 
 import falcon
 
-from sikre import settings
-from sikre.utils.logs import logger
+from sikr import settings
+from sikr.utils.logs import logger
 
 
 class BaseHeaders(object):

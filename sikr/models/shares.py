@@ -3,10 +3,10 @@ import os
 
 import peewee as orm
 
-from sikre.db.connector import ConnectionModel
-from sikre.models.users import User
-from sikre.models.items import Category, Item
-from sikre.models.services import Service
+from sikr.db.connector import ConnectionModel
+from sikr.models.users import User
+from sikr.models.items import Category, Item
+from sikr.models.services import Service
 
 
 RESOURCE = (

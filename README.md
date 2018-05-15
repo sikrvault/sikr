@@ -46,6 +46,7 @@ don't know what that is, please check it [here](https://docs.pipenv.org/))
 * Install the dependencies
 
     `$ cd <your_sikr_git_folder>`
+
     `$ pipenv install`
 
 * Activate the virttual environment
@@ -92,8 +93,4 @@ the moment of writing this document these are the functions:
 
 ## License and copyright
 
-This project is licensed under the MIT license.
-
-## Authors
-
-Oscar Carballal Prego <oscar.carballal@esmorga.eu>
+This project is licensed under the MIT license. Copyright Esmorga Software and contributors

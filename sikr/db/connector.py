@@ -14,7 +14,6 @@ from sikr import settings
 
 logger = logging.getLogger(__name__)
 
-
 db_conf = settings.DATABASE
 db_user = db_conf.get('USER', 'root')
 db_host = db_conf.get('HOST', 'localhost')
@@ -33,7 +32,7 @@ elif db_engine == 'mysql':
         db_engine, db_user, db_password, db_host, db_mysql_port, db_name
     ))
 elif db_engine == 'sqlite':
-    engine = sqlalchemy.create_engine("{}://{}.db".format(db_engine, db_name))
+    engine = sqlalchemy.create_engine("{}:///{}".format(db_engine, db_name))
 else:
     error_msg = "Database engine not supported. Valid options are: postgresql, mysql, sqlite"
     logger.error(error_msg)

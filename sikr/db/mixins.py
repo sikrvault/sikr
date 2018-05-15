@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy import Boolean
+from sqlalchemy import Boolean, Column, Integer
 
 
 class SikrModelMixin(object):
@@ -12,5 +12,5 @@ class SikrModelMixin(object):
     #__table_args__ = {'mysql_engine': 'InnoDB'}
     #__mapper_args__= {'always_refresh': True}
 
-    id =  Column(Integer, primary_key=True)
-    active = Column('Active', Boolean)
+    id = Column(Integer, primary_key=True)
+    active = Column(Boolean)

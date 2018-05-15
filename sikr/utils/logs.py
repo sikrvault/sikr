@@ -7,7 +7,7 @@ imported in all modules that need to declare logs.
 import logging
 import logging.config
 
-from sikre import settings
+from sikr import settings
 
 logging.config.dictConfig(settings.LOG_CONFIG)
 logger = logging.getLogger("sikr")

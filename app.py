@@ -13,8 +13,9 @@ import argparse
 import falcon
 
 from sikr.middleware import json, https, headers, handle_404
-from sikr.resources import categories, items, services, main, tests, sharing
-from sikr.resources.auth import github, facebook, google, twitter, linkedin
+#from sikr.resources import categories, items, services, main, tests, sharing
+#from sikr.resources.auth import github, facebook, google, twitter, linkedin
+from sikr.resources import main
 from sikr.utils.logs import logger
 from sikr.utils.checks import check_python
 from sikr import settings
@@ -23,8 +24,6 @@ check_python()
 
 # If the aplication is run directly through terminal, run this.
 if __name__ == "__main__":
-    from sikr.db import generator, syncdb
-
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                      epilog="If you are trying to run the "
                                      "application itself, you must call "
@@ -42,14 +41,16 @@ if __name__ == "__main__":
         parser.print_help()
 
     if args.syncdb:
-        syncdb.generate_db_schema()
+        from sikr.db.syncdb import generate_schema
+        generate_schema()
+
     if args.generate:
         if not settings.DEBUG:
-            sys.stdout.write("\n`generate` command is not available when debug "
-                             " mode is active. Please set DEBUG=True in the "
-                             "settings to use it.\n")
+            print("\n`generate` command is not available when debug "
+                  " mode is disabled. Please set DEBUG=True in the "
+                  "settings to use it.\n")
         else:
-            generator.generate_database()
+            sys.stdout.write('In development')
 # Else create the API instance, referenced as api
 else:
     api = falcon.API(
@@ -67,24 +68,20 @@ else:
     api_version = '/' + settings.DEFAULT_API
     api.add_route(api_version, main.APIInfo())
 
-    # Social Auth
-    api.add_route(api_version + '/auth/facebook/login', facebook.FacebookAuth())
-    api.add_route(api_version + '/auth/google/login', google.GoogleAuth())
-    api.add_route(api_version + '/auth/twitter/login', twitter.TwitterAuth())
-    api.add_route(api_version + '/auth/github/login', github.GithubAuth())
+    # # Social Auth
+    # api.add_route(api_version + '/auth/facebook/login', facebook.FacebookAuth())
+    # api.add_route(api_version + '/auth/google/login', google.GoogleAuth())
+    # api.add_route(api_version + '/auth/twitter/login', twitter.TwitterAuth())
+    # api.add_route(api_version + '/auth/github/login', github.GithubAuth())
 
-    # Content
-    api.add_route(api_version + '/categories', categories.Categories())
-    api.add_route(api_version + '/categories/{id}', categories.DetailCategory())
-    api.add_route(api_version + '/items', items.Items())
-    api.add_route(api_version + '/items/{id}', items.DetailItem())
-    api.add_route(api_version + '/services', services.Services())
-    api.add_route(api_version + '/services/{id}', services.DetailService())
+    # # Content
+    # api.add_route(api_version + '/categories', categories.Categories())
+    # api.add_route(api_version + '/categories/{id}', categories.DetailCategory())
+    # api.add_route(api_version + '/items', items.Items())
+    # api.add_route(api_version + '/items/{id}', items.DetailItem())
+    # api.add_route(api_version + '/services', services.Services())
+    # api.add_route(api_version + '/services/{id}', services.DetailService())
 
-    # Sharing
-    api.add_route(api_version + '/share', sharing.Share())
-
+    # # Sharing
+    # api.add_route(api_version + '/share', sharing.Share())
     logger.debug("API service started")
-
-    if settings.DEBUG:
-        api.add_route('/test_api', tests.TestResource())

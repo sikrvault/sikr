@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 import json
 
 import falcon
@@ -11,35 +12,19 @@ class APIInfo(object):
     """
 
     def on_get(self, req, res):
+        payload = {
+            "version": {
+                "api_version": settings.__version__,
+                "api_codename": settings.__codename__,
+                "api_status": settings.__status__,
+                "documentation": settings.__docs__
+            },
+            "date": str(datetime.utcnow().replace(tzinfo=timezone.utc)),
+        }
         res.status = falcon.HTTP_200
-        res.body = json.dumps(
-            {
-                "endpoints": {
-                    "facebook_login": settings.DEFAULT_API + '/auth/facebook/login',
-                    "google_login": settings.DEFAULT_API + '/auth/google/login',
-                    "github_login": settings.DEFAULT_API + '/auth/github/login',
-                    "twitter_login": settings.DEFAULT_API + '/auth/twitter/login',
-                    "linkedin_login": settings.DEFAULT_API + '/auth/linkedin/login',
-                    "groups": settings.DEFAULT_API + '/groups',
-                    "group_detail": settings.DEFAULT_API + '/groups/{id}',
-                    "items": settings.DEFAULT_API + '/items',
-                    "item_detail": settings.DEFAULT_API + '/items/{id}',
-                    "services": settings.DEFAULT_API + '/services',
-                    "service_detail": settings.DEFAULT_API + '/services/{id}',
-                },
-                "version": {
-                    "api_version": settings.__version__,
-                    "api_codename": settings.__codename__,
-                    "api_status": settings.__status__,
-                    "documentation": settings.__docs__
-                }
-            }
-        )
+        res.body = json.dumps(payload)
 
     def on_options(self, req, res):
-
-        """Acknowledge the OPTIONS method.
-        """
         res.status = falcon.HTTP_200
 
     def on_post(self, req, res):

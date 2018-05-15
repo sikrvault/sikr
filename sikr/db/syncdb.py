@@ -1,30 +1,21 @@
-from sikre.db.connector import db
-from sikre.models import users, items, services, shares
-from sikre.utils.logs import logger
-from sikre.utils.checks import check_python
-
-check_python()
+from sikr.db.connector import Base, engine
+from sikr.models.users import UserGroup, User
+from sikr.models.entries import Group, Entry
+from sikr.utils.logs import logger
 
 
-def generate_db_schema():
-    # Try to create the database tables, don't do anything if they fail
+def generate_schema():
+    """Generate the initial schema for the database."""
+    start_msg = "Creating database schema..."
+    end_msg = "Database schema created"
+    print(f"[ --  ] {start_msg}")
+    logger.info(start_msg)
     try:
-        print(" * Syncing database tables...")
-        # First set the m2m models
-        logger.info("Attempting to create the tables")
-        db.create_tables([
-            users.User,
-            users.Group,
-            users.UserGroup,
-            items.Category,
-            items.UserCategory,
-            items.UserItem,
-            items.Item,
-            services.Service,
-            services.UserService,
-            shares.ShareToken,
-        ])
-        print(" * Database tables created")
+        Base.metadata.create_all(engine)
+        print(f"[ OK  ] {end_msg}")
+        logger.info(end_msg)
     except Exception as e:
-        logger.error(e)
-        print(e)
+        error_msg = f"Error creating schema: {e}"
+        print(f"[ERROR] {error_msg}")
+        logger.error(error_msg)
+        sys.exit(1)

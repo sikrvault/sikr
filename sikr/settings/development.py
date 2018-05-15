@@ -18,7 +18,7 @@ DATABASE = {
 # Restrict the extensions allowed for the uploaded files, we do other checks
 # on the views, but this is the first level
 ALLOWED_EXTENSIONS = [
-    'cer', 'crt', 'pfx', 'key', 'pem', 'arm', 'crt',  # SSL files
+    'cer', 'crt', 'pfx', 'key', 'pem', 'arm', 'crt', 'pub'
 ]
 
 # Select the default version of the API, this will load specific parts of your
@@ -79,7 +79,7 @@ LOG_CONFIG = {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(BASE_DIR, LOGFILE),
-            'maxBytes': 2097152,  # 2MB per file
+            'maxBytes': 10485760,  # 10MB per file
             'backupCount': 2,  # Store up to three files
             'formatter': 'standard',
         },

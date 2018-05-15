@@ -32,28 +32,30 @@ The official password storage service called `Sikr` (as Sikre/Sikr in Danish, to
 ## Requirements
 
 * A GNU/Linux server
-* Python >= 3.5 (tested up to 3.7)
+* Python >= 3.6 (tested up to 3.7)
 * A valid SSL certificate (not necessary if DEBUG=True)
 
-Please note that this project **won't run** on Python 2.7.x series.
+Please note that this project **won't run** on Python 2.7.x series or
+Python 3.x below 3.6
 
 ## How to install
 
-To install please follow these steps:
+To install please follow these steps (these instructions use Pipenv, if you
+don't know what that is, please check it [here](https://docs.pipenv.org/))
 
-* Install a virtual environment
+* Install the dependencies
 
-    `$ pyvenv <folder name>`
+    `$ cd <your_sikr_git_folder>`
+    `$ pipenv install`
 
-* Activate the environment
+* Activate the virttual environment
 
-    `$ source <virtualenv folder>/bin/activate`
+    `$ pipenv shell`
 
-* Install the dependencies. There is two options:
-
-    `$ python install.py dev  # If you're going to develop`
-
-    `$ python install.py      # If it is a normal deploy`
+That should install and lock all the necessary requirements. If you're confused
+about how pipenv works, let's just say it takes care of the creation, isolation
+and activation of the correct virtual environment on its own, you don't need to
+do anything.
 
 ## How to run
 

@@ -1,16 +1,14 @@
 [[source]]
-url = "https://pypi.python.org/simple"
+url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
 [packages]
-ujson = ">=1.35"
-python-mimeparse = ">=1.6.0"
-six = ">=1.11.0"
-requests = ">=2.18.4"
-Cython = ">=0.28.2"
-Sphinx = ">=1.7.3"
-PyJWT = ">=1.6.1"
+cython = "*"
+ujson = "*"
+falcon = "*"
+sqlalchemy = "*"
+pyjwt = "*"
 
 [dev-packages]
 

@@ -1,8 +1,0 @@
-Cython>=0.28.2
-ujson>=1.35
-python-mimeparse>=1.6.0
-six>=1.11.0
---no-binary :all: falcon>=1.4.1
-sphinx>= 1.7.3
-requests>= 2.18.4
-PyJWT>=1.6.1

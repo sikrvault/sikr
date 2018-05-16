@@ -9,10 +9,10 @@ ujson = "*"
 falcon = "*"
 sqlalchemy = "*"
 pyjwt = "*"
-"psycopg2" = "*"
 ipdb = "*"
 ipython = "*"
 uwsgi = "*"
+"psycopg2-binary" = "*"
 
 [dev-packages]
 

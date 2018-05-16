@@ -7,12 +7,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Specify here the database settings. We support MySQL, PostgreSQL and SQLite
 DATABASE = {
-    'ENGINE': 'sqlite',        # 'postgres', 'sqlite' or 'mysql'. Any other defaults to sqlite
-    'NAME': 'development.db',  # Filename for SQLite or DB name for PostgreSQL/MySQL
-    'HOST': '',                # Not needed for SQLite. Server IP. Default: localhost
+    'ENGINE': 'postgresql',        # 'postgresql', 'sqlite' or 'mysql'. Any other defaults to sqlite
+    'NAME': 'sikr_test',  # Filename for SQLite or DB name for PostgreSQL/MySQL
+    'HOST': '172.17.0.2',                # Not needed for SQLite. Server IP. Default: localhost
     'PORT': '',                # Not needed for SQLite. PostgreSQL default: 5432
-    'USER': '',                # Not needed for SQLite. User that has access to the DB
-    'PASSWORD': '',            # Not needed for SQLite. Password for the user
+    'USER': 'postgres',                # Not needed for SQLite. User that has access to the DB
+    'PASSWORD': '4J2bPbMT5jLe5Re9',            # Not needed for SQLite. Password for the user
 }
 
 # Restrict the extensions allowed for the uploaded files, we do other checks

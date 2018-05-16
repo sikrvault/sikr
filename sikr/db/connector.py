@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_dict_values(dict, key, default_value=''):
-    """Get the dictionary values accounting for empty values when key exists."""
+    """Get dictionary values accounting for empty values when key exists."""
     # Returns False if key doesnt exist, False if value is empty
     if bool(dict.get(key)):
         return dict.get(key)
@@ -45,7 +45,8 @@ elif db_engine == 'mysql':
 elif db_engine == 'sqlite':
     engine = sqlalchemy.create_engine("{}:///{}".format(db_engine, db_name))
 else:
-    error_msg = "Database engine not supported. Valid options are: postgresql, mysql, sqlite"
+    error_msg = "Database engine not supported. Valid options are: " \
+                "postgresql, mysql, sqlite"
     logger.error(error_msg)
     sys.exit(error_msg)
 

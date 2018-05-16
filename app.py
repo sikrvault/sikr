@@ -13,8 +13,8 @@ import argparse
 import falcon
 
 from sikr.middleware import json, https, headers, handle_404
-#from sikr.resources import categories, items, services, main, tests, sharing
-#from sikr.resources.auth import github, facebook, google, twitter, linkedin
+# from sikr.resources import categories, items, services, main, tests, sharing
+# from sikr.resources.auth import github, facebook, google, twitter, linkedin
 from sikr.resources import main
 from sikr.utils.logs import logger
 from sikr.utils.checks import check_python
@@ -24,15 +24,18 @@ check_python()
 
 # If the aplication is run directly through terminal, run this.
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
-                                     epilog="If you are trying to run the "
-                                     "application itself, you must call "
-                                     "the constructor \nin the following "
-                                     "fashion (uWSGI example):\n\n"
-                                     "uwsgi --http :8080 --wsgi-file app.py --callable api \n\n")
-    parser.add_argument("-s", "--syncdb", help="Create the database schema",
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="If you are trying to run the "
+        "application itself, you must call "
+        "the constructor \nin the following "
+        "fashion (uWSGI example):\n\n"
+        "uwsgi --http :8080 --wsgi-file app.py --callable api \n\n")
+    parser.add_argument("-s", "--syncdb",
+                        help="Create the database schema",
                         action="store_true")
-    parser.add_argument("-g", "--generate", help="Fill the database with random data",
+    parser.add_argument("-g", "--generate",
+                        help="Fill the database with random data",
                         action="store_true")
     args = parser.parse_args()
 
@@ -50,7 +53,7 @@ if __name__ == "__main__":
                   " mode is disabled. Please set DEBUG=True in the "
                   "settings to use it.\n")
         else:
-            sys.stdout.write('In development')
+            print('In development')
 # Else create the API instance, referenced as api
 else:
     api = falcon.API(
@@ -67,21 +70,4 @@ else:
     # URLs
     api_version = '/' + settings.DEFAULT_API
     api.add_route(api_version, main.APIInfo())
-
-    # # Social Auth
-    # api.add_route(api_version + '/auth/facebook/login', facebook.FacebookAuth())
-    # api.add_route(api_version + '/auth/google/login', google.GoogleAuth())
-    # api.add_route(api_version + '/auth/twitter/login', twitter.TwitterAuth())
-    # api.add_route(api_version + '/auth/github/login', github.GithubAuth())
-
-    # # Content
-    # api.add_route(api_version + '/categories', categories.Categories())
-    # api.add_route(api_version + '/categories/{id}', categories.DetailCategory())
-    # api.add_route(api_version + '/items', items.Items())
-    # api.add_route(api_version + '/items/{id}', items.DetailItem())
-    # api.add_route(api_version + '/services', services.Services())
-    # api.add_route(api_version + '/services/{id}', services.DetailService())
-
-    # # Sharing
-    # api.add_route(api_version + '/share', sharing.Share())
     logger.debug("API service started")
